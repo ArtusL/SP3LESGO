@@ -1,17 +1,21 @@
 ﻿  SceneAsteroid.cpp
-c1xx : fatal error C1083: Cannot open source file: '..\Physics\Source\SceneAsteroid.cpp': No such file or directory
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\GameObject.h(4,10): fatal error C1083: Cannot open include file: 'Vector3.h': No such file or directory
   SceneBase.cpp
-C:\Users\artus\Documents\DM2212_Physics\PhysicsA1\Physics\Source\SceneBase.h(5,10): fatal error C1083: Cannot open include file: 'Mtx44.h': No such file or directory
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneBase.h(5,10): fatal error C1083: Cannot open include file: 'Mtx44.h': No such file or directory
   SceneGameOver.cpp
 c1xx : fatal error C1083: Cannot open source file: '..\Physics\Source\SceneGameOver.cpp': No such file or directory
   SceneKinematics.cpp
-C:\Users\artus\Documents\DM2212_Physics\PhysicsA1\Physics\Source\GameObject.h(4,10): fatal error C1083: Cannot open include file: 'Vector3.h': No such file or directory
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\GameObject.h(4,10): fatal error C1083: Cannot open include file: 'Vector3.h': No such file or directory
   SceneLevel1.cpp
-C:\Users\artus\Documents\DM2212_Physics\PhysicsA1\Physics\Source\GameObject.h(4,10): fatal error C1083: Cannot open include file: 'Vector3.h': No such file or directory
+c1xx : fatal error C1083: Cannot open source file: '..\Physics\Source\SceneLevel1.cpp': No such file or directory
   SceneLevel2.cpp
-C:\Users\artus\Documents\DM2212_Physics\PhysicsA1\Physics\Source\GameObject.h(4,10): fatal error C1083: Cannot open include file: 'Vector3.h': No such file or directory
+c1xx : fatal error C1083: Cannot open source file: '..\Physics\Source\SceneLevel2.cpp': No such file or directory
   SceneLevel3.cpp
 c1xx : fatal error C1083: Cannot open source file: '..\Physics\Source\SceneLevel3.cpp': No such file or directory
   SceneManager.cpp
-C:\Users\artus\Documents\DM2212_Physics\PhysicsA1\Physics\Source\GameObject.h(4,10): fatal error C1083: Cannot open include file: 'Vector3.h': No such file or directory
+c1xx : fatal error C1083: Cannot open source file: '..\Physics\Source\SceneManager.cpp': No such file or directory
+  MatrixStack.cpp
+  Mtx44.cpp
+  timer.cpp
+  Vector3.cpp
   Generating Code...
