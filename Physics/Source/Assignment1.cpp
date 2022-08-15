@@ -1098,7 +1098,7 @@ void Assignment1::RenderGO(GameObject *go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Rotate(go->angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_BASICBULLET], false);
+		RenderMesh(meshList[GEO_CLUB], false);
 		modelStack.PopMatrix();
 		break;
 
@@ -1123,7 +1123,7 @@ void Assignment1::RenderGO(GameObject *go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Rotate(go->angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_MISSLE], false);
+		RenderMesh(meshList[GEO_BOW], false);
 		modelStack.PopMatrix();
 		break;
 

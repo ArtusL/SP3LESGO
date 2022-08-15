@@ -132,14 +132,14 @@ void SceneBase::Init()
 
 
 	// Bullet types
-	meshList[GEO_BASICBULLET] = MeshBuilder::GenerateQuad("basic bullet", Color(1, 1, 1), 1.f);
-	meshList[GEO_BASICBULLET]->textureID = LoadTGA("Image//redbullet.tga");
+	meshList[GEO_CLUB] = MeshBuilder::GenerateQuad("basic bullet", Color(1, 1, 1), 1.f);
+	meshList[GEO_CLUB]->textureID = LoadTGA("Image//Perk_Club.tga");
 
 	meshList[GEO_ENEMYBULLET] = MeshBuilder::GenerateQuad("enemy bullet", Color(1, 1, 1), 1.f);
 	meshList[GEO_ENEMYBULLET]->textureID = LoadTGA("Image//enemybullet.tga");
 
-	meshList[GEO_MISSLE]= MeshBuilder::GenerateQuad("missle", Color(1, 1, 1), 1.f);
-	meshList[GEO_MISSLE]->textureID = LoadTGA("Image//missle.tga");
+	meshList[GEO_BOW]= MeshBuilder::GenerateQuad("missle", Color(1, 1, 1), 1.f);
+	meshList[GEO_BOW]->textureID = LoadTGA("Image//Perk_Bow.tga");
 
 	meshList[GEO_EXPLOSION] = MeshBuilder::GenerateSphere("explosion", Color(1, 0, 0), 10.f, 20);
 
