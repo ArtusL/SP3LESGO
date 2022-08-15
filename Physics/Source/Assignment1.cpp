@@ -39,7 +39,7 @@ void Assignment1::Init()
 	//Physics code here
 	m_speed = 1.f;
 
-	shipSpeed = 3.f;
+	shipSpeed = 13.f;
 	prevElapsedAsteroid = prevElapsedBullet = elapsedTime = waveTimer = prevElapsedMissle = keyDelay = prevHealthRegen = tripleShotTimer = 0.0;
 	Math::InitRNG();
 
@@ -87,8 +87,8 @@ void Assignment1::Init()
 	m_ship->active = true;
 	m_ship->scale.Set(7, 7, 1);
 	m_ship->pos.Set(m_worldWidth / 2, m_worldHeight / 2);
-	m_ship->vel.Set(1, 1, 0);
-	m_ship->direction.Set(1, 1, 0);
+	m_ship->vel.Set(1, 0, 0);
+	m_ship->direction.Set(1, 0, 0);
 	m_ship->hp = m_hp;
 	m_ship->maxHP = m_hp;
 	m_ship->mass = 0.1f;
@@ -216,6 +216,9 @@ void Assignment1::Update(double dt)
 	}
 	else if (gameStart)
 	{
+		m_force = Vector3(0,0,0);
+		m_ship->vel = Vector3(0, 0, 0);
+
 		if (Application::IsKeyPressed('9'))
 		{
 			m_speed = Math::Max(0.f, m_speed - 0.1f);
@@ -230,32 +233,39 @@ void Assignment1::Update(double dt)
 		//Exercise 6: set m_force values based on WASD
 		if (Application::IsKeyPressed('W'))
 		{
-			m_force += m_ship->direction * 4.f;
+			m_ship->direction = Vector3(0, 1, 0);
+			m_ship->vel = Vector3(0, 20, 0);
+			/*m_force += m_ship->direction * 4.f;*/
 		}
 		if (Application::IsKeyPressed('A'))
 		{
+			m_ship->direction = Vector3(-1, 0, 0);
+			m_ship->vel = Vector3(-20, 0, 0);
 			//m_force += m_ship->direction * ROTATION_SPEED;
-			m_torque += Vector3(-m_ship->scale.x, -m_ship->scale.y, 0).Cross(Vector3(ROTATION_SPEED, 0, 0));
-			if (movementLastPressed == 'D')
-			{
-				m_ship->angularVelocity = 0;
-			}
-			movementLastPressed = 'A';
+			//m_torque += Vector3(-m_ship->scale.x, -m_ship->scale.y, 0).Cross(Vector3(ROTATION_SPEED, 0, 0));
+			//if (movementLastPressed == 'D')
+			//{
+			//	m_ship->angularVelocity = 0;
+			//}
+			//movementLastPressed = 'A';
 		}
 		if (Application::IsKeyPressed('S'))
 		{
-			m_force -= m_ship->direction * 4.f;
+			m_ship->direction = Vector3(0, -1, 0);
+			m_ship->vel = Vector3(0, -20, 0);
 
 		}
 		if (Application::IsKeyPressed('D'))
 		{
+			m_ship->direction = Vector3(1, 0, 0);
+			m_ship->vel = Vector3(20, 0, 0);
 			//m_force += m_ship->direction * ROTATION_SPEED;
-			m_torque += Vector3(-m_ship->scale.x, m_ship->scale.y, 0).Cross(Vector3(ROTATION_SPEED, 0, 0));
-			if (movementLastPressed == 'A')
-			{
-				m_ship->angularVelocity = 0;
-			}
-			movementLastPressed = 'D';
+			//m_torque += Vector3(-m_ship->scale.x, m_ship->scale.y, 0).Cross(Vector3(ROTATION_SPEED, 0, 0));
+			//if (movementLastPressed == 'A')
+			//{
+			//	m_ship->angularVelocity = 0;
+			//}
+			//movementLastPressed = 'D';
 		}
 
 		// Access upgrade screen
@@ -470,18 +480,18 @@ void Assignment1::Update(double dt)
 			m_ship->vel.Normalize() *= MAX_SPEED;
 		}
 
-		//float angleInRadians = std::atan2(m_ship->vel.y, m_ship->vel.x);
-		//float angleInDegrees = (angleInRadians / Math::PI) * 180.0 - 90.0f;
-		//m_ship->angle = angleInDegrees;
+		float angleInRadians = std::atan2(m_ship->vel.y, m_ship->vel.x);
+		float angleInDegrees = (angleInRadians / Math::PI) * 180.0 - 90.0f;
+		m_ship->angle = angleInDegrees;
 
 		m_ship->vel += acceleration * dt * shipSpeed;
 		m_ship->pos += m_ship->vel * dt * shipSpeed;
 
-		float angularAcceleration = m_torque.z / m_ship->momentOfInertia;
-		m_ship->angularVelocity += angularAcceleration * dt * m_speed;
-		m_ship->angularVelocity = Math::Clamp(m_ship->angularVelocity, -MAX_ROTATION_SPEED, MAX_ROTATION_SPEED);
-		m_ship->direction = RotateVector(m_ship->direction, m_ship->angularVelocity * dt * shipSpeed);
-		m_ship->angle = Math::RadianToDegree(atan2(m_ship->direction.y, m_ship->direction.x));
+		//float angularAcceleration = m_torque.z / m_ship->momentOfInertia;
+		//m_ship->angularVelocity += angularAcceleration * dt * m_speed;
+		//m_ship->angularVelocity = Math::Clamp(m_ship->angularVelocity, -MAX_ROTATION_SPEED, MAX_ROTATION_SPEED);
+		//m_ship->direction = RotateVector(m_ship->direction, m_ship->angularVelocity * dt * shipSpeed);
+		//m_ship->angle = Math::RadianToDegree(atan2(m_ship->direction.y, m_ship->direction.x));
 
 
 		// Bound player within screen

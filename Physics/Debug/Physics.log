@@ -1,101 +1,65 @@
-﻿  Application.cpp
-  Assignment1.cpp
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(273,29): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(292,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(296,20): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(297,23): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(304,22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(351,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(351,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(351,76): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(355,44): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(355,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(355,75): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(359,50): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(359,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(359,81): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(363,50): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(363,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(363,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(387,15): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(466,33): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(477,33): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(478,32): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(481,64): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(483,84): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(516,26): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(522,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(683,29): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(694,29): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(739,29): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(750,29): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(806,24): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(824,22): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(828,14): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(840,23): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(876,51): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(886,23): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(927,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(947,34): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(948,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(948,33): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(953,35): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(954,75): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(954,41): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(976,36): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(977,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(977,33): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(982,36): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(983,75): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(983,41): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(998,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1018,50): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1019,26): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1032,34): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1033,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1033,33): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1038,36): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1039,75): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1039,41): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1061,53): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1061,33): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1066,34): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1067,76): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1067,42): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1132,29): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1141,29): warning C4305: '-=': truncation from 'double' to 'float'
-  Camera.cpp
-  GameObject.cpp
-  LoadOBJ.cpp
-  LoadTGA.cpp
-  main.cpp
-  Mesh.cpp
-  MeshBuilder.cpp
-  SceneAsteroid.cpp
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneAsteroid.cpp(121,28): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneAsteroid.cpp(125,28): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneAsteroid.cpp(148,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneAsteroid.cpp(193,32): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneAsteroid.cpp(200,23): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneAsteroid.cpp(203,32): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneAsteroid.cpp(205,31): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneAsteroid.cpp(217,25): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  SceneBase.cpp
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneBase.cpp(144,85): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-  SceneKinematics.cpp
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneKinematics.cpp(57,22): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneKinematics.cpp(62,22): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneKinematics.cpp(127,58): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneKinematics.cpp(127,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneKinematics.cpp(154,69): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneKinematics.cpp(154,39): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneKinematics.cpp(201,54): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneKinematics.cpp(201,24): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneKinematics.cpp(228,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneKinematics.cpp(232,26): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  SceneVector.cpp
-  shader.cpp
-  Utility.cpp
-  Generating Code...
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+﻿  Assignment1.cpp
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(283,29): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(302,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(306,20): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(307,23): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(314,22): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(361,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(361,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(361,76): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(365,44): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(365,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(365,75): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(369,50): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(369,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(369,81): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(373,50): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(373,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(373,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(397,15): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(476,33): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(484,24): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(487,33): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(488,32): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(526,26): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(532,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(693,29): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(704,29): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(749,29): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(760,29): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(816,24): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(834,22): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(838,14): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(850,23): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(886,51): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(896,23): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(937,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(957,34): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(958,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(958,33): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(963,35): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(964,75): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(964,41): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(986,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(987,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(987,33): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(992,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(993,75): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(993,41): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1008,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1028,50): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1029,26): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1042,34): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1043,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1043,33): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1048,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1049,75): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1049,41): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1071,53): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1071,33): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1076,34): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1077,76): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1077,42): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1142,29): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(1151,29): warning C4305: '-=': truncation from 'double' to 'float'
   Physics.vcxproj -> C:\Users\Song Ze\source\repos\SP3LESGO\Debug\Physics.exe
