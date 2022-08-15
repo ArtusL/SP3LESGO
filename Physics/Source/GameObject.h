@@ -10,7 +10,8 @@ struct GameObject
 		GO_NONE = 0,
 		GO_BALL,
 		GO_CUBE,
-
+		GO_BACKGROUND,
+		 
 		// Enemy types
 		GO_ASTEROID,
 		GO_BIGASTEROID,

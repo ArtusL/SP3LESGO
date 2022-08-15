@@ -96,6 +96,8 @@ void SceneBase::Init()
 	glUniform1f(m_parameters[U_LIGHT0_EXPONENT], lights[0].exponent);
 
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
+	camera2.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
+	cam2 = false;
 
 	for(int i = 0; i < NUM_GEOMETRY; ++i)
 	{
@@ -105,8 +107,12 @@ void SceneBase::Init()
 	meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 1), 10, 10, 1.f);
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 2.f);
 
-	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("background", Color(1, 1, 1),1.f);
+	//meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("background", Color(1, 1, 1),1.f);
+	//meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//background.tga");
+
+	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("border", Color(1, 1, 1), 200.f);
 	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//background.tga");
+	meshList[GEO_BACKGROUND]->material.kAmbient.Set(1, 0, 0);
 
 	meshList[GEO_SHIP] = MeshBuilder::GenerateQuad("ship", Color(1, 1, 1), 1.f);
 	meshList[GEO_SHIP]->textureID = LoadTGA("Image//playership2.tga");

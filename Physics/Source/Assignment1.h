@@ -25,6 +25,7 @@ public:
 	virtual void Exit();
 
 	void RenderGO(GameObject *go);
+	void UpdateCamera(double dt);
 	float Assignment1::CalculateAdditionalForce(GameObject* go1, GameObject* go2);
 	GameObject* FetchGO();
 protected:

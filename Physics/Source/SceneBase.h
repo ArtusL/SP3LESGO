@@ -94,6 +94,8 @@ protected:
 	unsigned m_parameters[U_TOTAL];
 
 	Camera camera;
+	Camera camera2;
+	bool cam2;
 
 	MS modelStack;
 	MS viewStack;

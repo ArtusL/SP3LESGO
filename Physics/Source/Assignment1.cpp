@@ -33,7 +33,7 @@ void Assignment1::Init()
 	SceneBase::Init();
 
 	//Calculating aspect ratio
-	m_worldHeight = 100.f;
+	m_worldHeight = 200.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
 	//Physics code here
@@ -103,6 +103,19 @@ void Assignment1::Init()
 
 	m_ship->momentOfInertia = m_ship->mass * m_ship->scale.x * m_ship->scale.x;
 
+}void Assignment1::UpdateCamera(double dt)
+{
+	//move camera pos
+	camera.position.x = m_ship->pos.x - m_worldWidth * 0.25;
+	camera.position.y = m_ship->pos.y - m_worldHeight * 0.25;
+	camera.target.x = m_ship->pos.x - m_worldWidth * 0.25;
+	camera.target.y = m_ship->pos.y - m_worldHeight * 0.25;
+
+
+	camera.position.x = Math::Clamp(camera.position.x, 0.f, m_worldWidth / 2);
+	camera.position.y = Math::Clamp(camera.position.y, 0.f, m_worldHeight / 2);
+	camera.target.x = Math::Clamp(camera.target.x, 0.f, m_worldWidth / 2);
+	camera.target.y = Math::Clamp(camera.target.y, 0.f, m_worldHeight / 2);
 }
 
 GameObject* Assignment1::FetchGO()
@@ -131,9 +144,10 @@ void Assignment1::Update(double dt)
 {
 	SceneBase::Update(dt);
 	elapsedTime += dt;
+	UpdateCamera(dt);
 
 	//Calculating aspect ratio
-	m_worldHeight = 100.f;
+	m_worldHeight = 200.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
 
@@ -207,6 +221,12 @@ void Assignment1::Update(double dt)
 				}
 			}
 		}
+
+		if (Application::IsKeyPressed('N'))
+		{
+			cam2 = !cam2;
+		}
+
 		// Upgrade ship keys
 		
 		if (Application::IsKeyPressed('Q'))
@@ -1116,7 +1136,14 @@ void Assignment1::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_MISSLE], false);
 		modelStack.PopMatrix();
 		break;
-
+	case GameObject::GO_BACKGROUND:
+		//render
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BACKGROUND], false);
+		modelStack.PopMatrix();
+		break;
 
 	case GameObject::GO_EXPLOSION:
 		modelStack.PushMatrix();
@@ -1167,21 +1194,36 @@ void Assignment1::RenderGO(GameObject *go)
 void Assignment1::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	if (cam2)
+	{
+		Mtx44 projection2;
+		projection2.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
+		projectionStack.LoadMatrix(projection2);
+		// Camera matrix
+		viewStack.LoadIdentity();
+		viewStack.LookAt(
+			camera2.position.x, camera2.position.y, camera2.position.z,
+			camera2.target.x, camera2.target.y, camera2.target.z,
+			camera2.up.x, camera2.up.y, camera2.up.z
+		);
+	}
+	else
+	{
 
+		// Projection matrix : Orthographic Projection
+		Mtx44 projection;
+		projection.SetToOrtho(0, m_worldWidth * 0.5, 0, m_worldHeight * 0.5, -10, 10);
+		projectionStack.LoadMatrix(projection);
 
+		// Camera matrix
+		viewStack.LoadIdentity();
+		viewStack.LookAt(
+			camera.position.x, camera.position.y, camera.position.z,
+			camera.target.x, camera.target.y, camera.target.z,
+			camera.up.x, camera.up.y, camera.up.z
+		);
+	}
 
-	// Projection matrix : Orthographic Projection
-	Mtx44 projection;
-	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
-	projectionStack.LoadMatrix(projection);
-	
-	// Camera matrix
-	viewStack.LoadIdentity();
-	viewStack.LookAt(
-						camera.position.x, camera.position.y, camera.position.z,
-						camera.target.x, camera.target.y, camera.target.z,
-						camera.up.x, camera.up.y, camera.up.z
-					);
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
 	
@@ -1191,8 +1233,8 @@ void Assignment1::Render()
 
 	//Render background
 	modelStack.PushMatrix();
-	modelStack.Translate(100, 50, -1);
-	modelStack.Scale(200, 150, 1);
+	modelStack.Translate(m_worldWidth * 0.5f, m_worldHeight * 0.5f, -1);
+	modelStack.Scale(1.92, 1.08, 1);
 	RenderMesh(meshList[GEO_BACKGROUND], false);
 	modelStack.PopMatrix();
 
