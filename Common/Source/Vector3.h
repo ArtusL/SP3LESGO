@@ -1,7 +1,7 @@
 /******************************************************************************/
 /*!
 \file	Vector3.h
-\author Wen Sheng Tang
+\author Wen Sheng Tang \ Lim Chian Song
 \par	email: tang_wen_sheng\@nyp.edu.sg
 \brief
 Struct to define a 3D vector
@@ -53,7 +53,11 @@ struct Vector3
 
 	float Length( void ) const; //Get magnitude
 	float LengthSquared (void ) const; //Get square of magnitude
-	
+	float Distance(const Vector3& rhs) const; //Get the distance 
+	float DistanceSquared(const Vector3& rhs) const; //Get the distance squared 
+	static float Distance(const Vector3& lhs, const Vector3& rhs);
+	static float DistanceSquared(const Vector3& lhs, const Vector3& rhs);
+
 	float Dot( const Vector3& rhs ) const; //Dot product
 	Vector3 Cross( const Vector3& rhs ) const; //Cross product
 	
@@ -65,9 +69,10 @@ struct Vector3
 	//Throw a divide by zero exception if normalizing a zero vector
 	Vector3& Normalize( void ) throw( DivideByZero );
 	
+	//Friend Functions
 	friend std::ostream& operator<<( std::ostream& os, Vector3& rhs); //print to ostream
+	friend Vector3 operator*( float scalar, const Vector3& rhs ); 
 
-	friend Vector3 operator*( float scalar, const Vector3& rhs ); //what is this for?
 };
 
 #endif //VECTOR3_H

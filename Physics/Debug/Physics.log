@@ -24,43 +24,17 @@ C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(478,32): w
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(481,64): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(483,84): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(516,26): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(521,26): error C2039: 'DistanceSquared': is not a member of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Common\Source\Vector3.h(25): message : see declaration of 'Vector3'
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(522,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(536,26): error C2039: 'DistanceSquared': is not a member of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Common\Source\Vector3.h(25): message : see declaration of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(553,26): error C2039: 'DistanceSquared': is not a member of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Common\Source\Vector3.h(25): message : see declaration of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(568,26): error C2039: 'DistanceSquared': is not a member of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Common\Source\Vector3.h(25): message : see declaration of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(589,26): error C2039: 'DistanceSquared': is not a member of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Common\Source\Vector3.h(25): message : see declaration of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(614,26): error C2039: 'DistanceSquared': is not a member of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Common\Source\Vector3.h(25): message : see declaration of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(653,28): error C2039: 'DistanceSquared': is not a member of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Common\Source\Vector3.h(25): message : see declaration of 'Vector3'
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(683,29): warning C4305: 'initializing': truncation from 'double' to 'float'
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(694,29): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(709,28): error C2039: 'DistanceSquared': is not a member of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Common\Source\Vector3.h(25): message : see declaration of 'Vector3'
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(739,29): warning C4305: 'initializing': truncation from 'double' to 'float'
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(750,29): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(764,28): error C2039: 'DistanceSquared': is not a member of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Common\Source\Vector3.h(25): message : see declaration of 'Vector3'
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(806,24): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(813,30): error C2039: 'DistanceSquared': is not a member of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Common\Source\Vector3.h(25): message : see declaration of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(816,31): error C2039: 'DistanceSquared': is not a member of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Common\Source\Vector3.h(25): message : see declaration of 'Vector3'
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(824,22): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(828,14): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(840,23): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(866,27): error C2039: 'DistanceSquared': is not a member of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Common\Source\Vector3.h(25): message : see declaration of 'Vector3'
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(876,51): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(886,23): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(920,33): error C2039: 'DistanceSquared': is not a member of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Common\Source\Vector3.h(25): message : see declaration of 'Vector3'
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(927,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(947,34): warning C4305: 'argument': truncation from 'double' to 'float'
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\Assignment1.cpp(948,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
@@ -106,10 +80,6 @@ C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneAsteroid.cpp(200,23):
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneAsteroid.cpp(203,32): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneAsteroid.cpp(205,31): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneAsteroid.cpp(217,25): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneAsteroid.cpp(222,25): error C2039: 'DistanceSquared': is not a member of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Common\Source\Vector3.h(25): message : see declaration of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneAsteroid.cpp(253,27): error C2039: 'DistanceSquared': is not a member of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Common\Source\Vector3.h(25): message : see declaration of 'Vector3'
   SceneBase.cpp
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneBase.cpp(144,85): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
   SceneKinematics.cpp
@@ -123,19 +93,9 @@ C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneKinematics.cpp(201,54
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneKinematics.cpp(201,24): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneKinematics.cpp(228,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneKinematics.cpp(232,26): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneKinematics.cpp(242,26): error C2039: 'DistanceSquared': is not a member of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Common\Source\Vector3.h(25): message : see declaration of 'Vector3'
   SceneVector.cpp
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneVector.cpp(77,18): error C2039: 'Distance': is not a member of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Common\Source\Vector3.h(25): message : see declaration of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneVector.cpp(78,18): error C2039: 'DistanceSquared': is not a member of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Common\Source\Vector3.h(25): message : see declaration of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneVector.cpp(79,24): error C2039: 'Distance': is not a member of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Common\Source\Vector3.h(25): message : see declaration of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneVector.cpp(79,32): error C3861: 'Distance': identifier not found
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneVector.cpp(80,24): error C2039: 'DistanceSquared': is not a member of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Common\Source\Vector3.h(25): message : see declaration of 'Vector3'
-C:\Users\Song Ze\source\repos\SP3LESGO\Physics\Source\SceneVector.cpp(80,39): error C3861: 'DistanceSquared': identifier not found
   shader.cpp
   Utility.cpp
   Generating Code...
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  Physics.vcxproj -> C:\Users\Song Ze\source\repos\SP3LESGO\Debug\Physics.exe

@@ -22,7 +22,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{F0FF80E5-2BC5-4142-BDF4-F24E7610B8B7}</ProjectGuid>
     <RootNamespace>Common</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -34,20 +34,20 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -123,28 +123,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Physics\Source\SceneAsteroid.cpp" />
-    <ClCompile Include="..\Physics\Source\SceneBase.cpp" />
-    <ClCompile Include="..\Physics\Source\SceneGameOver.cpp" />
-    <ClCompile Include="..\Physics\Source\SceneKinematics.cpp" />
-    <ClCompile Include="..\Physics\Source\SceneLevel1.cpp" />
-    <ClCompile Include="..\Physics\Source\SceneLevel2.cpp" />
-    <ClCompile Include="..\Physics\Source\SceneLevel3.cpp" />
-    <ClCompile Include="..\Physics\Source\SceneManager.cpp" />
     <ClCompile Include="Source\MatrixStack.cpp" />
     <ClCompile Include="Source\Mtx44.cpp" />
     <ClCompile Include="Source\timer.cpp" />
     <ClCompile Include="Source\Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Physics\Source\SceneAsteroid.h" />
-    <ClInclude Include="..\Physics\Source\SceneBase.h" />
-    <ClInclude Include="..\Physics\Source\SceneGameOver.h" />
-    <ClInclude Include="..\Physics\Source\SceneKinematics.h" />
-    <ClInclude Include="..\Physics\Source\SceneLevel1.h" />
-    <ClInclude Include="..\Physics\Source\SceneLevel2.h" />
-    <ClInclude Include="..\Physics\Source\SceneLevel3.h" />
-    <ClInclude Include="..\Physics\Source\SceneManager.h" />
     <ClInclude Include="Source\MatrixStack.h" />
     <ClInclude Include="Source\Mtx44.h" />
     <ClInclude Include="Source\MyMath.h" />
