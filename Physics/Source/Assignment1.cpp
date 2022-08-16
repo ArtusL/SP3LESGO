@@ -53,7 +53,7 @@ void Assignment1::Init()
 	m_hp= 100;
 	m_money = 0;
 	m_objectCount = 0;
-	waveCount = 1;
+	waveCount = 5;
 
 	hpFactor = moneyFactor = 1;
 	bonusMoney = 1;
@@ -219,35 +219,27 @@ void Assignment1::Update(double dt)
 	else if (gameStart)
 	{
 
-
 		// ************************* CURSOR CODE ****************************************
 		{
 
 			// Window Height: 750
 			// Window Width: 1000
-			double worldPosX, worldPosY;
 			Application::GetCursorPos(&worldPosX, &worldPosY);
 
-
+			
 			// Converting to world space
 			worldPosY /= 7.5;
 			worldPosX /= 10;
+			worldPosX *= 1.33333;
+
+			worldPosY = 100 - (worldPosY);
 
 
-			m_ship->angle = atan2(worldPosY - m_ship->pos.y, worldPosX - m_ship->pos.x);
-			m_ship->angle = -(m_ship->angle / Math::PI) * 180.0 - 90.0f;
+			m_ship->angle = atan2(m_ship->pos.y - worldPosY, m_ship->pos.x - worldPosX);
+			m_ship->angle = (m_ship->angle / Math::PI) * 180.0;
 
 
-			//m_ship->angle = atan2(m_ship->pos.y - worldPosY, m_ship->pos.x - worldPosX);
-			//m_ship->angle = -(m_ship->angle / Math::PI) * 180.0 - 90.0f;
-
-
-			//go->angle = atan2(go2->pos.y - go->pos.y, go2->pos.x - go->pos.x) + 45;
-			//go->angle = (go->angle / Math::PI) * 180.0 - 90.0f;
-
-
-			std::cout << m_ship->angle << std::endl;
-
+			// FOR PRINTING
 			if (worldPosX > m_ship->pos.x)
 			{
 				std::cout << "RIGHT" << std::endl;
@@ -267,11 +259,6 @@ void Assignment1::Update(double dt)
 				std::cout << "UP" << std::endl;
 			}
 
-
-			//std::cout << worldPosY << std::endl;
-			////std::cout << za << std::endl;
-
-			//std::cout << "Ship PosX: " << m_ship->pos.y << std::endl;
 		}
 		// **************************************************************************
 
@@ -461,7 +448,10 @@ void Assignment1::Update(double dt)
 				if (tripleShot)
 				{
 					go->pos = m_ship->pos;
-					go->vel = m_ship->direction * BULLET_SPEED;
+
+					go->direction = m_ship->pos - Vector3(worldPosX, worldPosY, m_ship->pos.z);
+					go->direction = go->direction.Normalized();
+					go->vel = -(go->direction * BULLET_SPEED * 0.8);
 					go->scale.Set(4.0f, 4.0f, 4.0f);
 					go->angle = m_ship->angle;
 
@@ -470,7 +460,10 @@ void Assignment1::Update(double dt)
 					go->pos = m_ship->pos;
 					go->pos.y += 4;
 					go->pos.z += 1;
-					go->vel = m_ship->direction * BULLET_SPEED;
+
+					go->direction = m_ship->pos - Vector3(worldPosX, worldPosY, m_ship->pos.z);
+					go->direction = go->direction.Normalized();
+					go->vel = -(go->direction * BULLET_SPEED * 0.8);
 					go->scale.Set(4.0f, 4.0f, 4.0f);
 					go->angle = m_ship->angle;
 
@@ -479,7 +472,10 @@ void Assignment1::Update(double dt)
 					go->pos = m_ship->pos;
 					go->pos.x += 4;
 					go->pos.z += 1;
-					go->vel = m_ship->direction * BULLET_SPEED;
+
+					go->direction = m_ship->pos - Vector3(worldPosX, worldPosY, m_ship->pos.z);
+					go->direction = go->direction.Normalized();
+					go->vel = -(go->direction * BULLET_SPEED * 0.8);
 					go->scale.Set(4.0f, 4.0f, 4.0f);
 					go->angle = m_ship->angle;
 
@@ -487,10 +483,13 @@ void Assignment1::Update(double dt)
 				else
 				{
 					go->pos = m_ship->pos;
-					go->vel = m_ship->direction * BULLET_SPEED;
 					go->scale.Set(4.0f, 4.0f, 4.0f);
+
+
+					go->direction = m_ship->pos - Vector3(worldPosX, worldPosY, m_ship->pos.z);
+					go->direction = go->direction.Normalized();
+					go->vel =-(go->direction * BULLET_SPEED * 0.8);
 					go->angle = m_ship->angle;
-					std::cout << go->angle << std::endl;
 				}
 				prevElapsedBullet = elapsedTime;
 			}
@@ -550,8 +549,8 @@ void Assignment1::Update(double dt)
 		//float angularAcceleration = m_torque.z / m_ship->momentOfInertia;
 		//m_ship->angularVelocity += angularAcceleration * dt * m_speed;
 		//m_ship->angularVelocity = Math::Clamp(m_ship->angularVelocity, -MAX_ROTATION_SPEED, MAX_ROTATION_SPEED);
-		m_ship->direction = RotateVector(m_ship->direction, m_ship->angle * dt * shipSpeed);
-		std::cout << m_ship->direction << std::endl;
+		//m_ship->direction = RotateVector(m_ship->direction, m_ship->angle * dt * shipSpeed);
+		//std::cout << m_ship->direction << std::endl;
 		//m_ship->angle = Math::RadianToDegree(atan2(m_ship->direction.y, m_ship->direction.x));
 
 
@@ -1155,6 +1154,7 @@ void Assignment1::RenderGO(GameObject *go)
 		break;
 
 	case GameObject::GO_BULLET:
+		go->angle += 20;
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Rotate(go->angle, 0, 0, 1);
