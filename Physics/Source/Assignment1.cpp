@@ -734,7 +734,7 @@ void Assignment1::Update(double dt)
 						if (go2->type == GameObject::GO_ASTEROID && go2->active)
 						{
 							float dis = go->pos.DistanceSquared(go2->pos);
-							float rad = (go->scale.x + ringAOE + go2->scale.x/4) * (go->scale.x + ringAOE + go2->scale.x/4);
+							float rad = (go->scale.x + ringAOE + go2->scale.x/3) * (go->scale.x + ringAOE + go2->scale.x/3);
 							if (dis < rad)
 							{
 								if (go->type == GameObject::GO_RINGAURA)
@@ -787,7 +787,7 @@ void Assignment1::Update(double dt)
 						else if (go2->type == GameObject::GO_ENEMYSHIP && go2->active)
 						{
 							float dis = go->pos.DistanceSquared(go2->pos);
-							float rad = (go->scale.x + ringAOE + go2->scale.x / 4) * (go->scale.x + ringAOE + go2->scale.x / 4);
+							float rad = (go->scale.x + ringAOE + go2->scale.x / 3) * (go->scale.x + ringAOE + go2->scale.x / 3);
 							if (dis < rad)
 							{
 
@@ -833,7 +833,7 @@ void Assignment1::Update(double dt)
 						else if (go2->type == GameObject::GO_BIGASTEROID && go2->active)
 						{
 							float dis = go->pos.DistanceSquared(go2->pos);
-							float rad = (go->scale.x + ringAOE + go2->scale.x / 4) * (go->scale.x + ringAOE + go2->scale.x / 4);
+							float rad = (go->scale.x + ringAOE + go2->scale.x / 3) * (go->scale.x + ringAOE + go2->scale.x / 3);
 							if (dis < rad)
 							{
 
