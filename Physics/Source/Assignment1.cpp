@@ -62,6 +62,7 @@ void Assignment1::Init()
 	fireRateCost = 10;
 	damageUpCost = 10;
 	missleCost = 20;
+	ringCost = 60;
 	healthRegenCost = 20;
 
 
@@ -69,6 +70,9 @@ void Assignment1::Init()
 	healthRegen = 0;
 	healthRegenAmount = 0;
 	missleRate = 1;
+	ringRate = 1;
+	misslelvl = 0;
+	ringlvl = 0;
 
 	doubleBullet = false;
 	tripleShot = false;
@@ -199,13 +203,35 @@ void Assignment1::Update(double dt)
 					if (missleCost < 30)
 					{
 						missleUse = true;
+						misslelvl++;
 					}
 					else
 					{
 						missleRate += 0.5;
+						misslelvl++;
 					}
 					m_money -= missleCost;
 					missleCost += 15;
+				}
+			}
+
+			if (Application::IsKeyPressed('P'))
+			{
+				keyDelay = 0.3;
+				if (m_money >= ringCost)
+				{
+					if (ringCost < 70)
+					{
+						ringUse = true;
+						ringlvl++;
+					}
+					else
+					{
+						ringRate += 0.75;
+						ringlvl++;
+					}
+					m_money -= ringCost;
+					ringCost += 30;
 				}
 			}
 		}
@@ -917,6 +943,22 @@ void Assignment1::Update(double dt)
 			}
 		}
 
+		if (ringUse == true)
+		{
+			diff = elapsedTime - prevElapsedRing;
+			if (diff > 1 / ringRate)
+			{
+				GameObject* go = FetchGO();
+				go->type = GameObject::GO_RING;
+				go->pos = m_ship->pos;
+				go->vel = m_ship->direction * BULLET_SPEED;
+				go->scale.Set(6.0f, 4.0f, 4.0f);
+				go->angle = m_ship->angle;
+
+				prevElapsedRing = elapsedTime;
+			}
+		}
+
 
 		// ************************************* Homing Missle Code *******************************************
 		float closestDis = 999999;
@@ -1220,6 +1262,15 @@ void Assignment1::RenderGO(GameObject *go)
 		modelStack.PopMatrix();
 		break;
 
+	case GameObject::GO_RING:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Rotate(go->angle, 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_RING], false);
+		modelStack.PopMatrix();
+		break;
+
 
 	case GameObject::GO_EXPLOSION:
 		modelStack.PushMatrix();
@@ -1304,8 +1355,20 @@ void Assignment1::Render()
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(70, 50, 10);
-		modelStack.Scale(100, 100, 1);
+		modelStack.Scale(120, 100, 1);
 		RenderMesh(meshList[GEO_UPGRADESCREEN], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(31, 51, 11);
+		modelStack.Scale(5, 5, 1);
+		RenderMesh(meshList[GEO_BOW], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(31, 43, 11);
+		modelStack.Scale(5, 5, 1);
+		RenderMesh(meshList[GEO_RING], false);
 		modelStack.PopMatrix();
 	}
 
@@ -1352,44 +1415,56 @@ void Assignment1::Render()
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 30, 50);
 
 		ss.str("");
-		ss << "--------------------------";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 16, 47);
+		ss << "-------------------------------";
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 47);
 
 		if (fireRateCost < 60)
 		{
 			ss.str("");
-			ss << "[J] Fire Rate Up: $" << fireRateCost;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 17, 45);
+			ss << "[J]  Fire Rate Up:$" << fireRateCost;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 45);
 
 		}
 		else
 		{
 			ss.str("");
-			ss << "[J] Fire Rate Up: SOLD";
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 17, 45);
+			ss << "[J]  Fire Rate Up:SOLD";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 45);
 
 		}
 		ss.str("");
-		ss << "[K] Damage Up: $" << damageUpCost;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 17, 40);
+		ss << "[K]  Damage Up:$" << damageUpCost;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 40);
 
 		ss.str("");
-		ss << "[L] Health Regen: $" << healthRegenCost;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 17, 35);
+		ss << "[L]  Health Regen:$" << healthRegenCost;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 35);
 
 		if (missleCost < 25)
 		{
 			ss.str("");
-			ss << "[N] Homing Missle: $" << missleCost;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 17, 30);
+			ss << "[N]  Homing Missle:$" << missleCost << " lvl" << misslelvl;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 30);
 		}
 		else
 		{
 			ss.str("");
-			ss << "[N] Missle Fire Rate: $" << missleCost;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 17, 30);
+			ss << "[N]  Missle Fire Rate:$" << missleCost << " lvl" << misslelvl;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 30);
 		}
 
+		if (ringCost < 55)
+		{
+			ss.str("");
+			ss << "[P]  Protection:$" << ringCost << " lvl" << ringlvl;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 25);
+		}
+		else
+		{
+			ss.str("");
+			ss << "[P]  Protection Rate:$" << ringCost << " lvl" << ringlvl;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 25);
+		}
 	}
 
 	if (!gameStart)

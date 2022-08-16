@@ -142,6 +142,9 @@ void SceneBase::Init()
 	meshList[GEO_BOW]= MeshBuilder::GenerateQuad("missle", Color(1, 1, 1), 1.f);
 	meshList[GEO_BOW]->textureID = LoadTGA("Image//Gauntlet.tga");
 
+	meshList[GEO_RING] = MeshBuilder::GenerateQuad("ring", Color(1, 1, 1), 1.f);
+	meshList[GEO_RING]->textureID = LoadTGA("Image//Perk_Ring.tga");
+
 	meshList[GEO_EXPLOSION] = MeshBuilder::GenerateSphere("explosion", Color(1, 0, 0), 10.f, 20);
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);

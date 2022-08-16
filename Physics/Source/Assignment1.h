@@ -53,6 +53,8 @@ protected:
 	int damageUpCost;
 	int missleCost;
 	int ringCost;
+	int misslelvl;
+	int ringlvl;
 	int healthRegenCost;
 	int basicBulletDamage;
 	int healthRegenAmount;
@@ -69,13 +71,15 @@ protected:
 	double prevElapsedMissle;
 	double prevElapsedRing;
 	double prevHealthRegen;
-	double missleRate;
+	double missleRate; 
+	double ringRate;
 	double keyDelay;
 	double elapsedTime;
 	double waveTimer;
 	double tripleShotTimer;
 
 	bool missleUse;
+	bool ringUse;
 	bool healthRegen;
 	bool doubleBullet;
 	bool tripleShot;
