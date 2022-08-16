@@ -402,7 +402,7 @@ void Assignment1::Update(double dt)
 						go->type = GameObject::GO_ENEMYSHIP;
 						go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
 						go->hp = round(7 * hpFactor);
-						go->scale.Set(10, 10, 10);
+						go->scale.Set(14, 14, 14);
 						go->prevEnemyBullet = 0.0;
 						maxVel = 10;
 					}
@@ -421,7 +421,7 @@ void Assignment1::Update(double dt)
 						go->type = GameObject::GO_ASTEROID;
 						go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
 						go->hp = round(1 * hpFactor);
-						go->scale.Set(4, 4, 4);
+						go->scale.Set(10, 10, 10);
 						maxVel = 20;
 					}
 					go->angle = 0;
@@ -462,7 +462,7 @@ void Assignment1::Update(double dt)
 		}
 
 		//Exercise 14: use a key to spawn a bullet
-		if (Application::IsKeyPressed(VK_SPACE))
+		if (Application::IsMousePressed(0))
 		{
 			//Exercise 15: limit the spawn rate of bullets
 			float diff = elapsedTime - prevElapsedBullet;
@@ -1199,7 +1199,7 @@ void Assignment1::RenderGO(GameObject *go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 10);
 		modelStack.Rotate(go->angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_SHIP], false);
+		RenderMesh(meshList[GEO_HERO], false);
 
 		modelStack.Rotate(-go->angle, 0, 0, 1);
 
@@ -1211,7 +1211,7 @@ void Assignment1::RenderGO(GameObject *go)
 
 			modelStack.PushMatrix();
 			modelStack.Translate(0, 1, 0.1);
-			modelStack.Scale(go->scale.x * 0.2, go->scale.y * 0.03, go->scale.z);
+			modelStack.Scale(go->scale.x * 0.002, go->scale.y * 0.003, go->scale.z);
 			RenderMesh(meshList[GEO_REDHEALTH], false);
 			modelStack.PopMatrix();
 
@@ -1238,20 +1238,20 @@ void Assignment1::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_ASTEROID], false);
 
 		// Display health bar if asteroid is damaged
-		if (go->hp < go->maxHP)
+	if (go->hp < go->maxHP)
 		{
 			float greenHealthPercent = (go->hp / go->maxHP) * 100;
 			float redHealthPercent = 100 - greenHealthPercent;
 
 			modelStack.PushMatrix();
 			modelStack.Translate(0, 1.3, 0.1);
-			modelStack.Scale(go->scale.x * 0.5, go->scale.y * 0.1, go->scale.z);
+			modelStack.Scale(go->scale.x * 0.08, go->scale.y * 0.015, go->scale.z);
 			RenderMesh(meshList[GEO_REDHEALTH], false);
 			modelStack.PopMatrix();
 
 			modelStack.PushMatrix();
 			modelStack.Translate(0, 1.3, 0.2);
-			modelStack.Scale(go->scale.x * 0.005 * greenHealthPercent, go->scale.y * 0.1, go->scale.z);
+			modelStack.Scale(go->scale.x * 0.0008 * greenHealthPercent, go->scale.y * 0.015, go->scale.z);
 			RenderMesh(meshList[GEO_GREENHEALTH], false);
 			modelStack.PopMatrix();
 		}
@@ -1341,14 +1341,14 @@ void Assignment1::RenderGO(GameObject *go)
 			float redHealthPercent = 100 - greenHealthPercent;
 
 			modelStack.PushMatrix();
-			modelStack.Translate(0, 1, 0);
-			modelStack.Scale(go->scale.x * 0.05, go->scale.y * 0.01, go->scale.z);
+			modelStack.Translate(0, 0.5, 0);
+			modelStack.Scale(go->scale.x * 0.04, go->scale.y * 0.008, go->scale.z);
 			RenderMesh(meshList[GEO_REDHEALTH], false);
 			modelStack.PopMatrix();
 
 			modelStack.PushMatrix();
-			modelStack.Translate(0, 1, 0.1);
-			modelStack.Scale(go->scale.x * 0.0005 * greenHealthPercent, go->scale.y * 0.01, go->scale.z);
+			modelStack.Translate(0, 0.5, 0.1);
+			modelStack.Scale(go->scale.x * 0.0004 * greenHealthPercent, go->scale.y * 0.008, go->scale.z);
 			RenderMesh(meshList[GEO_GREENHEALTH], false);
 			modelStack.PopMatrix();
 		}

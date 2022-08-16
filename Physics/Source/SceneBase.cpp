@@ -122,25 +122,25 @@ void SceneBase::Init()
 
 	// Enemy types
 	meshList[GEO_ASTEROID] = MeshBuilder::GenerateQuad("asteroid", Color(1, 1, 1), 1.f);
-	meshList[GEO_ASTEROID]->textureID = LoadTGA("Image//asteroid.tga");
+	meshList[GEO_ASTEROID]->textureID = LoadTGA("Image//Goblin.tga");
 
 	meshList[GEO_BIGASTEROID] = MeshBuilder::GenerateQuad("big asteroid", Color(1, 1, 1), 1.f);
-	meshList[GEO_BIGASTEROID]->textureID = LoadTGA("Image//bigasteroid.tga");
+	meshList[GEO_BIGASTEROID]->textureID = LoadTGA("Image//Nightmare.tga");
 
 	meshList[GEO_ENEMYSHIP] = MeshBuilder::GenerateQuad("enemy ship", Color(1, 1, 1), 1.f);
-	meshList[GEO_ENEMYSHIP]->textureID = LoadTGA("Image//enemyship.tga");
+	meshList[GEO_ENEMYSHIP]->textureID = LoadTGA("Image//BDemon.tga");
 
 
 
 	// Bullet types
 	meshList[GEO_CLUB] = MeshBuilder::GenerateQuad("basic bullet", Color(1, 1, 1), 1.f);
-	meshList[GEO_CLUB]->textureID = LoadTGA("Image//Perk_Club.tga");
+	meshList[GEO_CLUB]->textureID = LoadTGA("Image//Dagger.tga");
 
 	meshList[GEO_ENEMYBULLET] = MeshBuilder::GenerateQuad("enemy bullet", Color(1, 1, 1), 1.f);
 	meshList[GEO_ENEMYBULLET]->textureID = LoadTGA("Image//enemybullet.tga");
 
 	meshList[GEO_BOW]= MeshBuilder::GenerateQuad("missle", Color(1, 1, 1), 1.f);
-	meshList[GEO_BOW]->textureID = LoadTGA("Image//Perk_Bow.tga");
+	meshList[GEO_BOW]->textureID = LoadTGA("Image//Gauntlet.tga");
 
 	meshList[GEO_RING] = MeshBuilder::GenerateQuad("ring", Color(1, 1, 1), 1.f);
 	meshList[GEO_RING]->textureID = LoadTGA("Image//Perk_Ring.tga");

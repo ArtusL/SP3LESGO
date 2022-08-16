@@ -122,6 +122,10 @@ void main(){
 				color = texture2D( colorTexture, texCoord ) * vec4( textColor, 1 );
 			else
 				color = texture2D( colorTexture, texCoord );
+				if(color.a <= 0.0)
+				{
+				discard;
+				}
 		}
 		else
 			color = vec4( fragmentColor, 1 );
