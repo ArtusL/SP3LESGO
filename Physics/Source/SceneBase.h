@@ -71,8 +71,6 @@ public:
 		GEO_EXPLOSION,
 		GEO_TRIPLESHOT,
 
-		GEO_HERO,
-
 		NUM_GEOMETRY,
 	};
 public:
