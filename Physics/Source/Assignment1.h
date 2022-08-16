@@ -57,6 +57,9 @@ protected:
 	int basicBulletDamage;
 	int healthRegenAmount;
 
+	double worldPosX;
+	double worldPosY;
+
 	int asteroidCount;
 	int maxEnemyCount;
 	int bonusMoney;
@@ -79,6 +82,7 @@ protected:
 	bool isAlive;
 	bool upgradeScreen;
 	bool gameStart;
+
 
 	char movementLastPressed;
 };
