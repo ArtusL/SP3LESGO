@@ -52,8 +52,8 @@ protected:
 	int fireRateCost;
 	int damageUpCost;
 	int missleCost;
+	int ringCost;
 	int healthRegenCost;
-	int multiBulletCost;
 	int basicBulletDamage;
 	int healthRegenAmount;
 
@@ -64,6 +64,7 @@ protected:
 	double prevElapsedAsteroid;
 	double prevElapsedBullet;
 	double prevElapsedMissle;
+	double prevElapsedRing;
 	double prevHealthRegen;
 	double missleRate;
 	double keyDelay;
