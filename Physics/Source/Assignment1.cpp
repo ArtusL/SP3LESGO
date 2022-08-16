@@ -39,7 +39,7 @@ void Assignment1::Init()
 	//Physics code here
 	m_speed = 1.f;
 
-	shipSpeed = 3.f;
+	shipSpeed = 13.f;
 	prevElapsedAsteroid = prevElapsedBullet = elapsedTime = waveTimer = prevElapsedMissle = keyDelay = prevHealthRegen = tripleShotTimer = 0.0;
 	Math::InitRNG();
 
@@ -51,9 +51,9 @@ void Assignment1::Init()
 
 	//Exercise 2b: Initialize m_hp and m_score
 	m_hp= 100;
-	m_money = 0;
+	m_money = 10000;
 	m_objectCount = 0;
-	waveCount = 1;
+	waveCount = 5;
 
 	hpFactor = moneyFactor = 1;
 	bonusMoney = 1;
@@ -62,6 +62,7 @@ void Assignment1::Init()
 	fireRateCost = 10;
 	damageUpCost = 10;
 	missleCost = 20;
+	ringCost = 60;
 	healthRegenCost = 20;
 
 
@@ -69,6 +70,9 @@ void Assignment1::Init()
 	healthRegen = 0;
 	healthRegenAmount = 0;
 	missleRate = 1;
+	ringRate = 1;
+	misslelvl = 0;
+	ringlvl = 0;
 
 	doubleBullet = false;
 	tripleShot = false;
@@ -87,8 +91,8 @@ void Assignment1::Init()
 	m_ship->active = true;
 	m_ship->scale.Set(7, 7, 1);
 	m_ship->pos.Set(m_worldWidth / 2, m_worldHeight / 2);
-	m_ship->vel.Set(1, 1, 0);
-	m_ship->direction.Set(1, 1, 0);
+	m_ship->vel.Set(1, 0, 0);
+	m_ship->direction.Set(1, 0, 0);
 	m_ship->hp = m_hp;
 	m_ship->maxHP = m_hp;
 	m_ship->mass = 0.1f;
@@ -151,6 +155,8 @@ void Assignment1::Update(double dt)
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
 
+
+
 	// Enter to begin game
 	if (!gameStart)
 	{
@@ -211,13 +217,35 @@ void Assignment1::Update(double dt)
 					if (missleCost < 30)
 					{
 						missleUse = true;
+						misslelvl++;
 					}
 					else
 					{
 						missleRate += 0.5;
+						misslelvl++;
 					}
 					m_money -= missleCost;
 					missleCost += 15;
+				}
+			}
+
+			if (Application::IsKeyPressed('P'))
+			{
+				keyDelay = 0.3;
+				if (m_money >= ringCost)
+				{
+					if (ringCost < 70)
+					{
+						ringUse = true;
+						ringlvl++;
+					}
+					else
+					{
+						ringRate += 0.75;
+						ringlvl++;
+					}
+					m_money -= ringCost;
+					ringCost += 30;
 				}
 			}
 		}
@@ -236,6 +264,53 @@ void Assignment1::Update(double dt)
 	}
 	else if (gameStart)
 	{
+
+		// ************************* CURSOR CODE ****************************************
+		{
+
+			// Window Height: 750
+			// Window Width: 1000
+			Application::GetCursorPos(&worldPosX, &worldPosY);
+
+			
+			// Converting to world space
+			worldPosY /= 7.5;
+			worldPosX /= 10;
+			worldPosX *= 1.33333;
+
+			worldPosY = 100 - (worldPosY);
+
+
+			m_ship->angle = atan2(m_ship->pos.y - worldPosY, m_ship->pos.x - worldPosX);
+			m_ship->angle = (m_ship->angle / Math::PI) * 180.0;
+
+
+			// FOR PRINTING
+			if (worldPosX > m_ship->pos.x)
+			{
+				std::cout << "RIGHT" << std::endl;
+			}
+			else
+			{
+				std::cout << "LEFT" << std::endl;
+
+			}
+
+			if (worldPosY > m_ship->pos.y)
+			{
+				std::cout << "DOWN" << std::endl;
+			}
+			else
+			{
+				std::cout << "UP" << std::endl;
+			}
+
+		}
+		// **************************************************************************
+
+		m_force = Vector3(0,0,0);
+		m_ship->vel = Vector3(0, 0, 0);
+
 		if (Application::IsKeyPressed('9'))
 		{
 			m_speed = Math::Max(0.f, m_speed - 0.1f);
@@ -250,32 +325,39 @@ void Assignment1::Update(double dt)
 		//Exercise 6: set m_force values based on WASD
 		if (Application::IsKeyPressed('W'))
 		{
-			m_force += m_ship->direction * 4.f;
+			m_ship->direction = Vector3(0, 1, 0);
+			m_ship->vel = Vector3(0, 20, 0);
+			/*m_force += m_ship->direction * 4.f;*/
 		}
 		if (Application::IsKeyPressed('A'))
 		{
+			m_ship->direction = Vector3(-1, 0, 0);
+			m_ship->vel = Vector3(-20, 0, 0);
 			//m_force += m_ship->direction * ROTATION_SPEED;
-			m_torque += Vector3(-m_ship->scale.x, -m_ship->scale.y, 0).Cross(Vector3(ROTATION_SPEED, 0, 0));
-			if (movementLastPressed == 'D')
-			{
-				m_ship->angularVelocity = 0;
-			}
-			movementLastPressed = 'A';
+			//m_torque += Vector3(-m_ship->scale.x, -m_ship->scale.y, 0).Cross(Vector3(ROTATION_SPEED, 0, 0));
+			//if (movementLastPressed == 'D')
+			//{
+			//	m_ship->angularVelocity = 0;
+			//}
+			//movementLastPressed = 'A';
 		}
 		if (Application::IsKeyPressed('S'))
 		{
-			m_force -= m_ship->direction * 4.f;
+			m_ship->direction = Vector3(0, -1, 0);
+			m_ship->vel = Vector3(0, -20, 0);
 
 		}
 		if (Application::IsKeyPressed('D'))
 		{
+			m_ship->direction = Vector3(1, 0, 0);
+			m_ship->vel = Vector3(20, 0, 0);
 			//m_force += m_ship->direction * ROTATION_SPEED;
-			m_torque += Vector3(-m_ship->scale.x, m_ship->scale.y, 0).Cross(Vector3(ROTATION_SPEED, 0, 0));
-			if (movementLastPressed == 'A')
-			{
-				m_ship->angularVelocity = 0;
-			}
-			movementLastPressed = 'D';
+			//m_torque += Vector3(-m_ship->scale.x, m_ship->scale.y, 0).Cross(Vector3(ROTATION_SPEED, 0, 0));
+			//if (movementLastPressed == 'A')
+			//{
+			//	m_ship->angularVelocity = 0;
+			//}
+			//movementLastPressed = 'D';
 		}
 
 		// Access upgrade screen
@@ -368,19 +450,15 @@ void Assignment1::Update(double dt)
 					{
 					case 0:
 						go->pos.Set(m_worldWidth + 1, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
-						go->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), 0);
 						break;
 					case 1:
 						go->pos.Set(0 - 1, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
-						go->vel.Set(Math::RandFloatMinMax(0, maxVel), Math::RandFloatMinMax(-maxVel, maxVel), 0);
 						break;
 					case 2:
 						go->pos.Set(Math::RandFloatMinMax(-20, 20), m_worldHeight + 1, go->pos.z);
-						go->vel.Set(Math::RandFloatMinMax(-maxVel, maxVel), Math::RandFloatMinMax(-maxVel, 0), 0);
 						break;
 					case 3:
 						go->pos.Set(Math::RandFloatMinMax(-20, 20), 0 - 1, go->pos.z);
-						go->vel.Set(Math::RandFloatMinMax(-maxVel, maxVel), Math::RandFloatMinMax(0, maxVel), 0);
 						break;
 					}
 					prevElapsedAsteroid = elapsedTime;
@@ -412,7 +490,10 @@ void Assignment1::Update(double dt)
 				if (tripleShot)
 				{
 					go->pos = m_ship->pos;
-					go->vel = m_ship->direction * BULLET_SPEED;
+
+					go->direction = m_ship->pos - Vector3(worldPosX, worldPosY, m_ship->pos.z);
+					go->direction = go->direction.Normalized();
+					go->vel = -(go->direction * BULLET_SPEED * 0.8);
 					go->scale.Set(4.0f, 4.0f, 4.0f);
 					go->angle = m_ship->angle;
 
@@ -421,7 +502,10 @@ void Assignment1::Update(double dt)
 					go->pos = m_ship->pos;
 					go->pos.y += 4;
 					go->pos.z += 1;
-					go->vel = m_ship->direction * BULLET_SPEED;
+
+					go->direction = m_ship->pos - Vector3(worldPosX, worldPosY, m_ship->pos.z);
+					go->direction = go->direction.Normalized();
+					go->vel = -(go->direction * BULLET_SPEED * 0.8);
 					go->scale.Set(4.0f, 4.0f, 4.0f);
 					go->angle = m_ship->angle;
 
@@ -430,7 +514,10 @@ void Assignment1::Update(double dt)
 					go->pos = m_ship->pos;
 					go->pos.x += 4;
 					go->pos.z += 1;
-					go->vel = m_ship->direction * BULLET_SPEED;
+
+					go->direction = m_ship->pos - Vector3(worldPosX, worldPosY, m_ship->pos.z);
+					go->direction = go->direction.Normalized();
+					go->vel = -(go->direction * BULLET_SPEED * 0.8);
 					go->scale.Set(4.0f, 4.0f, 4.0f);
 					go->angle = m_ship->angle;
 
@@ -438,8 +525,12 @@ void Assignment1::Update(double dt)
 				else
 				{
 					go->pos = m_ship->pos;
-					go->vel = m_ship->direction * BULLET_SPEED;
 					go->scale.Set(4.0f, 4.0f, 4.0f);
+
+
+					go->direction = m_ship->pos - Vector3(worldPosX, worldPosY, m_ship->pos.z);
+					go->direction = go->direction.Normalized();
+					go->vel =-(go->direction * BULLET_SPEED * 0.8);
 					go->angle = m_ship->angle;
 				}
 				prevElapsedBullet = elapsedTime;
@@ -497,11 +588,12 @@ void Assignment1::Update(double dt)
 		m_ship->vel += acceleration * dt * shipSpeed;
 		m_ship->pos += m_ship->vel * dt * shipSpeed;
 
-		float angularAcceleration = m_torque.z / m_ship->momentOfInertia;
-		m_ship->angularVelocity += angularAcceleration * dt * m_speed;
-		m_ship->angularVelocity = Math::Clamp(m_ship->angularVelocity, -MAX_ROTATION_SPEED, MAX_ROTATION_SPEED);
-		m_ship->direction = RotateVector(m_ship->direction, m_ship->angularVelocity * dt * shipSpeed);
-		m_ship->angle = Math::RadianToDegree(atan2(m_ship->direction.y, m_ship->direction.x));
+		//float angularAcceleration = m_torque.z / m_ship->momentOfInertia;
+		//m_ship->angularVelocity += angularAcceleration * dt * m_speed;
+		//m_ship->angularVelocity = Math::Clamp(m_ship->angularVelocity, -MAX_ROTATION_SPEED, MAX_ROTATION_SPEED);
+		//m_ship->direction = RotateVector(m_ship->direction, m_ship->angle * dt * shipSpeed);
+		//std::cout << m_ship->direction << std::endl;
+		//m_ship->angle = Math::RadianToDegree(atan2(m_ship->direction.y, m_ship->direction.x));
 
 
 		// Bound player within screen
@@ -870,35 +962,69 @@ void Assignment1::Update(double dt)
 				prevElapsedMissle = elapsedTime;
 			}
 		}
-		// Homing missle
 
+		if (ringUse == true)
+		{
+			diff = elapsedTime - prevElapsedRing;
+			if (diff > 1 / ringRate)
+			{
+				GameObject* go = FetchGO();
+				go->type = GameObject::GO_RING;
+				go->pos = m_ship->pos;
+				go->vel = m_ship->direction * BULLET_SPEED;
+				go->scale.Set(6.0f, 4.0f, 4.0f);
+				go->angle = m_ship->angle;
+
+				prevElapsedRing = elapsedTime;
+			}
+		}
+
+
+		// ************************************* Homing Missle Code *******************************************
+		float closestDis = 999999;
 		for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 		{
 			GameObject* go = (GameObject*)*it;
 			if (go->active && go->type == GameObject::GO_MISSLE)
 			{
+				// Check for enemy targets
 				for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
 				{
 					GameObject* go2 = (GameObject*)*it2;
-					if (go2->active && go2->type == GameObject::GO_ASTEROID && it != it2 && go2->type)
+					// Proceed if enemy type
+					if (go2->type == GameObject::GO_ASTEROID ||
+						go2->type == GameObject::GO_BIGASTEROID || 
+						go2->type == GameObject::GO_ENEMYSHIP)
 					{
-
-						float dis = go->pos.DistanceSquared(go2->pos);
-						float rad = (go->scale.x + go2->scale.x * 10) * (go->scale.x + go2->scale.x * 10);
-						if (dis < rad)
+						if (go2->active && it != it2)
 						{
 
-							go->direction = go->pos - go2->pos;
-							go->direction = -go->direction.Normalized();
-							go->vel = go->direction * BULLET_SPEED * 0.5;
+							// This checks current distances between each other,
+							// will update target based on closest distance
+							float currentDis = go->pos.DistanceSquared(go2->pos);
+							if (currentDis < closestDis)
 
-							go->angle = atan2(go2->pos.y - go->pos.y, go2->pos.x - go->pos.x) + 45;
-							go->angle = (go->angle / Math::PI) * 180.0 - 90.0f;
+							{
+								closestDis = currentDis;
+								float rad = (go->scale.x + go2->scale.x * 10) * (go->scale.x + go2->scale.x * 10);
+								if (currentDis < rad)
+								{
+
+									go->direction = go->pos - go2->pos;
+									go->direction = -go->direction.Normalized();
+									go->vel = go->direction * BULLET_SPEED * 0.5;
+
+									go->angle = atan2(go2->pos.y - go->pos.y, go2->pos.x - go->pos.x) + 45;
+									go->angle = (go->angle / Math::PI) * 180.0 - 90.0f;
+								}
+							}
 						}
 					}
+
 				}
 			}
 		}
+		//*****************************************************************************************************************
 
 		// Health regen
 		if (healthRegen == true)
@@ -981,6 +1107,11 @@ void Assignment1::RenderGO(GameObject *go)
 		//Exercise 17b:	re-orientate the ship with velocity
 
 	case GameObject::GO_ASTEROID:
+		// Move towards player
+		go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
+		go->direction = go->direction.Normalized();
+		go->vel = (go->direction * 6);
+
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
@@ -1009,6 +1140,12 @@ void Assignment1::RenderGO(GameObject *go)
 		break;
 
 	case GameObject::GO_ENEMYSHIP:
+		// Move towards player
+		go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
+		go->direction = go->direction.Normalized();
+		go->vel = (go->direction * 6);
+
+
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 
@@ -1065,6 +1202,13 @@ void Assignment1::RenderGO(GameObject *go)
 		break;
 
 	case GameObject::GO_BIGASTEROID:
+
+		// Move towards player
+		go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
+		go->direction = go->direction.Normalized();
+		go->vel = (go->direction * 6);
+
+
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
@@ -1104,11 +1248,12 @@ void Assignment1::RenderGO(GameObject *go)
 		break;
 
 	case GameObject::GO_BULLET:
+		go->angle += 20;
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Rotate(go->angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_BASICBULLET], false);
+		RenderMesh(meshList[GEO_CLUB], false);
 		modelStack.PopMatrix();
 		break;
 
@@ -1133,7 +1278,16 @@ void Assignment1::RenderGO(GameObject *go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Rotate(go->angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_MISSLE], false);
+		RenderMesh(meshList[GEO_BOW], false);
+		modelStack.PopMatrix();
+		break;
+
+	case GameObject::GO_RING:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Rotate(go->angle, 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_RING], false);
 		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_BACKGROUND:
@@ -1243,8 +1397,20 @@ void Assignment1::Render()
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(70, 50, 10);
-		modelStack.Scale(100, 100, 1);
+		modelStack.Scale(120, 100, 1);
 		RenderMesh(meshList[GEO_UPGRADESCREEN], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(31, 51, 11);
+		modelStack.Scale(5, 5, 1);
+		RenderMesh(meshList[GEO_BOW], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(31, 43, 11);
+		modelStack.Scale(5, 5, 1);
+		RenderMesh(meshList[GEO_RING], false);
 		modelStack.PopMatrix();
 	}
 
@@ -1291,44 +1457,56 @@ void Assignment1::Render()
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 30, 50);
 
 		ss.str("");
-		ss << "--------------------------";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 16, 47);
+		ss << "-------------------------------";
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 47);
 
 		if (fireRateCost < 60)
 		{
 			ss.str("");
-			ss << "[J] Fire Rate Up: $" << fireRateCost;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 17, 45);
+			ss << "[J]  Fire Rate Up:$" << fireRateCost;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 45);
 
 		}
 		else
 		{
 			ss.str("");
-			ss << "[J] Fire Rate Up: SOLD";
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 17, 45);
+			ss << "[J]  Fire Rate Up:SOLD";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 45);
 
 		}
 		ss.str("");
-		ss << "[K] Damage Up: $" << damageUpCost;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 17, 40);
+		ss << "[K]  Damage Up:$" << damageUpCost;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 40);
 
 		ss.str("");
-		ss << "[L] Health Regen: $" << healthRegenCost;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 17, 35);
+		ss << "[L]  Health Regen:$" << healthRegenCost;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 35);
 
 		if (missleCost < 25)
 		{
 			ss.str("");
-			ss << "[N] Homing Missle: $" << missleCost;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 17, 30);
+			ss << "[N]  Homing Missle:$" << missleCost << " lvl" << misslelvl;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 30);
 		}
 		else
 		{
 			ss.str("");
-			ss << "[N] Missle Fire Rate: $" << missleCost;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 17, 30);
+			ss << "[N]  Missle Fire Rate:$" << missleCost << " lvl" << misslelvl;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 30);
 		}
 
+		if (ringCost < 55)
+		{
+			ss.str("");
+			ss << "[P]  Protection:$" << ringCost << " lvl" << ringlvl;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 25);
+		}
+		else
+		{
+			ss.str("");
+			ss << "[P]  Protection Rate:$" << ringCost << " lvl" << ringlvl;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 25);
+		}
 	}
 
 	if (!gameStart)

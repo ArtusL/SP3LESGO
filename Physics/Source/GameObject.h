@@ -28,6 +28,7 @@ struct GameObject
 		GO_ENEMYBULLET,
 		GO_MISSLE,
 		GO_EXPLOSION,
+		GO_RING,
 		GO_TRIPLESHOT,
 		GO_TOTAL, //must be last
 	};

@@ -6,6 +6,7 @@
 #include "Application.h"
 #include "Utility.h"
 #include "LoadTGA.h"
+#include "LoadTexture.h"
 #include <sstream>
 
 SceneBase::SceneBase()
@@ -138,14 +139,17 @@ void SceneBase::Init()
 
 
 	// Bullet types
-	meshList[GEO_BASICBULLET] = MeshBuilder::GenerateQuad("basic bullet", Color(1, 1, 1), 1.f);
-	meshList[GEO_BASICBULLET]->textureID = LoadTGA("Image//redbullet.tga");
+	meshList[GEO_CLUB] = MeshBuilder::GenerateQuad("basic bullet", Color(1, 1, 1), 1.f);
+	meshList[GEO_CLUB]->textureID = LoadTGA("Image//Perk_Club.tga");
 
 	meshList[GEO_ENEMYBULLET] = MeshBuilder::GenerateQuad("enemy bullet", Color(1, 1, 1), 1.f);
 	meshList[GEO_ENEMYBULLET]->textureID = LoadTGA("Image//enemybullet.tga");
 
-	meshList[GEO_MISSLE]= MeshBuilder::GenerateQuad("missle", Color(1, 1, 1), 1.f);
-	meshList[GEO_MISSLE]->textureID = LoadTGA("Image//missle.tga");
+	meshList[GEO_BOW]= MeshBuilder::GenerateQuad("missle", Color(1, 1, 1), 1.f);
+	meshList[GEO_BOW]->textureID = LoadTGA("Image//Perk_Bow.tga");
+
+	meshList[GEO_RING] = MeshBuilder::GenerateQuad("ring", Color(1, 1, 1), 1.f);
+	meshList[GEO_RING]->textureID = LoadTGA("Image//Perk_Ring.tga");
 
 	meshList[GEO_EXPLOSION] = MeshBuilder::GenerateSphere("explosion", Color(1, 0, 0), 10.f, 20);
 
@@ -159,6 +163,13 @@ void SceneBase::Init()
 
 	meshList[GEO_TRIPLESHOT] = MeshBuilder::GenerateQuad("triple shot", Color(1, 1, 1), 1.f);
 	meshList[GEO_TRIPLESHOT]->textureID = LoadTGA("Image//tripleshot.tga");
+
+	meshList[GEO_HERO] = MeshBuilder::GenerateSpriteAnimation("Hero", 1, 4);
+	meshList[GEO_HERO]->textureID = LoadTexture("Image//HeroIdle.png", true);
+	meshList[GEO_HERO]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERO]);
+	//Add the animation “ROW1” that start at 0 with 4 frames
+	sa->AddAnimation("IDLE", 0, 4);
 
 	bLightEnabled = false;
 }
