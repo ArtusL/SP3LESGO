@@ -137,8 +137,6 @@ void Assignment1::Update(double dt)
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
 
-
-
 	// Enter to begin game
 	if (!gameStart)
 	{
@@ -218,63 +216,6 @@ void Assignment1::Update(double dt)
 	}
 	else if (gameStart)
 	{
-
-
-		// ************************* CURSOR CODE ****************************************
-		{
-
-			// Window Height: 750
-			// Window Width: 1000
-			double worldPosX, worldPosY;
-			Application::GetCursorPos(&worldPosX, &worldPosY);
-
-
-			// Converting to world space
-			worldPosY /= 7.5;
-			worldPosX /= 10;
-
-
-			m_ship->angle = atan2(worldPosY - m_ship->pos.y, worldPosX - m_ship->pos.x);
-			m_ship->angle = -(m_ship->angle / Math::PI) * 180.0 - 90.0f;
-
-
-			//m_ship->angle = atan2(m_ship->pos.y - worldPosY, m_ship->pos.x - worldPosX);
-			//m_ship->angle = -(m_ship->angle / Math::PI) * 180.0 - 90.0f;
-
-
-			//go->angle = atan2(go2->pos.y - go->pos.y, go2->pos.x - go->pos.x) + 45;
-			//go->angle = (go->angle / Math::PI) * 180.0 - 90.0f;
-
-
-			std::cout << m_ship->angle << std::endl;
-
-			if (worldPosX > m_ship->pos.x)
-			{
-				std::cout << "RIGHT" << std::endl;
-			}
-			else
-			{
-				std::cout << "LEFT" << std::endl;
-
-			}
-
-			if (worldPosY > m_ship->pos.y)
-			{
-				std::cout << "DOWN" << std::endl;
-			}
-			else
-			{
-				std::cout << "UP" << std::endl;
-			}
-
-
-			//std::cout << worldPosY << std::endl;
-			////std::cout << za << std::endl;
-
-			//std::cout << "Ship PosX: " << m_ship->pos.y << std::endl;
-		}
-		// **************************************************************************
-
 		m_force = Vector3(0,0,0);
 		m_ship->vel = Vector3(0, 0, 0);
 
@@ -490,7 +431,6 @@ void Assignment1::Update(double dt)
 					go->vel = m_ship->direction * BULLET_SPEED;
 					go->scale.Set(4.0f, 4.0f, 4.0f);
 					go->angle = m_ship->angle;
-					std::cout << go->angle << std::endl;
 				}
 				prevElapsedBullet = elapsedTime;
 			}
@@ -540,9 +480,9 @@ void Assignment1::Update(double dt)
 			m_ship->vel.Normalize() *= MAX_SPEED;
 		}
 
-		//float angleInRadians = std::atan2(m_ship->vel.y, m_ship->vel.x);
-		//float angleInDegrees = (angleInRadians / Math::PI) * 180.0 - 90.0f;
-		//m_ship->angle = angleInDegrees;
+		float angleInRadians = std::atan2(m_ship->vel.y, m_ship->vel.x);
+		float angleInDegrees = (angleInRadians / Math::PI) * 180.0 - 90.0f;
+		m_ship->angle = angleInDegrees;
 
 		m_ship->vel += acceleration * dt * shipSpeed;
 		m_ship->pos += m_ship->vel * dt * shipSpeed;
@@ -550,8 +490,7 @@ void Assignment1::Update(double dt)
 		//float angularAcceleration = m_torque.z / m_ship->momentOfInertia;
 		//m_ship->angularVelocity += angularAcceleration * dt * m_speed;
 		//m_ship->angularVelocity = Math::Clamp(m_ship->angularVelocity, -MAX_ROTATION_SPEED, MAX_ROTATION_SPEED);
-		m_ship->direction = RotateVector(m_ship->direction, m_ship->angle * dt * shipSpeed);
-		std::cout << m_ship->direction << std::endl;
+		//m_ship->direction = RotateVector(m_ship->direction, m_ship->angularVelocity * dt * shipSpeed);
 		//m_ship->angle = Math::RadianToDegree(atan2(m_ship->direction.y, m_ship->direction.x));
 
 
