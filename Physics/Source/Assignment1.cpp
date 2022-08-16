@@ -50,7 +50,7 @@ void Assignment1::Init()
 	}
 
 	//Exercise 2b: Initialize m_hp and m_score
-	m_hp= 100;
+	m_hp = 100;
 	m_money = 10000;
 	m_objectCount = 0;
 	waveCount = 5;
@@ -62,7 +62,7 @@ void Assignment1::Init()
 	fireRateCost = 10;
 	damageUpCost = 10;
 	missleCost = 20;
-	ringCost = 60;
+	ringCost = 250;
 	healthRegenCost = 20;
 
 
@@ -72,7 +72,7 @@ void Assignment1::Init()
 	missleRate = 1;
 	misslelvl = 0;
 	ringlvl = 0;
-	ringAOE = 10.0f;
+	ringAOE = 6.0f;
 
 	doubleBullet = false;
 	tripleShot = false;
@@ -220,16 +220,16 @@ void Assignment1::Update(double dt)
 				keyDelay = 0.3;
 				if (m_money >= ringCost)
 				{
-					if (ringCost < 70)
+					if (ringCost < 300)
 					{
 						ringUse = true;
 						ringlvl++;
 					}
 					else
 					{
-						if (ringlvl <= 8)
+						if (ringlvl <= 4)
 						{
-							ringAOE += 1.5;
+							ringAOE += 2.0;
 							ringlvl++;
 						}
 					}
@@ -239,7 +239,7 @@ void Assignment1::Update(double dt)
 			}
 		}
 		// Upgrade ship keys
-		
+
 		if (Application::IsKeyPressed('Q'))
 		{
 			upgradeScreen = false;
@@ -255,7 +255,7 @@ void Assignment1::Update(double dt)
 			// Window Width: 1000
 			Application::GetCursorPos(&worldPosX, &worldPosY);
 
-			
+
 			// Converting to world space
 			worldPosY /= 7.5;
 			worldPosX /= 10;
@@ -291,7 +291,7 @@ void Assignment1::Update(double dt)
 		}
 		// **************************************************************************
 
-		m_force = Vector3(0,0,0);
+		m_force = Vector3(0, 0, 0);
 		m_ship->vel = Vector3(0, 0, 0);
 
 		if (Application::IsKeyPressed('9'))
@@ -513,7 +513,7 @@ void Assignment1::Update(double dt)
 
 					go->direction = m_ship->pos - Vector3(worldPosX, worldPosY, m_ship->pos.z);
 					go->direction = go->direction.Normalized();
-					go->vel =-(go->direction * BULLET_SPEED * 0.8);
+					go->vel = -(go->direction * BULLET_SPEED * 0.8);
 					go->angle = m_ship->angle;
 				}
 				prevElapsedBullet = elapsedTime;
@@ -734,12 +734,12 @@ void Assignment1::Update(double dt)
 						if (go2->type == GameObject::GO_ASTEROID && go2->active)
 						{
 							float dis = go->pos.DistanceSquared(go2->pos);
-							float rad = (go->scale.x + ringAOE + go2->scale.x/3) * (go->scale.x + ringAOE + go2->scale.x/3);
+							float rad = (go->scale.x + ringAOE + go2->scale.x / 3) * (go->scale.x + ringAOE + go2->scale.x / 3);
 							if (dis < rad)
 							{
 								if (go->type == GameObject::GO_RINGAURA)
 								{
-									go2->hp -= basicBulletDamage * 0.05;
+									go2->hp -= basicBulletDamage * 0.075;
 								}
 								// Asteroid HP reaches 0
 								if (go2->hp <= 0)
@@ -775,16 +775,25 @@ void Assignment1::Update(double dt)
 								}
 							}
 						}
+						else if (go2->type == GameObject::GO_ENEMYBULLET && go2->active)
+						{
+							float dis = go->pos.DistanceSquared(go2->pos);
+							float rad = (go->scale.x + ringAOE + go2->scale.x / 4) * (go->scale.x + ringAOE + go2->scale.x / 4);
+							if (dis < rad)
+							{
+								go2->active = false;
+							}
+						}
 						else if (go2->type == GameObject::GO_ENEMYSHIP && go2->active)
 						{
 							float dis = go->pos.DistanceSquared(go2->pos);
-							float rad = (go->scale.x + ringAOE + go2->scale.x / 3) * (go->scale.x + ringAOE + go2->scale.x / 3);
+							float rad = (go->scale.x + ringAOE + go2->scale.x /3) * (go->scale.x + ringAOE + go2->scale.x / 3);
 							if (dis < rad)
 							{
 
 								if (go->type == GameObject::GO_RINGAURA)
 								{
-									go2->hp -= basicBulletDamage * 0.05;
+									go2->hp -= basicBulletDamage * 0.075;
 								}
 
 								// Asteroid HP reaches 0
@@ -830,7 +839,7 @@ void Assignment1::Update(double dt)
 
 								if (go->type == GameObject::GO_RINGAURA)
 								{
-									go2->hp -= basicBulletDamage * 0.05;
+									go2->hp -= basicBulletDamage * 0.075;
 								}
 
 								// Asteroid HP reaches 0
@@ -857,14 +866,14 @@ void Assignment1::Update(double dt)
 				//Exercise 16: unspawn bullets when they leave screen
 				else if (go->type == GameObject::GO_BULLET || go->type == GameObject::GO_MISSLE)
 				{
-						if (go->pos.x > m_worldWidth
-							|| go->pos.x <0
-							|| go->pos.y > m_worldHeight
-							|| go->pos.y < 0)
-						{
-							go->active = false;
-							continue;
-						}
+					if (go->pos.x > m_worldWidth
+						|| go->pos.x <0
+						|| go->pos.y > m_worldHeight
+						|| go->pos.y < 0)
+					{
+						go->active = false;
+						continue;
+					}
 
 					//Exercise 18: collision check between GO_BULLET and GO_ASTEROID
 					for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
@@ -1038,7 +1047,7 @@ void Assignment1::Update(double dt)
 							}
 						}
 					}
-				
+
 				}
 				// Magnet effect for powerups
 				if (go->type == GameObject::GO_BLACKHOLE)
@@ -1094,9 +1103,9 @@ void Assignment1::Update(double dt)
 		if (ringUse == true)
 		{
 
-				GameObject* go = FetchGO();
-				go->type = GameObject::GO_RINGAURA;
-				ringUse = false;
+			GameObject* go = FetchGO();
+			go->type = GameObject::GO_RINGAURA;
+			ringUse = false;
 		}
 
 
@@ -1113,7 +1122,7 @@ void Assignment1::Update(double dt)
 					GameObject* go2 = (GameObject*)*it2;
 					// Proceed if enemy type
 					if (go2->type == GameObject::GO_ASTEROID ||
-						go2->type == GameObject::GO_BIGASTEROID || 
+						go2->type == GameObject::GO_BIGASTEROID ||
 						go2->type == GameObject::GO_ENEMYSHIP)
 					{
 						if (go2->active && it != it2)
@@ -1178,7 +1187,7 @@ void Assignment1::Update(double dt)
 		}
 
 	}
-	
+
 }
 
 float Assignment1::CalculateAdditionalForce(GameObject* go1, GameObject* go2)
@@ -1188,7 +1197,7 @@ float Assignment1::CalculateAdditionalForce(GameObject* go1, GameObject* go2)
 
 }
 
-void Assignment1::RenderGO(GameObject *go)
+void Assignment1::RenderGO(GameObject* go)
 {
 	float diff = elapsedTime - go->prevEnemyBullet;
 	switch (go->type)
@@ -1238,7 +1247,7 @@ void Assignment1::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_ASTEROID], false);
 
 		// Display health bar if asteroid is damaged
-	if (go->hp < go->maxHP)
+		if (go->hp < go->maxHP)
 		{
 			float greenHealthPercent = (go->hp / go->maxHP) * 100;
 			float redHealthPercent = 100 - greenHealthPercent;
@@ -1271,7 +1280,7 @@ void Assignment1::RenderGO(GameObject *go)
 
 		// Rotate to player
 		modelStack.PushMatrix();
-		go->angle = atan2(m_ship->pos.y - go->pos.y , m_ship->pos.x - go->pos.x);
+		go->angle = atan2(m_ship->pos.y - go->pos.y, m_ship->pos.x - go->pos.x);
 		go->angle = (go->angle / Math::PI) * 180.0 - 90.0f;
 		modelStack.Rotate(go->angle, 0, 0, 1);
 
@@ -1359,7 +1368,7 @@ void Assignment1::RenderGO(GameObject *go)
 	case GameObject::GO_ENEMYBULLET:
 		modelStack.PushMatrix();
 
-	    modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 2);
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 2);
 		modelStack.Rotate(go->angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_ENEMYBULLET], false);
@@ -1370,7 +1379,7 @@ void Assignment1::RenderGO(GameObject *go)
 	case GameObject::GO_BULLET:
 		go->angle += 20;
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Rotate(go->angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_CLUB], false);
@@ -1415,7 +1424,7 @@ void Assignment1::RenderGO(GameObject *go)
 		go->pos = m_ship->pos;
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x + ringAOE, go->scale.y + ringAOE, go->scale.z);
+		modelStack.Scale(go->scale.x + ringAOE, go->scale.y + ringAOE, go->scale.z + 3);
 		RenderMesh(meshList[GEO_RINGAURA], false);
 		modelStack.PopMatrix();
 		break;
@@ -1450,19 +1459,19 @@ void Assignment1::RenderGO(GameObject *go)
 
 
 
-	//case GameObject::GO_WHITEHOLE:
-	//	modelStack.PushMatrix();
-	//	modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-	//	modelStack.Rotate(go->angle + 90, 0, 0, 1);
-	//	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-	//	RenderMesh(meshList[GEO_WHITEHOLE], false);
-	//	modelStack.PopMatrix();
-	//	break;
+		//case GameObject::GO_WHITEHOLE:
+		//	modelStack.PushMatrix();
+		//	modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		//	modelStack.Rotate(go->angle + 90, 0, 0, 1);
+		//	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		//	RenderMesh(meshList[GEO_WHITEHOLE], false);
+		//	modelStack.PopMatrix();
+		//	break;
 	case GameObject::GO_BLACKHOLE:
 		go->pos = m_ship->pos;
 		break;
 	}
-	
+
 
 }
 
@@ -1476,17 +1485,17 @@ void Assignment1::Render()
 	Mtx44 projection;
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
 	projectionStack.LoadMatrix(projection);
-	
+
 	// Camera matrix
 	viewStack.LoadIdentity();
 	viewStack.LookAt(
-						camera.position.x, camera.position.y, camera.position.z,
-						camera.target.x, camera.target.y, camera.target.z,
-						camera.up.x, camera.up.y, camera.up.z
-					);
+		camera.position.x, camera.position.y, camera.position.z,
+		camera.target.x, camera.target.y, camera.target.z,
+		camera.up.x, camera.up.y, camera.up.z
+	);
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
-	
+
 	RenderMesh(meshList[GEO_AXES], false);
 
 
@@ -1549,7 +1558,7 @@ void Assignment1::Render()
 	//Exercise 5b: Render position, velocity & mass of ship
 
 
-	
+
 	//RenderTextOnScreen(meshList[GEO_TEXT], "Asteroid", Color(0, 1, 0), 20, 0, 0);
 
 	// Upgrade information
@@ -1601,7 +1610,7 @@ void Assignment1::Render()
 			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 30);
 		}
 
-		if (ringCost < 65)
+		if (ringCost < 275)
 		{
 			ss.str("");
 			ss << "[P]  Protection:$" << ringCost << " LVL" << ringlvl;
@@ -1609,10 +1618,10 @@ void Assignment1::Render()
 		}
 		else
 		{
-			if (ringlvl >= 9)
+			if (ringlvl >= 5)
 			{
 				ss.str("");
-				ss << "[P]  Protection Range:SOLD "<< "LVL" << ringlvl;
+				ss << "[P]  Protection Range:SOLD " << "LVL" << ringlvl;
 				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 25);
 			}
 			else
@@ -1635,7 +1644,7 @@ void Assignment1::Render()
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 20);
 	}
 
-	if (isAlive  && !upgradeScreen && gameStart)
+	if (isAlive && !upgradeScreen && gameStart)
 	{
 
 		//ss.str("");
@@ -1695,13 +1704,13 @@ void Assignment1::Exit()
 {
 	SceneBase::Exit();
 	//Cleanup GameObjects
-	while(m_goList.size() > 0)
+	while (m_goList.size() > 0)
 	{
-		GameObject *go = m_goList.back();
+		GameObject* go = m_goList.back();
 		delete go;
 		m_goList.pop_back();
 	}
-	if(m_ship)
+	if (m_ship)
 	{
 		delete m_ship;
 		m_ship = NULL;
