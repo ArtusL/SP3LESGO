@@ -70,9 +70,9 @@ void Assignment1::Init()
 	healthRegen = 0;
 	healthRegenAmount = 0;
 	missleRate = 1;
-	ringRate = 1;
 	misslelvl = 0;
 	ringlvl = 0;
+	ringAOE = 10.0f;
 
 	doubleBullet = false;
 	tripleShot = false;
@@ -227,11 +227,14 @@ void Assignment1::Update(double dt)
 					}
 					else
 					{
-						ringRate += 0.75;
-						ringlvl++;
+						if (ringlvl <= 8)
+						{
+							ringAOE += 1.5;
+							ringlvl++;
+						}
 					}
 					m_money -= ringCost;
-					ringCost += 30;
+					ringCost += 50;
 				}
 			}
 		}
@@ -723,18 +726,145 @@ void Assignment1::Update(double dt)
 					}
 				}
 
+				else if (go->type == GameObject::GO_RINGAURA)
+				{
+					for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
+					{
+						GameObject* go2 = (GameObject*)*it2;
+						if (go2->type == GameObject::GO_ASTEROID && go2->active)
+						{
+							float dis = go->pos.DistanceSquared(go2->pos);
+							float rad = (go->scale.x + ringAOE + go2->scale.x/4) * (go->scale.x + ringAOE + go2->scale.x/4);
+							if (dis < rad)
+							{
+								if (go->type == GameObject::GO_RINGAURA)
+								{
+									go2->hp -= basicBulletDamage * 0.05;
+								}
+								// Asteroid HP reaches 0
+								if (go2->hp <= 0)
+								{
+									go2->active = false;
+									m_objectCount--;
+									// Money gained
+									m_money += 1 + bonusMoney;
+
+									// Drop  Item
+									int random = rand() % 14;
+									if (random == 0)
+									{
+										float maxVel = 0.8;
+
+										GameObject* go3 = FetchGO();
+										go3->type = GameObject::GO_TRIPLESHOT;
+										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
+										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
+										go3->scale.Set(9, 9, 1);
+
+									}
+									else if (random < 3)
+									{
+										float maxVel = 0.8;
+
+										GameObject* go3 = FetchGO();
+										go3->type = GameObject::GO_HEAL;
+										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
+										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
+										go3->scale.Set(5, 5, 1);
+									}
+								}
+							}
+						}
+						else if (go2->type == GameObject::GO_ENEMYSHIP && go2->active)
+						{
+							float dis = go->pos.DistanceSquared(go2->pos);
+							float rad = (go->scale.x + ringAOE + go2->scale.x / 4) * (go->scale.x + ringAOE + go2->scale.x / 4);
+							if (dis < rad)
+							{
+
+								if (go->type == GameObject::GO_RINGAURA)
+								{
+									go2->hp -= basicBulletDamage * 0.05;
+								}
+
+								// Asteroid HP reaches 0
+								if (go2->hp <= 0)
+								{
+									go2->active = false;
+									m_objectCount--;
+									// Money gained
+									m_money += 10 + (bonusMoney * 3);
+
+									// Drop  Item
+									int random = rand() % 14;
+									if (random == 0)
+									{
+										float maxVel = 0.8;
+
+										GameObject* go3 = FetchGO();
+										go3->type = GameObject::GO_TRIPLESHOT;
+										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
+										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
+										go3->scale.Set(9, 9, 1);
+
+									}
+									else if (random < 3)
+									{
+										float maxVel = 0.8;
+
+										GameObject* go3 = FetchGO();
+										go3->type = GameObject::GO_HEAL;
+										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
+										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
+										go3->scale.Set(5, 5, 1);
+									}
+								}
+							}
+						}
+						else if (go2->type == GameObject::GO_BIGASTEROID && go2->active)
+						{
+							float dis = go->pos.DistanceSquared(go2->pos);
+							float rad = (go->scale.x + ringAOE + go2->scale.x / 4) * (go->scale.x + ringAOE + go2->scale.x / 4);
+							if (dis < rad)
+							{
+
+								if (go->type == GameObject::GO_RINGAURA)
+								{
+									go2->hp -= basicBulletDamage * 0.05;
+								}
+
+								// Asteroid HP reaches 0
+								if (go2->hp <= 0)
+								{
+									go2->active = false;
+									m_objectCount--;
+									for (int i = 0; i < 4; ++i)
+									{
+										GameObject* go = FetchGO();
+										go->type = GameObject::GO_ASTEROID;
+										go->hp = round(1 * hpFactor);
+										go->scale.Set(4, 4, 4);
+										go->pos.Set(go2->pos.x, go2->pos.y, go->pos.z);
+										go->vel.Set(Math::RandFloatMinMax(-20, 0), Math::RandFloatMinMax(-20, 20), 0);
+									}
+									// Money gained
+									m_money += 10 + (bonusMoney * 3);
+								}
+							}
+						}
+					}
+				}
 				//Exercise 16: unspawn bullets when they leave screen
 				else if (go->type == GameObject::GO_BULLET || go->type == GameObject::GO_MISSLE)
 				{
-					if (go->pos.x > m_worldWidth
-						|| go->pos.x <0
-						|| go->pos.y > m_worldHeight
-						|| go->pos.y < 0)
-					{
-						go->active = false;
-						continue;
-					}
-
+						if (go->pos.x > m_worldWidth
+							|| go->pos.x <0
+							|| go->pos.y > m_worldHeight
+							|| go->pos.y < 0)
+						{
+							go->active = false;
+							continue;
+						}
 
 					//Exercise 18: collision check between GO_BULLET and GO_ASTEROID
 					for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
@@ -748,7 +878,7 @@ void Assignment1::Update(double dt)
 							{
 								if (go->type == GameObject::GO_MISSLE)
 								{
-									go2->hp -= basicBulletDamage;
+									go2->hp -= basicBulletDamage * 2;
 									GameObject* explosion = FetchGO();
 									explosion->type = GameObject::GO_EXPLOSION;
 									explosion->pos = go2->pos;
@@ -756,9 +886,16 @@ void Assignment1::Update(double dt)
 									explosion->vel = 0;
 									explosion->explosionScale = 0;
 									explosion->scaleDown = false;
+									go->active = false;
 								}
-								go2->hp -= basicBulletDamage;
-								go->active = false;
+
+
+								if (go->type == GameObject::GO_BULLET)
+								{
+									go2->hp -= basicBulletDamage;
+									go->active = false;
+								}
+
 
 								// Asteroid HP reaches 0
 								if (go2->hp <= 0)
@@ -804,7 +941,7 @@ void Assignment1::Update(double dt)
 							{
 								if (go->type == GameObject::GO_MISSLE)
 								{
-									go2->hp -= basicBulletDamage;
+									go2->hp -= basicBulletDamage * 2;
 									GameObject* explosion = FetchGO();
 									explosion->type = GameObject::GO_EXPLOSION;
 									explosion->pos = go2->pos;
@@ -812,9 +949,14 @@ void Assignment1::Update(double dt)
 									explosion->vel = 0;
 									explosion->explosionScale = 0;
 									explosion->scaleDown = false;
+									go->active = false;
 								}
-								go2->hp -= basicBulletDamage;
-								go->active = false;
+
+								if (go->type == GameObject::GO_BULLET)
+								{
+									go2->hp -= basicBulletDamage;
+									go->active = false;
+								}
 
 								// Asteroid HP reaches 0
 								if (go2->hp <= 0)
@@ -859,7 +1001,7 @@ void Assignment1::Update(double dt)
 							{
 								if (go->type == GameObject::GO_MISSLE)
 								{
-									go2->hp -= basicBulletDamage;
+									go2->hp -= basicBulletDamage * 2;
 									GameObject* explosion = FetchGO();
 									explosion->type = GameObject::GO_EXPLOSION;
 									explosion->pos = go2->pos;
@@ -867,9 +1009,14 @@ void Assignment1::Update(double dt)
 									explosion->vel = 0;
 									explosion->explosionScale = 0;
 									explosion->scaleDown = false;
+									go->active = false;
 								}
-								go2->hp -= basicBulletDamage;
-								go->active = false;
+
+								if (go->type == GameObject::GO_BULLET)
+								{
+									go2->hp -= basicBulletDamage;
+									go->active = false;
+								}
 
 								// Asteroid HP reaches 0
 								if (go2->hp <= 0)
@@ -891,6 +1038,7 @@ void Assignment1::Update(double dt)
 							}
 						}
 					}
+				
 				}
 				// Magnet effect for powerups
 				if (go->type == GameObject::GO_BLACKHOLE)
@@ -945,18 +1093,10 @@ void Assignment1::Update(double dt)
 
 		if (ringUse == true)
 		{
-			diff = elapsedTime - prevElapsedRing;
-			if (diff > 1 / ringRate)
-			{
-				GameObject* go = FetchGO();
-				go->type = GameObject::GO_RING;
-				go->pos = m_ship->pos;
-				go->vel = m_ship->direction * BULLET_SPEED;
-				go->scale.Set(6.0f, 4.0f, 4.0f);
-				go->angle = m_ship->angle;
 
-				prevElapsedRing = elapsedTime;
-			}
+				GameObject* go = FetchGO();
+				go->type = GameObject::GO_RINGAURA;
+				ringUse = false;
 		}
 
 
@@ -1271,6 +1411,14 @@ void Assignment1::RenderGO(GameObject *go)
 		modelStack.PopMatrix();
 		break;
 
+	case GameObject::GO_RINGAURA:
+		go->pos = m_ship->pos;
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x + ringAOE, go->scale.y + ringAOE, go->scale.z);
+		RenderMesh(meshList[GEO_RINGAURA], false);
+		modelStack.PopMatrix();
+		break;
 
 	case GameObject::GO_EXPLOSION:
 		modelStack.PushMatrix();
@@ -1443,27 +1591,36 @@ void Assignment1::Render()
 		if (missleCost < 25)
 		{
 			ss.str("");
-			ss << "[N]  Homing Missle:$" << missleCost << " lvl" << misslelvl;
+			ss << "[N]  Homing Missle:$" << missleCost << " LVL" << misslelvl;
 			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 30);
 		}
 		else
 		{
 			ss.str("");
-			ss << "[N]  Missle Fire Rate:$" << missleCost << " lvl" << misslelvl;
+			ss << "[N]  Missle Fire Rate:$" << missleCost << " LVL" << misslelvl;
 			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 30);
 		}
 
-		if (ringCost < 55)
+		if (ringCost < 65)
 		{
 			ss.str("");
-			ss << "[P]  Protection:$" << ringCost << " lvl" << ringlvl;
+			ss << "[P]  Protection:$" << ringCost << " LVL" << ringlvl;
 			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 25);
 		}
 		else
 		{
-			ss.str("");
-			ss << "[P]  Protection Rate:$" << ringCost << " lvl" << ringlvl;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 25);
+			if (ringlvl >= 9)
+			{
+				ss.str("");
+				ss << "[P]  Protection Range:SOLD "<< "LVL" << ringlvl;
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 25);
+			}
+			else
+			{
+				ss.str("");
+				ss << "[P]  Protection Range:$" << ringCost << " LVL" << ringlvl;
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 25);
+			}
 		}
 	}
 

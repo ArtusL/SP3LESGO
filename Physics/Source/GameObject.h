@@ -28,6 +28,7 @@ struct GameObject
 		GO_MISSLE,
 		GO_EXPLOSION,
 		GO_RING,
+		GO_RINGAURA,
 		GO_TRIPLESHOT,
 		GO_TOTAL, //must be last
 	};
@@ -43,6 +44,7 @@ struct GameObject
 	float maxHP;
 	float prevEnemyBullet;
 	float explosionScale;
+	float ringaurascale;
 	bool scaleDown;
 
 	float momentOfInertia;

@@ -58,6 +58,7 @@ protected:
 	int healthRegenCost;
 	int basicBulletDamage;
 	int healthRegenAmount;
+	float ringAOE;
 
 	double worldPosX;
 	double worldPosY;
@@ -72,7 +73,6 @@ protected:
 	double prevElapsedRing;
 	double prevHealthRegen;
 	double missleRate; 
-	double ringRate;
 	double keyDelay;
 	double elapsedTime;
 	double waveTimer;

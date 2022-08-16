@@ -147,6 +147,8 @@ void SceneBase::Init()
 
 	meshList[GEO_EXPLOSION] = MeshBuilder::GenerateSphere("explosion", Color(1, 0, 0), 10.f, 20);
 
+	meshList[GEO_RINGAURA] = MeshBuilder::GenerateSphere("Protection", Color(0, 1, 0), 10.f, 20);
+
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//font.tga");
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
