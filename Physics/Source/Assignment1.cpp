@@ -51,7 +51,7 @@ void Assignment1::Init()
 
 	//Exercise 2b: Initialize m_hp and m_score
 	m_hp= 100;
-	m_money = 0;
+	m_money = 10000;
 	m_objectCount = 0;
 	waveCount = 5;
 
@@ -404,19 +404,15 @@ void Assignment1::Update(double dt)
 					{
 					case 0:
 						go->pos.Set(m_worldWidth + 1, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
-						go->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), 0);
 						break;
 					case 1:
 						go->pos.Set(0 - 1, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
-						go->vel.Set(Math::RandFloatMinMax(0, maxVel), Math::RandFloatMinMax(-maxVel, maxVel), 0);
 						break;
 					case 2:
 						go->pos.Set(Math::RandFloatMinMax(-20, 20), m_worldHeight + 1, go->pos.z);
-						go->vel.Set(Math::RandFloatMinMax(-maxVel, maxVel), Math::RandFloatMinMax(-maxVel, 0), 0);
 						break;
 					case 3:
 						go->pos.Set(Math::RandFloatMinMax(-20, 20), 0 - 1, go->pos.z);
-						go->vel.Set(Math::RandFloatMinMax(-maxVel, maxVel), Math::RandFloatMinMax(0, maxVel), 0);
 						break;
 					}
 					prevElapsedAsteroid = elapsedTime;
@@ -920,35 +916,53 @@ void Assignment1::Update(double dt)
 				prevElapsedMissle = elapsedTime;
 			}
 		}
-		// Homing missle
 
+
+		// ************************************* Homing Missle Code *******************************************
+		float closestDis = 999999;
 		for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 		{
 			GameObject* go = (GameObject*)*it;
 			if (go->active && go->type == GameObject::GO_MISSLE)
 			{
+				// Check for enemy targets
 				for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
 				{
 					GameObject* go2 = (GameObject*)*it2;
-					if (go2->active && go2->type == GameObject::GO_ASTEROID && it != it2 && go2->type)
+					// Proceed if enemy type
+					if (go2->type == GameObject::GO_ASTEROID ||
+						go2->type == GameObject::GO_BIGASTEROID || 
+						go2->type == GameObject::GO_ENEMYSHIP)
 					{
-
-						float dis = go->pos.DistanceSquared(go2->pos);
-						float rad = (go->scale.x + go2->scale.x * 10) * (go->scale.x + go2->scale.x * 10);
-						if (dis < rad)
+						if (go2->active && it != it2)
 						{
 
-							go->direction = go->pos - go2->pos;
-							go->direction = -go->direction.Normalized();
-							go->vel = go->direction * BULLET_SPEED * 0.5;
+							// This checks current distances between each other,
+							// will update target based on closest distance
+							float currentDis = go->pos.DistanceSquared(go2->pos);
+							if (currentDis < closestDis)
 
-							go->angle = atan2(go2->pos.y - go->pos.y, go2->pos.x - go->pos.x) + 45;
-							go->angle = (go->angle / Math::PI) * 180.0 - 90.0f;
+							{
+								closestDis = currentDis;
+								float rad = (go->scale.x + go2->scale.x * 10) * (go->scale.x + go2->scale.x * 10);
+								if (currentDis < rad)
+								{
+
+									go->direction = go->pos - go2->pos;
+									go->direction = -go->direction.Normalized();
+									go->vel = go->direction * BULLET_SPEED * 0.5;
+
+									go->angle = atan2(go2->pos.y - go->pos.y, go2->pos.x - go->pos.x) + 45;
+									go->angle = (go->angle / Math::PI) * 180.0 - 90.0f;
+								}
+							}
 						}
 					}
+
 				}
 			}
 		}
+		//*****************************************************************************************************************
 
 		// Health regen
 		if (healthRegen == true)
@@ -1031,6 +1045,11 @@ void Assignment1::RenderGO(GameObject *go)
 		//Exercise 17b:	re-orientate the ship with velocity
 
 	case GameObject::GO_ASTEROID:
+		// Move towards player
+		go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
+		go->direction = go->direction.Normalized();
+		go->vel = (go->direction * 6);
+
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
@@ -1059,6 +1078,12 @@ void Assignment1::RenderGO(GameObject *go)
 		break;
 
 	case GameObject::GO_ENEMYSHIP:
+		// Move towards player
+		go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
+		go->direction = go->direction.Normalized();
+		go->vel = (go->direction * 6);
+
+
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 
@@ -1115,6 +1140,13 @@ void Assignment1::RenderGO(GameObject *go)
 		break;
 
 	case GameObject::GO_BIGASTEROID:
+
+		// Move towards player
+		go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
+		go->direction = go->direction.Normalized();
+		go->vel = (go->direction * 6);
+
+
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
