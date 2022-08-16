@@ -62,7 +62,7 @@ void Assignment1::Init()
 	fireRateCost = 10;
 	damageUpCost = 10;
 	missleCost = 20;
-	ringCost = 250;
+	ringCost = 60;
 	healthRegenCost = 20;
 
 
@@ -72,7 +72,7 @@ void Assignment1::Init()
 	missleRate = 1;
 	misslelvl = 0;
 	ringlvl = 0;
-	ringAOE = 6.0f;
+	ringAOE = 10.0f;
 
 	doubleBullet = false;
 	tripleShot = false;
@@ -220,16 +220,16 @@ void Assignment1::Update(double dt)
 				keyDelay = 0.3;
 				if (m_money >= ringCost)
 				{
-					if (ringCost < 300)
+					if (ringCost < 70)
 					{
 						ringUse = true;
 						ringlvl++;
 					}
 					else
 					{
-						if (ringlvl <= 4)
+						if (ringlvl <= 8)
 						{
-							ringAOE += 2.0;
+							ringAOE += 1.5;
 							ringlvl++;
 						}
 					}
@@ -739,7 +739,7 @@ void Assignment1::Update(double dt)
 							{
 								if (go->type == GameObject::GO_RINGAURA)
 								{
-									go2->hp -= basicBulletDamage * 0.075;
+									go2->hp -= basicBulletDamage * 0.05;
 								}
 								// Asteroid HP reaches 0
 								if (go2->hp <= 0)
@@ -775,15 +775,6 @@ void Assignment1::Update(double dt)
 								}
 							}
 						}
-						else if (go2->type == GameObject::GO_ENEMYBULLET && go2->active)
-						{
-							float dis = go->pos.DistanceSquared(go2->pos);
-							float rad = (go->scale.x + ringAOE + go2->scale.x / 4) * (go->scale.x + ringAOE + go2->scale.x / 4);
-							if (dis < rad)
-							{
-								go2->active = false;
-							}
-						}
 						else if (go2->type == GameObject::GO_ENEMYSHIP && go2->active)
 						{
 							float dis = go->pos.DistanceSquared(go2->pos);
@@ -793,7 +784,7 @@ void Assignment1::Update(double dt)
 
 								if (go->type == GameObject::GO_RINGAURA)
 								{
-									go2->hp -= basicBulletDamage * 0.075;
+									go2->hp -= basicBulletDamage * 0.05;
 								}
 
 								// Asteroid HP reaches 0
@@ -839,7 +830,7 @@ void Assignment1::Update(double dt)
 
 								if (go->type == GameObject::GO_RINGAURA)
 								{
-									go2->hp -= basicBulletDamage * 0.075;
+									go2->hp -= basicBulletDamage * 0.05;
 								}
 
 								// Asteroid HP reaches 0
@@ -1379,7 +1370,7 @@ void Assignment1::RenderGO(GameObject *go)
 	case GameObject::GO_BULLET:
 		go->angle += 20;
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Rotate(go->angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_CLUB], false);
@@ -1424,7 +1415,7 @@ void Assignment1::RenderGO(GameObject *go)
 		go->pos = m_ship->pos;
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x + ringAOE, go->scale.y + ringAOE, go->scale.z + 3);
+		modelStack.Scale(go->scale.x + ringAOE, go->scale.y + ringAOE, go->scale.z);
 		RenderMesh(meshList[GEO_RINGAURA], false);
 		modelStack.PopMatrix();
 		break;
@@ -1610,7 +1601,7 @@ void Assignment1::Render()
 			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 30);
 		}
 
-		if (ringCost < 275)
+		if (ringCost < 65)
 		{
 			ss.str("");
 			ss << "[P]  Protection:$" << ringCost << " LVL" << ringlvl;
@@ -1618,7 +1609,7 @@ void Assignment1::Render()
 		}
 		else
 		{
-			if (ringlvl >= 5)
+			if (ringlvl >= 9)
 			{
 				ss.str("");
 				ss << "[P]  Protection Range:SOLD "<< "LVL" << ringlvl;
