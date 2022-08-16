@@ -6,6 +6,7 @@
 #include "Application.h"
 #include "Utility.h"
 #include "LoadTGA.h"
+#include "LoadTexture.h"
 #include <sstream>
 
 SceneBase::SceneBase()
@@ -153,6 +154,13 @@ void SceneBase::Init()
 
 	meshList[GEO_TRIPLESHOT] = MeshBuilder::GenerateQuad("triple shot", Color(1, 1, 1), 1.f);
 	meshList[GEO_TRIPLESHOT]->textureID = LoadTGA("Image//tripleshot.tga");
+
+	meshList[GEO_HERO] = MeshBuilder::GenerateSpriteAnimation("Hero", 1, 4);
+	meshList[GEO_HERO]->textureID = LoadTexture("Image//HeroIdle.png", true);
+	meshList[GEO_HERO]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERO]);
+	//Add the animation “ROW1” that start at 0 with 4 frames
+	sa->AddAnimation("IDLE", 0, 4);
 
 	bLightEnabled = false;
 }
