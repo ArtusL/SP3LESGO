@@ -46,7 +46,7 @@ void Assignment1::Init()
 	//Exercise 2a: Construct 100 GameObject with type GO_ASTEROID and add into m_goList
 	for (int i = 0; i != 100; i++)
 	{
-		m_goList.push_back(new GameObject(GameObject::GO_ASTEROID));
+		m_goList.push_back(new GameObject(GameObject::GO_GHOST));
 	}
 
 	//Exercise 2b: Initialize m_hp and m_score
@@ -91,7 +91,7 @@ void Assignment1::Init()
 
 
 	//Exercise 2c: Construct m_ship, set active, type, scale and pos
-	m_ship = new GameObject(GameObject::GO_SHIP);
+	m_ship = new GameObject(GameObject::GO_HERO);
 	m_ship->active = true;
 	m_ship->scale.Set(7, 7, 1);
 	m_ship->pos.Set(m_worldWidth / 2, m_worldHeight / 2);
@@ -129,7 +129,7 @@ GameObject* Assignment1::FetchGO()
 	//Get Size before adding 10
 	int prevSize = m_goList.size();
 	for (int i = 0; i < 10; ++i) {
-		m_goList.push_back(new GameObject(GameObject::GO_ASTEROID));
+		m_goList.push_back(new GameObject(GameObject::GO_GHOST));
 	}
 	m_goList.at(prevSize)->active = true;
 	return m_goList.at(prevSize);
@@ -144,7 +144,21 @@ void Assignment1::Update(double dt)
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
+	HeroSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERO]);
+	HeroSprite->PlayAnimation("IDLE", -1, 0.5f);
+	HeroSprite->Update(dt);
 
+	//GhostSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_GHOST]);
+	//GhostSprite->PlayAnimation("IDLE", -1, 0.5f);
+	//GhostSprite->Update(dt);
+
+	FdemonSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FDEMON]);
+	FdemonSprite->PlayAnimation("IDLE", -1, 0.8f);
+	FdemonSprite->Update(dt);
+
+	BdemonSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_BDEMON]);
+	BdemonSprite->PlayAnimation("IDLE", -1, 1.0f);
+	BdemonSprite->Update(dt);
 
 
 	// Enter to begin game
@@ -459,7 +473,7 @@ void Assignment1::Update(double dt)
 					// Spawn Enemy Ship
 					if (randomEnemy < 10 && waveCount >= 4)
 					{
-						go->type = GameObject::GO_ENEMYSHIP;
+						go->type = GameObject::GO_BDEMON;
 						go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
 						go->hp = round(7 * hpFactor);
 						go->scale.Set(14, 14, 14);
@@ -471,7 +485,7 @@ void Assignment1::Update(double dt)
 					// Spawn Big Asteroid
 					else if (randomEnemy < 15)
 					{
-						go->type = GameObject::GO_BIGASTEROID;
+						go->type = GameObject::GO_NIGHTMARE;
 						go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
 						go->hp = round(10 * hpFactor);
 						go->scale.Set(20, 20, 1);
@@ -482,7 +496,7 @@ void Assignment1::Update(double dt)
 					// Spawn Asteroids
 					else
 					{
-						go->type = GameObject::GO_ASTEROID;
+						go->type = GameObject::GO_GHOST;
 						go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
 						go->hp = round(1 * hpFactor);
 						go->scale.Set(10, 10, 10);
@@ -712,7 +726,7 @@ void Assignment1::Update(double dt)
 			if (go->active)
 			{
 				go->pos += go->vel * dt * m_speed;
-				if (go->type != GameObject::GO_SHIP &&
+				if (go->type != GameObject::GO_HERO &&
 					go->type != GameObject::GO_BULLET &&
 					go->type != GameObject::GO_RINGAURA &&
 					go->type != GameObject::GO_BLACKHOLE &&
@@ -774,7 +788,7 @@ void Assignment1::Update(double dt)
 						if (go2->active)
 						{
 
-							if (go2->type != GameObject::GO_SHIP &&
+							if (go2->type != GameObject::GO_HERO &&
 								go2->type != GameObject::GO_BULLET &&
 								go2->type != GameObject::GO_RINGAURA &&
 								go2->type != GameObject::GO_BLACKHOLE &&
@@ -898,9 +912,9 @@ void Assignment1::Update(double dt)
 				{
 					GameObject* go2 = (GameObject*)*it2;
 					// Proceed if enemy type
-					if (go2->type == GameObject::GO_ASTEROID ||
-						go2->type == GameObject::GO_BIGASTEROID ||
-						go2->type == GameObject::GO_ENEMYSHIP)
+					if (go2->type == GameObject::GO_GHOST ||
+						go2->type == GameObject::GO_NIGHTMARE ||
+						go2->type == GameObject::GO_BDEMON)
 					{
 						if (go2->active && it != it2)
 						{
@@ -1098,12 +1112,12 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				m_money += 1 + bonusMoney;
 
 				m_objectCount--;
-				if (target->type == GameObject::GO_BIGASTEROID)
+				if (target->type == GameObject::GO_NIGHTMARE)
 				{
 					for (int i = 0; i < 4; ++i)
 					{
 						GameObject* go = FetchGO();
-						go->type = GameObject::GO_ASTEROID;
+						go->type = GameObject::GO_GHOST;
 						go->hp = round(1 * hpFactor);
 						go->scale.Set(4, 4, 4);
 						go->pos.Set(target->pos.x, target->pos.y, go->pos.z);
@@ -1163,12 +1177,12 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				m_money += 1 + bonusMoney;
 
 				m_objectCount--;
-				if (target->type == GameObject::GO_BIGASTEROID)
+				if (target->type == GameObject::GO_NIGHTMARE)
 				{
 					for (int i = 0; i < 4; ++i)
 					{
 						GameObject* go = FetchGO();
-						go->type = GameObject::GO_ASTEROID;
+						go->type = GameObject::GO_GHOST;
 						go->hp = round(1 * hpFactor);
 						go->scale.Set(4, 4, 4);
 						go->pos.Set(target->pos.x, target->pos.y, go->pos.z);
@@ -1223,7 +1237,7 @@ void Assignment1::RenderGO(GameObject* go)
 	float diff = elapsedTime - go->prevEnemyBullet;
 	switch (go->type)
 	{
-	case GameObject::GO_SHIP:
+	case GameObject::GO_HERO:
 		//Exercise 4a: render a sphere with radius 1
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 10);
@@ -1256,7 +1270,7 @@ void Assignment1::RenderGO(GameObject* go)
 		//Exercise 17a: render a ship texture or 3D ship model
 		//Exercise 17b:	re-orientate the ship with velocity
 
-	case GameObject::GO_ASTEROID:
+	case GameObject::GO_GHOST:
 		// Move towards player
 		go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
 		go->direction = go->direction.Normalized();
@@ -1265,7 +1279,7 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_ASTEROID], false);
+		RenderMesh(meshList[GEO_GHOST], false);
 
 		// Display health bar if asteroid is damaged
 		if (go->hp < go->maxHP)
@@ -1289,7 +1303,7 @@ void Assignment1::RenderGO(GameObject* go)
 		//Exercise 4b: render a cube with length 2
 		break;
 
-	case GameObject::GO_ENEMYSHIP:
+	case GameObject::GO_BDEMON:
 		// Move towards player
 		go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
 		go->direction = go->direction.Normalized();
@@ -1306,7 +1320,7 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.Rotate(go->angle, 0, 0, 1);
 
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_ENEMYSHIP], false);
+		RenderMesh(meshList[GEO_BDEMON], false);
 		modelStack.PopMatrix();
 
 
@@ -1393,7 +1407,7 @@ void Assignment1::RenderGO(GameObject* go)
 		}
 		modelStack.PopMatrix();
 		break;
-	case GameObject::GO_BIGASTEROID:
+	case GameObject::GO_NIGHTMARE:
 
 		// Move towards player
 		go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
@@ -1404,7 +1418,7 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_BIGASTEROID], false);
+		RenderMesh(meshList[GEO_NIGHTMARE], false);
 
 		// Display health bar if asteroid is damaged
 		if (go->hp < go->maxHP)
