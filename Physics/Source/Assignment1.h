@@ -55,10 +55,13 @@ protected:
 	int ringCost;
 	int misslelvl;
 	int ringlvl;
+	int bombCost;
+	int bomblvl;
 	int healthRegenCost;
 	int basicBulletDamage;
 	int healthRegenAmount;
 	float ringAOE;
+	float gravity;
 
 	double worldPosX;
 	double worldPosY;
@@ -70,9 +73,10 @@ protected:
 	double prevElapsedAsteroid;
 	double prevElapsedBullet;
 	double prevElapsedMissle;
-	double prevElapsedRing;
+	double prevElapsedBomb;
 	double prevHealthRegen;
 	double missleRate; 
+	double bombRate;
 	double keyDelay;
 	double elapsedTime;
 	double waveTimer;
@@ -80,6 +84,7 @@ protected:
 
 	bool missleUse;
 	bool ringUse;
+	bool bombUse;
 	bool healthRegen;
 	bool doubleBullet;
 	bool tripleShot;
