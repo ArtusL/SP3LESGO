@@ -1437,7 +1437,7 @@ void Assignment1::RenderGO(GameObject* go)
 	case GameObject::GO_RINGAURA:
 		go->pos = m_ship->pos;
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z -1);
 		modelStack.Scale(go->scale.x + ringAOE, go->scale.y + ringAOE, go->scale.z + 3);
 		RenderMesh(meshList[GEO_RINGAURA], false);
 		modelStack.PopMatrix();
