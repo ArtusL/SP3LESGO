@@ -26,6 +26,7 @@ public:
 
 	void RenderGO(GameObject *go);
 	float Assignment1::CalculateAdditionalForce(GameObject* go1, GameObject* go2);
+	void Collision(GameObject* go1);
 	GameObject* FetchGO();
 protected:
 
@@ -45,6 +46,7 @@ protected:
 
 	float m_hp;
 
+	// Player variable
 	float hpFactor;
 	int m_money;
 	float moneyFactor;
@@ -70,6 +72,7 @@ protected:
 	int maxEnemyCount;
 	int bonusMoney;
 
+	// Timers
 	double prevElapsedAsteroid;
 	double prevElapsedBullet;
 	double prevElapsedMissle;

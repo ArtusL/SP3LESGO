@@ -15,13 +15,14 @@ struct GameObject
 		GO_ASTEROID,
 		GO_BIGASTEROID,
 		GO_ENEMYSHIP,
-		//GO_ROTATINGASTEROID,
+		GO_FLAMEDEMON,
 		
 		GO_BLACKHOLE,
 		GO_WHITEHOLE,
 
 		GO_SHIP,
 		GO_HEAL,
+
 		GO_BULLET,
 		GO_SPLITBULLET,
 		GO_ENEMYBULLET,
@@ -43,9 +44,12 @@ struct GameObject
 	float angle;
 	float hp;
 	float maxHP;
+	float enemyDamage;
+	float speedFactor;
 	float prevEnemyBullet;
 	float explosionScale;
 	float ringaurascale;
+	float hitboxSizeDivider;
 	bool scaleDown;
 
 	float momentOfInertia;
