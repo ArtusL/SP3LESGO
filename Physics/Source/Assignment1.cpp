@@ -988,6 +988,12 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				explosion->explosionScale = 0;
 				explosion->scaleDown = false;
 				bullet->active = false;
+
+				displayDamage.push_back(basicBulletDamage * 2);
+				damageTextX.push_back(target->pos.x / 2);
+				damageTextY.push_back(target->pos.y / 2);
+				translateTextY.push_back(0);
+				damageTimer.push_back(elapsedTime);
 			}
 
 			if (bullet->type == GameObject::GO_BOMB)
@@ -1001,6 +1007,12 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				explosion->explosionScale = 0;
 				explosion->scaleDown = false;
 				bullet->active = false;
+
+				displayDamage.push_back(basicBulletDamage * 2);
+				damageTextX.push_back(target->pos.x / 2);
+				damageTextY.push_back(target->pos.y / 2);
+				translateTextY.push_back(0);
+				damageTimer.push_back(elapsedTime);
 			}
 
 
@@ -1008,6 +1020,12 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 			{
 				target->hp -= basicBulletDamage;
 				bullet->active = false;
+
+				displayDamage.push_back(basicBulletDamage);
+				damageTextX.push_back(target->pos.x / 2);
+				damageTextY.push_back(target->pos.y / 2);
+				translateTextY.push_back(0);
+				damageTimer.push_back(elapsedTime);
 			}
 
 			// Asteroid HP reaches 0
@@ -1691,6 +1709,29 @@ void Assignment1::Render()
 	if (isAlive && !upgradeScreen && gameStart)
 	{
 
+		for (int it = 0; it != damageTimer.size(); ++it)
+		{
+			ss.str("");
+			ss << displayDamage.at(it);
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 3, damageTextX.at(it), damageTextY.at(it));
+
+			damageTextY.at(it) += 0.08;
+			double diff = elapsedTime - damageTimer.at(it);
+
+			if (diff > 0.4)
+			{
+				displayDamage.erase(displayDamage.begin() + it);
+				damageTextX.erase(damageTextX.begin() + it);
+				damageTextY.erase(damageTextY.begin() + it);
+				translateTextY.erase(translateTextY.begin() + it);
+				damageTimer.erase(damageTimer.begin() + it);
+
+				if (it >= damageTimer.size())
+				{
+					break;
+				}
+			}
+		}
 		//ss.str("");
 		//ss << "Fire Power: " << basicBulletDamage << " /s";
 		//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 9);
