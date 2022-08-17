@@ -404,6 +404,8 @@ void Assignment1::Update(double dt)
 						go->hp = round(7 * hpFactor);
 						go->scale.Set(14, 14, 14);
 						go->prevEnemyBullet = 0.0;
+						go->hitboxSizeDivider = 3;
+						go->enemyDamage = 5;
 						maxVel = 10;
 					}
 					// Spawn Big Asteroid
@@ -413,6 +415,8 @@ void Assignment1::Update(double dt)
 						go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
 						go->hp = round(10 * hpFactor);
 						go->scale.Set(20, 20, 1);
+						go->hitboxSizeDivider = 6;
+						go->enemyDamage = 20;
 						maxVel = 5;
 					}
 					// Spawn Asteroids
@@ -422,6 +426,8 @@ void Assignment1::Update(double dt)
 						go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
 						go->hp = round(1 * hpFactor);
 						go->scale.Set(10, 10, 10);
+						go->hitboxSizeDivider = 3.5;
+						go->enemyDamage = 2;
 						maxVel = 20;
 					}
 					go->angle = 0;
@@ -462,6 +468,8 @@ void Assignment1::Update(double dt)
 				go->maxHP = go->hp;
 				go->prevEnemyBullet = 0.0;
 				go->speedFactor = 1;
+				go->hitboxSizeDivider = 3;
+				go->enemyDamage = 5;
 			}
 		}
 
@@ -639,278 +647,162 @@ void Assignment1::Update(double dt)
 		for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 		{
 			GameObject* go = (GameObject*)*it;
+
+			// Prevent collision with player weapons
 			if (go->active)
 			{
 				go->pos += go->vel * dt * m_speed;
-				//Exercise 12: handle collision between GO_SHIP and GO_ASTEROID using simple distance-based check
-
-				if (go->type == GameObject::GO_ASTEROID)
+				if (go->type != GameObject::GO_SHIP &&
+					go->type != GameObject::GO_BULLET &&
+					go->type != GameObject::GO_RINGAURA)
 				{
-					float dis = go->pos.DistanceSquared(m_ship->pos);
-					float cRad = (m_ship->scale.x / 3.5 + go->scale.x) * (m_ship->scale.x / 3.5 + go->scale.x);
-					if (dis < cRad)
-					{
-						go->active = false;
-						m_objectCount--;
-						m_ship->hp -= 2;
-					}
-					//Exercise 13: asteroids should wrap around the screen like the ship
-					Wrap(go->pos.x, m_worldWidth);
-					Wrap(go->pos.y, m_worldHeight);
+					Collision(go);
 				}
 
-				else if (go->type == GameObject::GO_ENEMYSHIP)
+				
+
+				if (go->type == GameObject::GO_RINGAURA)
 				{
-					float dis = go->pos.DistanceSquared(m_ship->pos);
-					float cRad = (m_ship->scale.x / 3 + go->scale.x) * (m_ship->scale.x / 3 + go->scale.x);
-					if (dis < cRad)
-					{
-						go->active = false;
-						m_objectCount--;
-						m_ship->hp -= 5;
+					//for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
+					//{
+					//	GameObject* go2 = (GameObject*)*it2;
+					//	if (go2->type == GameObject::GO_ASTEROID && go2->active)
+					//	{
+					//		float dis = go->pos.DistanceSquared(go2->pos);
+					//		float rad = (go->scale.x + ringAOE + go2->scale.x / 3) * (go->scale.x + ringAOE + go2->scale.x / 3);
+					//		if (dis < rad)
+					//		{
+					//			if (go->type == GameObject::GO_RINGAURA)
+					//			{
+					//				go2->hp -= basicBulletDamage * 0.075;
+					//			}
+					//			// Asteroid HP reaches 0
+					//			if (go2->hp <= 0)
+					//			{
+					//				go2->active = false;
+					//				m_objectCount--;
+					//				// Money gained
+					//				m_money += 1 + bonusMoney;
 
-					}
-					//Exercise 13: asteroids should wrap around the screen like the ship
-					Wrap(go->pos.x, m_worldWidth);
-					Wrap(go->pos.y, m_worldHeight);
-				}
+					//				// Drop  Item
+					//				int random = rand() % 14;
+					//				if (random == 0)
+					//				{
+					//					float maxVel = 0.8;
 
-				else if (go->type == GameObject::GO_FLAMEDEMON)
-				{
-					float dis = go->pos.DistanceSquared(m_ship->pos);
-					float cRad = (m_ship->scale.x / 3 + go->scale.x) * (m_ship->scale.x / 3 + go->scale.x);
-					if (dis < cRad)
-					{
-						go->active = false;
-						m_objectCount--;
-						m_ship->hp -= 5;
+					//					GameObject* go3 = FetchGO();
+					//					go3->type = GameObject::GO_TRIPLESHOT;
+					//					go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
+					//					go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
+					//					go3->scale.Set(9, 9, 1);
+					//					go3->enemyDamage = 0;
+					//					go3->hitboxSizeDivider = 3;
 
-					}
-					//Exercise 13: asteroids should wrap around the screen like the ship
-					Wrap(go->pos.x, m_worldWidth);
-					Wrap(go->pos.y, m_worldHeight);
-				}
+					//				}
+					//				else if (random < 3)
+					//				{
+					//					float maxVel = 0.8;
 
+					//					GameObject* go3 = FetchGO();
+					//					go3->type = GameObject::GO_HEAL;
+					//					go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
+					//					go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
+					//					go3->scale.Set(5, 5, 1);
+					//					go3->enemyDamage = -5;
+					//					go3->hitboxSizeDivider = 3;
+					//				}
+					//			}
+					//		}
+					//	}
+					//	else if (go2->type == GameObject::GO_ENEMYBULLET && go2->active)
+					//	{
+					//		float dis = go->pos.DistanceSquared(go2->pos);
+					//		float rad = (go->scale.x + ringAOE + go2->scale.x / 4) * (go->scale.x + ringAOE + go2->scale.x / 4);
+					//		if (dis < rad)
+					//		{
+					//			go2->active = false;
+					//		}
+					//	}
+					//	else if (go2->type == GameObject::GO_ENEMYSHIP && go2->active)
+					//	{
+					//		float dis = go->pos.DistanceSquared(go2->pos);
+					//		float rad = (go->scale.x + ringAOE + go2->scale.x /3) * (go->scale.x + ringAOE + go2->scale.x / 3);
+					//		if (dis < rad)
+					//		{
 
-				else if (go->type == GameObject::GO_BIGASTEROID)
-				{
-					float dis = go->pos.DistanceSquared(m_ship->pos);
-					float cRad = (m_ship->scale.x / 3 + go->scale.x / 2) * (m_ship->scale.x / 3 + go->scale.x / 2);
-					if (dis < cRad)
-					{
-						go->active = false;
-						m_objectCount--;
-						m_ship->hp -= 20;
-					}
-					//Exercise 13: asteroids should wrap around the screen like the ship
-					Wrap(go->pos.x, m_worldWidth);
-					Wrap(go->pos.y, m_worldHeight);
-				}
+					//			if (go->type == GameObject::GO_RINGAURA)
+					//			{
+					//				go2->hp -= basicBulletDamage * 0.075;
+					//			}
 
-				else if (go->type == GameObject::GO_ENEMYBULLET)
-				{
-					float dis = go->pos.DistanceSquared(m_ship->pos);
-					float cRad = (m_ship->scale.x / 3 + go->scale.x) * (m_ship->scale.x / 3 + go->scale.x);
-					if (dis < cRad)
-					{
-						go->active = false;
-						m_ship->hp -= 1;
-					}
+					//			// Asteroid HP reaches 0
+					//			if (go2->hp <= 0)
+					//			{
+					//				go2->active = false;
+					//				m_objectCount--;
+					//				// Money gained
+					//				m_money += 10 + (bonusMoney * 3);
 
-					// Enemy bullet unspawn offscreen
-					if (go->pos.x > m_worldWidth
-						|| go->pos.x <0
-						|| go->pos.y > m_worldHeight
-						|| go->pos.y < 0)
-					{
-						go->active = false;
-						continue;
-					}
-				}
+					//				// Drop  Item
+					//				int random = rand() % 14;
+					//				if (random == 0)
+					//				{
+					//					float maxVel = 0.8;
 
-				else if (go->type == GameObject::GO_HEAL)
-				{
-					float dis = go->pos.DistanceSquared(m_ship->pos);
-					float cRad = (m_ship->scale.x / 3 + go->scale.x) * (m_ship->scale.x / 3 + go->scale.x);
-					if (dis < cRad)
-					{
-						go->active = false;
-						m_ship->hp += 5;
-						if (m_ship->hp > m_ship->maxHP)
-						{
-							m_ship->hp = m_ship->maxHP;
-						}
-					}
+					//					GameObject* go3 = FetchGO();
+					//					go3->type = GameObject::GO_TRIPLESHOT;
+					//					go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
+					//					go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
+					//					go3->scale.Set(9, 9, 1);
+					//					go3->enemyDamage = 0;
+					//					go3->hitboxSizeDivider = 3;
 
-					// unspawn offscreen
-					if (go->pos.x > m_worldWidth
-						|| go->pos.x <0
-						|| go->pos.y > m_worldHeight
-						|| go->pos.y < 0)
-					{
-						go->active = false;
-						continue;
-					}
-				}
+					//				}
+					//				else if (random < 3)
+					//				{
+					//					float maxVel = 0.8;
 
-				else if (go->type == GameObject::GO_TRIPLESHOT)
-				{
-					float dis = go->pos.DistanceSquared(m_ship->pos);
-					float cRad = (m_ship->scale.x / 3 + go->scale.x) * (m_ship->scale.x / 3 + go->scale.x);
-					if (dis < cRad)
-					{
-						go->active = false;
-						tripleShot = true;
-						tripleShotTimer = 6;
-					}
+					//					GameObject* go3 = FetchGO();
+					//					go3->type = GameObject::GO_HEAL;
+					//					go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
+					//					go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
+					//					go3->scale.Set(5, 5, 1);
+					//				}
+					//			}
+					//		}
+					//	}
+					//	else if (go2->type == GameObject::GO_BIGASTEROID && go2->active)
+					//	{
+					//		float dis = go->pos.DistanceSquared(go2->pos);
+					//		float rad = (go->scale.x + ringAOE + go2->scale.x / 3) * (go->scale.x + ringAOE + go2->scale.x / 3);
+					//		if (dis < rad)
+					//		{
 
-					// unspawn offscreen
-					if (go->pos.x > m_worldWidth
-						|| go->pos.x <0
-						|| go->pos.y > m_worldHeight
-						|| go->pos.y < 0)
-					{
-						go->active = false;
-						continue;
-					}
-				}
+					//			if (go->type == GameObject::GO_RINGAURA)
+					//			{
+					//				go2->hp -= basicBulletDamage * 0.075;
+					//			}
 
-				else if (go->type == GameObject::GO_RINGAURA)
-				{
-					for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
-					{
-						GameObject* go2 = (GameObject*)*it2;
-						if (go2->type == GameObject::GO_ASTEROID && go2->active)
-						{
-							float dis = go->pos.DistanceSquared(go2->pos);
-							float rad = (go->scale.x + ringAOE + go2->scale.x / 3) * (go->scale.x + ringAOE + go2->scale.x / 3);
-							if (dis < rad)
-							{
-								if (go->type == GameObject::GO_RINGAURA)
-								{
-									go2->hp -= basicBulletDamage * 0.075;
-								}
-								// Asteroid HP reaches 0
-								if (go2->hp <= 0)
-								{
-									go2->active = false;
-									m_objectCount--;
-									// Money gained
-									m_money += 1 + bonusMoney;
-
-									// Drop  Item
-									int random = rand() % 14;
-									if (random == 0)
-									{
-										float maxVel = 0.8;
-
-										GameObject* go3 = FetchGO();
-										go3->type = GameObject::GO_TRIPLESHOT;
-										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
-										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
-										go3->scale.Set(9, 9, 1);
-
-									}
-									else if (random < 3)
-									{
-										float maxVel = 0.8;
-
-										GameObject* go3 = FetchGO();
-										go3->type = GameObject::GO_HEAL;
-										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
-										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
-										go3->scale.Set(5, 5, 1);
-									}
-								}
-							}
-						}
-						else if (go2->type == GameObject::GO_ENEMYBULLET && go2->active)
-						{
-							float dis = go->pos.DistanceSquared(go2->pos);
-							float rad = (go->scale.x + ringAOE + go2->scale.x / 4) * (go->scale.x + ringAOE + go2->scale.x / 4);
-							if (dis < rad)
-							{
-								go2->active = false;
-							}
-						}
-						else if (go2->type == GameObject::GO_ENEMYSHIP && go2->active)
-						{
-							float dis = go->pos.DistanceSquared(go2->pos);
-							float rad = (go->scale.x + ringAOE + go2->scale.x /3) * (go->scale.x + ringAOE + go2->scale.x / 3);
-							if (dis < rad)
-							{
-
-								if (go->type == GameObject::GO_RINGAURA)
-								{
-									go2->hp -= basicBulletDamage * 0.075;
-								}
-
-								// Asteroid HP reaches 0
-								if (go2->hp <= 0)
-								{
-									go2->active = false;
-									m_objectCount--;
-									// Money gained
-									m_money += 10 + (bonusMoney * 3);
-
-									// Drop  Item
-									int random = rand() % 14;
-									if (random == 0)
-									{
-										float maxVel = 0.8;
-
-										GameObject* go3 = FetchGO();
-										go3->type = GameObject::GO_TRIPLESHOT;
-										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
-										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
-										go3->scale.Set(9, 9, 1);
-
-									}
-									else if (random < 3)
-									{
-										float maxVel = 0.8;
-
-										GameObject* go3 = FetchGO();
-										go3->type = GameObject::GO_HEAL;
-										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
-										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
-										go3->scale.Set(5, 5, 1);
-									}
-								}
-							}
-						}
-						else if (go2->type == GameObject::GO_BIGASTEROID && go2->active)
-						{
-							float dis = go->pos.DistanceSquared(go2->pos);
-							float rad = (go->scale.x + ringAOE + go2->scale.x / 3) * (go->scale.x + ringAOE + go2->scale.x / 3);
-							if (dis < rad)
-							{
-
-								if (go->type == GameObject::GO_RINGAURA)
-								{
-									go2->hp -= basicBulletDamage * 0.075;
-								}
-
-								// Asteroid HP reaches 0
-								if (go2->hp <= 0)
-								{
-									go2->active = false;
-									m_objectCount--;
-									for (int i = 0; i < 4; ++i)
-									{
-										GameObject* go = FetchGO();
-										go->type = GameObject::GO_ASTEROID;
-										go->hp = round(1 * hpFactor);
-										go->scale.Set(4, 4, 4);
-										go->pos.Set(go2->pos.x, go2->pos.y, go->pos.z);
-										go->vel.Set(Math::RandFloatMinMax(-20, 0), Math::RandFloatMinMax(-20, 20), 0);
-									}
-									// Money gained
-									m_money += 10 + (bonusMoney * 3);
-								}
-							}
-						}
-					}
+					//			// Asteroid HP reaches 0
+					//			if (go2->hp <= 0)
+					//			{
+					//				go2->active = false;
+					//				m_objectCount--;
+					//				for (int i = 0; i < 4; ++i)
+					//				{
+					//					GameObject* go = FetchGO();
+					//					go->type = GameObject::GO_ASTEROID;
+					//					go->hp = round(1 * hpFactor);
+					//					go->scale.Set(4, 4, 4);
+					//					go->pos.Set(go2->pos.x, go2->pos.y, go->pos.z);
+					//					go->vel.Set(Math::RandFloatMinMax(-20, 0), Math::RandFloatMinMax(-20, 20), 0);
+					//				}
+					//				// Money gained
+					//				m_money += 10 + (bonusMoney * 3);
+					//			}
+					//		}
+					//	}
+					//}
 				}
 				//Exercise 16: unspawn bullets when they leave screen
 				else if (go->type == GameObject::GO_BULLET || go->type == GameObject::GO_MISSLE)
@@ -974,6 +866,8 @@ void Assignment1::Update(double dt)
 										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
 										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
 										go3->scale.Set(9, 9, 1);
+										go3->enemyDamage = 0;
+										go3->hitboxSizeDivider = 3;
 
 									}
 									else if (random < 3)
@@ -985,6 +879,8 @@ void Assignment1::Update(double dt)
 										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
 										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
 										go3->scale.Set(5, 5, 1);
+										go3->enemyDamage = -5;
+										go3->hitboxSizeDivider = 3;
 									}
 								}
 							}
@@ -1035,6 +931,8 @@ void Assignment1::Update(double dt)
 										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
 										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
 										go3->scale.Set(9, 9, 1);
+										go3->enemyDamage = 0;
+										go3->hitboxSizeDivider = 3;
 
 									}
 									else if (random < 3)
@@ -1046,6 +944,8 @@ void Assignment1::Update(double dt)
 										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
 										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
 										go3->scale.Set(5, 5, 1);
+										go3->enemyDamage = -5;
+										go3->hitboxSizeDivider = 3;
 									}
 								}
 							}
@@ -1142,6 +1042,8 @@ void Assignment1::Update(double dt)
 										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
 										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
 										go3->scale.Set(9, 9, 1);
+										go3->enemyDamage = 0;
+										go3->hitboxSizeDivider = 3;
 
 									}
 									else if (random < 3)
@@ -1153,6 +1055,8 @@ void Assignment1::Update(double dt)
 										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
 										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
 										go3->scale.Set(5, 5, 1);
+										go3->enemyDamage = -5;
+										go3->hitboxSizeDivider = 3;
 									}
 								}
 							}
@@ -1302,6 +1206,48 @@ void Assignment1::Update(double dt)
 
 }
 
+void Assignment1::Collision(GameObject* go)
+{
+	float dis = go->pos.DistanceSquared(m_ship->pos);
+	float cRad = (m_ship->scale.x / go->hitboxSizeDivider + go->scale.x) * (m_ship->scale.x / go->hitboxSizeDivider + go->scale.x);
+	if (dis < cRad)
+	{
+		if (go->type == GameObject::GO_TRIPLESHOT)
+		{
+			if (dis < cRad)
+			{
+				tripleShot = true;
+				tripleShotTimer = 6;
+			}
+		}
+
+		go->active = false;
+		m_objectCount--;
+		m_ship->hp -= go->enemyDamage;
+	}
+	//Exercise 13: asteroids should wrap around the screen like the ship
+	//Wrap(go->pos.x, m_worldWidth);
+	//Wrap(go->pos.y, m_worldHeight);
+
+	// unspawn offscreen
+	if (go->type == GameObject::GO_ENEMYBULLET ||
+		go->type == GameObject::GO_BULLET ||
+		go->type == GameObject::GO_HEAL ||
+		go->type == GameObject::GO_TRIPLESHOT)
+	{
+
+		if (go->pos.x > m_worldWidth
+			|| go->pos.x <0
+			|| go->pos.y > m_worldHeight
+			|| go->pos.y < 0)
+		{
+			go->active = false;
+		}
+	}
+
+	std::cout << m_ship->hp << std::endl;
+}
+
 float Assignment1::CalculateAdditionalForce(GameObject* go1, GameObject* go2)
 {
 	float radiusSquared = go1->pos.DistanceSquared(go2->pos);
@@ -1410,6 +1356,8 @@ void Assignment1::RenderGO(GameObject* go)
 			go2->scale.Set(4.0f, 4.0f, 4.0f);
 			go2->pos = go->pos;
 			go2->angle = go->angle;
+			go2->enemyDamage = 1;
+			go2->hitboxSizeDivider = 3;
 
 			go2->direction = go2->pos - m_ship->pos;
 			go2->direction = -go2->direction.Normalized();

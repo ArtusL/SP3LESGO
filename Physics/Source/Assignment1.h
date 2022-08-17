@@ -26,6 +26,7 @@ public:
 
 	void RenderGO(GameObject *go);
 	float Assignment1::CalculateAdditionalForce(GameObject* go1, GameObject* go2);
+	void Collision(GameObject* go1);
 	GameObject* FetchGO();
 protected:
 

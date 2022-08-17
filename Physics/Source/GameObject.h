@@ -43,10 +43,12 @@ struct GameObject
 	float angle;
 	float hp;
 	float maxHP;
+	float enemyDamage;
 	float speedFactor;
 	float prevEnemyBullet;
 	float explosionScale;
 	float ringaurascale;
+	float hitboxSizeDivider;
 	bool scaleDown;
 
 	float momentOfInertia;
