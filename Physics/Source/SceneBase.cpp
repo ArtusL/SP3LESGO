@@ -170,8 +170,31 @@ void SceneBase::Init()
 	meshList[GEO_HERO]->textureID = LoadTexture("Image//HeroIdle.png", true);
 	meshList[GEO_HERO]->material.kAmbient.Set(1, 1, 1);
 	SpriteAnimation* sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERO]);
-	//Add the animation “ROW1” that start at 0 with 4 frames
 	sa->AddAnimation("IDLE", 0, 4);
+
+	meshList[GEO_FDEMON] = MeshBuilder::GenerateSpriteAnimation("Fdemon", 1, 6);
+	meshList[GEO_FDEMON]->textureID = LoadTexture("Image//FlameDemon.png", true);
+	meshList[GEO_FDEMON]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* Fdemonsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FDEMON]);
+	Fdemonsprite->AddAnimation("IDLE", 0, 6);
+
+	meshList[GEO_BDEMON] = MeshBuilder::GenerateSpriteAnimation("Bdemon", 1, 6);
+	meshList[GEO_BDEMON]->textureID = LoadTexture("Image//Bdemon.png", true);
+	meshList[GEO_BDEMON]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* Bdemonsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_BDEMON]);
+	Bdemonsprite->AddAnimation("IDLE", 0, 6);
+
+	meshList[GEO_NIGHTMARE] = MeshBuilder::GenerateSpriteAnimation("Nightmare", 1, 4);
+	meshList[GEO_NIGHTMARE]->textureID = LoadTexture("Image//Nightmare.png", true);
+	meshList[GEO_NIGHTMARE]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* Nightmaresprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_NIGHTMARE]);
+	Bdemonsprite->AddAnimation("IDLE", 0, 4);
+
+	meshList[GEO_GHOST] = MeshBuilder::GenerateSpriteAnimation("Ghost", 1, 7);
+	meshList[GEO_GHOST]->textureID = LoadTexture("Image//ghost-idle.png", true);
+	meshList[GEO_GHOST]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* Ghostsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_GHOST]);
+	Bdemonsprite->AddAnimation("IDLE", 0, 7);
 
 	bLightEnabled = false;
 }

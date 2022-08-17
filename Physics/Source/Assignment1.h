@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include <vector>
 #include "SceneBase.h"
+#include"SpriteAnimation.h"
 
 class Assignment1 : public SceneBase
 {
@@ -42,6 +43,11 @@ protected:
 	float m_worldWidth;
 	float m_worldHeight;
 	GameObject *m_ship;
+	SpriteAnimation* HeroSprite;
+	SpriteAnimation* GhostSprite;
+	SpriteAnimation* FdemonSprite;
+	SpriteAnimation* BdemonSprite;
+	SpriteAnimation* NightmareSprite;
 	Vector3 m_force;
 	float shipSpeed;
 
