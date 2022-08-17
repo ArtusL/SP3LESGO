@@ -33,6 +33,11 @@ protected:
 
 	//Physics
 	std::vector<GameObject *> m_goList;
+	std::vector<int> displayDamage;
+	std::vector<float>damageTextX;
+	std::vector<float> damageTextY;
+	std::vector<float> translateTextY;
+	std::vector<double> damageTimer;
 	float m_speed;
 	float m_worldWidth;
 	float m_worldHeight;
