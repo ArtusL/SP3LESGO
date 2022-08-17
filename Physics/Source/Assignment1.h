@@ -65,6 +65,8 @@ protected:
 	int ringlvl;
 	int bombCost;
 	int bomblvl;
+	int molotovCost;
+	int molotovlvl;
 	int healthRegenCost;
 	int basicBulletDamage;
 	int healthRegenAmount;
@@ -83,8 +85,10 @@ protected:
 	double prevElapsedBullet;
 	double prevElapsedMissle;
 	double prevElapsedBomb;
+	double prevElapsedMolotov;
 	double prevHealthRegen;
-	double missleRate; 
+	double missleRate;
+	double molotovRate;
 	double bombRate;
 	double keyDelay;
 	double elapsedTime;
@@ -94,6 +98,7 @@ protected:
 	bool missleUse;
 	bool ringUse;
 	bool bombUse;
+	bool molotovUse;
 	bool healthRegen;
 	bool doubleBullet;
 	bool tripleShot;

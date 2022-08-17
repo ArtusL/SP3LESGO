@@ -270,6 +270,33 @@ void Assignment1::Update(double dt)
 					}
 				}
 			}
+
+
+			if (Application::IsKeyPressed('B'))
+			{
+				keyDelay = 0.3;
+				if (m_money >= molotovCost)
+				{
+					if (molotovCost < 60)
+					{
+						molotovUse = true;
+						molotovlvl++;
+					}
+					else
+					{
+						if (molotovlvl <= 8)
+						{
+							molotovRate += 0.35;
+							molotovlvl++;
+						}
+					}
+					if (molotovlvl <= 8)
+					{
+						m_money -= molotovCost;
+						molotovCost += 30;
+					}
+				}
+			}
 		}
 		// Upgrade ship keys
 
@@ -691,6 +718,7 @@ void Assignment1::Update(double dt)
 					go->type != GameObject::GO_BLACKHOLE &&
 					go->type != GameObject::GO_MISSLE &&
 					go->type != GameObject::GO_BOMB &&
+					go->type != GameObject::GO_MOLOTOV &&
 					go->type != GameObject::GO_EXPLOSION &&
 					go->type != GameObject::GO_HEAL &&
 					go->type != GameObject::GO_TRIPLESHOT)
@@ -713,6 +741,7 @@ void Assignment1::Update(double dt)
 								go2->type != GameObject::GO_BLACKHOLE &&
 								go2->type != GameObject::GO_MISSLE &&
 								go2->type != GameObject::GO_BOMB &&
+								go2->type != GameObject::GO_MOLOTOV &&
 								go2->type != GameObject::GO_EXPLOSION &&
 								go2->type != GameObject::GO_TRIPLESHOT &&
 								go2->type != GameObject::GO_HEAL)
@@ -727,7 +756,7 @@ void Assignment1::Update(double dt)
 				}
 
 				//Exercise 16: unspawn bullets when they leave screen
-				else if (go->type == GameObject::GO_BULLET || go->type == GameObject::GO_MISSLE || go->type == GameObject::GO_BOMB)
+				else if (go->type == GameObject::GO_BULLET || go->type == GameObject::GO_MISSLE || go->type == GameObject::GO_BOMB || go->type == GameObject::GO_MOLOTOV)
 				{
 					if (go->pos.x > m_worldWidth
 						|| go->pos.x <0
@@ -751,6 +780,7 @@ void Assignment1::Update(double dt)
 								go2->type != GameObject::GO_BLACKHOLE &&
 								go2->type != GameObject::GO_MISSLE &&
 								go2->type != GameObject::GO_BOMB &&
+								go2->type != GameObject::GO_MOLOTOV &&
 								go2->type != GameObject::GO_EXPLOSION &&
 								go2->type != GameObject::GO_ENEMYBULLET &&
 								go2->type != GameObject::GO_TRIPLESHOT &&
@@ -829,6 +859,21 @@ void Assignment1::Update(double dt)
 				go->scale.Set(5.0f, 5.0f, 4.0f);
 				go->angle = m_ship->angle;
 				prevElapsedBomb = elapsedTime;
+			}
+		}
+
+		if (molotovUse == true)
+		{
+			diff = elapsedTime - prevElapsedMolotov;
+			if (diff > 1 / molotovRate)
+			{
+				GameObject* go = FetchGO();
+				go->type = GameObject::GO_MOLOTOV;
+				go->pos = m_ship->pos;
+				go->vel = Vector3(Math::RandFloatMinMax(-1, 1), Math::RandFloatMinMax(-1, 1), 0) * BULLET_SPEED;
+				go->scale.Set(5.0f, 5.0f, 4.0f);
+				go->angle = m_ship->angle;
+				prevElapsedMolotov = elapsedTime;
 			}
 		}
 
@@ -971,7 +1016,7 @@ void Assignment1::Collision(GameObject* go)
 
 void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 {
-	if (bullet->type == GameObject::GO_MISSLE || bullet->type == GameObject::GO_BOMB || bullet->type == GameObject::GO_BULLET)
+	if (bullet->type == GameObject::GO_MISSLE || bullet->type == GameObject::GO_BOMB || bullet->type == GameObject::GO_BULLET || bullet->type == GameObject::GO_MOLOTOV)
 	{
 		float dis = bullet->pos.DistanceSquared(target->pos);
 		float rad = (bullet->scale.x + target->scale.x / 4) * (bullet->scale.x + target->scale.x / 4);
@@ -1009,6 +1054,22 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				bullet->active = false;
 
 				displayDamage.push_back(basicBulletDamage * 2);
+				damageTextX.push_back(target->pos.x / 2);
+				damageTextY.push_back(target->pos.y / 2);
+				translateTextY.push_back(0);
+				damageTimer.push_back(elapsedTime);
+			}
+
+			if (bullet->type == GameObject::GO_MOLOTOV)
+			{
+				GameObject* fire = FetchGO();
+				fire->type = GameObject::GO_EXPLOSION;
+				fire->pos = target->pos;
+				fire->scale.Set(1, 1, 1);
+				fire->vel = 0;
+				bullet->active = false;
+
+				displayDamage.push_back(0);
 				damageTextX.push_back(target->pos.x / 2);
 				damageTextY.push_back(target->pos.y / 2);
 				translateTextY.push_back(0);
@@ -1441,24 +1502,34 @@ void Assignment1::RenderGO(GameObject* go)
 		RenderMesh(meshList[GEO_BOMB], false);
 		modelStack.PopMatrix();
 		break;
-		// Scale the explosion effect
-		if (go->scaleDown == false)
-		{
-			go->explosionScale += 0.2;
-			if (go->explosionScale > 4)
-			{
-				go->scaleDown = true;
-			}
-		}
+		//// Scale the explosion effect
+		//if (go->scaleDown == false)
+		//{
+		//	go->explosionScale += 0.2;
+		//	if (go->explosionScale > 4)
+		//	{
+		//		go->scaleDown = true;
+		//	}
+		//}
 
-		if (go->scaleDown == true)
-		{
-			go->explosionScale -= 0.2;
-			if (go->explosionScale <= 0)
-			{
-				go->active = false;
-			}
-		}
+		//if (go->scaleDown == true)
+		//{
+		//	go->explosionScale -= 0.2;
+		//	if (go->explosionScale <= 0)
+		//	{
+		//		go->active = false;
+		//	}
+		//}
+		//break;
+
+	case GameObject::GO_MOLOTOV:
+		go->angle += 2.5;
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Rotate(go->angle, 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_MOLOTOV], false);
+		modelStack.PopMatrix();
 		break;
 
 	case GameObject::GO_EXPLOSION:

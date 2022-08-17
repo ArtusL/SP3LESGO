@@ -32,6 +32,7 @@ struct GameObject
 		GO_RINGAURA,
 		GO_BOMB,
 		GO_MOLOTOV,
+		GO_FIRE,
 		GO_TRIPLESHOT,
 		GO_TOTAL, //must be last
 	};
