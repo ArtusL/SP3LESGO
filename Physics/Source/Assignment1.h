@@ -25,8 +25,9 @@ public:
 	virtual void Exit();
 
 	void RenderGO(GameObject *go);
-	void UpdateCamera(double dt);
 	float Assignment1::CalculateAdditionalForce(GameObject* go1, GameObject* go2);
+	void Collision(GameObject* go1);
+	void HitEnemy(GameObject* bullet, GameObject* target);
 	GameObject* FetchGO();
 protected:
 
@@ -46,6 +47,7 @@ protected:
 
 	float m_hp;
 
+	// Player variable
 	float hpFactor;
 	int m_money;
 	float moneyFactor;
@@ -56,9 +58,13 @@ protected:
 	int ringCost;
 	int misslelvl;
 	int ringlvl;
+	int bombCost;
+	int bomblvl;
 	int healthRegenCost;
 	int basicBulletDamage;
 	int healthRegenAmount;
+	float ringAOE;
+	float gravity;
 
 	double worldPosX;
 	double worldPosY;
@@ -67,13 +73,14 @@ protected:
 	int maxEnemyCount;
 	int bonusMoney;
 
+	// Timers
 	double prevElapsedAsteroid;
 	double prevElapsedBullet;
 	double prevElapsedMissle;
-	double prevElapsedRing;
+	double prevElapsedBomb;
 	double prevHealthRegen;
 	double missleRate; 
-	double ringRate;
+	double bombRate;
 	double keyDelay;
 	double elapsedTime;
 	double waveTimer;
@@ -81,6 +88,7 @@ protected:
 
 	bool missleUse;
 	bool ringUse;
+	bool bombUse;
 	bool healthRegen;
 	bool doubleBullet;
 	bool tripleShot;
