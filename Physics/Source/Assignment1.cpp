@@ -317,24 +317,24 @@ void Assignment1::Update(double dt)
 
 
 			// FOR PRINTING
-			if (worldPosX > m_ship->pos.x)
-			{
-				std::cout << "RIGHT" << std::endl;
-			}
-			else
-			{
-				std::cout << "LEFT" << std::endl;
+			//if (worldPosX > m_ship->pos.x)
+			//{
+			//	std::cout << "RIGHT" << std::endl;
+			//}
+			//else
+			//{
+			//	std::cout << "LEFT" << std::endl;
 
-			}
+			//}
 
-			if (worldPosY > m_ship->pos.y)
-			{
-				std::cout << "DOWN" << std::endl;
-			}
-			else
-			{
-				std::cout << "UP" << std::endl;
-			}
+			//if (worldPosY > m_ship->pos.y)
+			//{
+			//	std::cout << "DOWN" << std::endl;
+			//}
+			//else
+			//{
+			//	std::cout << "UP" << std::endl;
+			//}
 
 		}
 		// **************************************************************************
@@ -702,7 +702,13 @@ void Assignment1::Update(double dt)
 				go->pos += go->vel * dt * m_speed;
 				if (go->type != GameObject::GO_SHIP &&
 					go->type != GameObject::GO_BULLET &&
-					go->type != GameObject::GO_RINGAURA)
+					go->type != GameObject::GO_RINGAURA &&
+					go->type != GameObject::GO_BLACKHOLE &&
+					go->type != GameObject::GO_MISSLE &&
+					go->type != GameObject::GO_BOMB &&
+					go->type != GameObject::GO_EXPLOSION &&
+					go->type != GameObject::GO_HEAL &&
+					go->type != GameObject::GO_TRIPLESHOT)
 				{
 					Collision(go);
 				}
@@ -868,290 +874,28 @@ void Assignment1::Update(double dt)
 					for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
 					{
 						GameObject* go2 = (GameObject*)*it2;
-						if (go2->type == GameObject::GO_ASTEROID && go2->active)
+						if (go2->active)
 						{
-							float dis = go->pos.DistanceSquared(go2->pos);
-							float rad = (go->scale.x + go2->scale.x / 4) * (go->scale.x + go2->scale.x / 4);
-							if (dis < rad)
+
+							if (go2->type != GameObject::GO_SHIP &&
+								go2->type != GameObject::GO_BULLET &&
+								go2->type != GameObject::GO_RINGAURA &&
+								go2->type != GameObject::GO_BLACKHOLE &&
+								go2->type != GameObject::GO_MISSLE &&
+								go2->type != GameObject::GO_BOMB &&
+								go2->type != GameObject::GO_EXPLOSION &&
+								go2->type != GameObject::GO_TRIPLESHOT &&
+								go2->type != GameObject::GO_HEAL)
 							{
-								if (go->type == GameObject::GO_MISSLE)
-								{
-									go2->hp -= basicBulletDamage * 2;
-									GameObject* explosion = FetchGO();
-									explosion->type = GameObject::GO_EXPLOSION;
-									explosion->pos = go2->pos;
-									explosion->scale.Set(1, 1, 1);
-									explosion->vel = 0;
-									explosion->explosionScale = 0;
-									explosion->scaleDown = false;
-									go->active = false;
-								}
 
-
-								if (go->type == GameObject::GO_BULLET)
-								{
-									go2->hp -= basicBulletDamage;
-									go->active = false;
-								}
-
-
-								if (go->type == GameObject::GO_BOMB)
-								{
-									go2->hp -= basicBulletDamage * 2;
-									GameObject* explosion = FetchGO();
-									explosion->type = GameObject::GO_EXPLOSION;
-									explosion->pos = go2->pos;
-									explosion->scale.Set(1, 1, 1);
-									explosion->vel = 0;
-									explosion->explosionScale = 0;
-									explosion->scaleDown = false;
-									go->active = false;
-								}
-
-								// Asteroid HP reaches 0
-								if (go2->hp <= 0)
-								{
-									go2->active = false;
-									m_objectCount--;
-									// Money gained
-									m_money += 1 + bonusMoney;
-
-									// Drop  Item
-									int random = rand() % 14;
-									if (random == 0)
-									{
-										float maxVel = 0.8;
-
-										GameObject* go3 = FetchGO();
-										go3->type = GameObject::GO_TRIPLESHOT;
-										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
-										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
-										go3->scale.Set(9, 9, 1);
-										go3->enemyDamage = 0;
-										go3->hitboxSizeDivider = 3;
-
-									}
-									else if (random < 3)
-									{
-										float maxVel = 0.8;
-
-										GameObject* go3 = FetchGO();
-										go3->type = GameObject::GO_HEAL;
-										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
-										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
-										go3->scale.Set(5, 5, 1);
-										go3->enemyDamage = -5;
-										go3->hitboxSizeDivider = 3;
-									}
-								}
+								HitEnemy(go, go2);
 							}
 
 						}
-						// Collison with enemy ship
-						else if (go2->type == GameObject::GO_ENEMYSHIP && go2->active)
-						{
-							float dis = go->pos.DistanceSquared(go2->pos);
-							float rad = (go->scale.x + go2->scale.x / 4) * (go->scale.x + go2->scale.x / 4);
-							if (dis < rad)
-							{
-								if (go->type == GameObject::GO_MISSLE)
-								{
-									go2->hp -= basicBulletDamage * 2;
-									GameObject* explosion = FetchGO();
-									explosion->type = GameObject::GO_EXPLOSION;
-									explosion->pos = go2->pos;
-									explosion->scale.Set(1, 1, 1);
-									explosion->vel = 0;
-									explosion->explosionScale = 0;
-									explosion->scaleDown = false;
-									go->active = false;
-								}
-
-								if (go->type == GameObject::GO_BULLET)
-								{
-									go2->hp -= basicBulletDamage;
-									go->active = false;
-								}
-
-
-								if (go->type == GameObject::GO_BOMB)
-								{
-									go2->hp -= basicBulletDamage * 2;
-									GameObject* explosion = FetchGO();
-									explosion->type = GameObject::GO_EXPLOSION;
-									explosion->pos = go2->pos;
-									explosion->scale.Set(1, 1, 1);
-									explosion->vel = 0;
-									explosion->explosionScale = 0;
-									explosion->scaleDown = false;
-									go->active = false;
-								}
-								// Asteroid HP reaches 0
-								if (go2->hp <= 0)
-								{
-									go2->active = false;
-									m_objectCount--;
-									// Money gained
-									m_money += 10 + (bonusMoney * 3);
-
-									// Drop  Item
-									int random = rand() % 14;
-									if (random == 0)
-									{
-										float maxVel = 0.8;
-
-										GameObject* go3 = FetchGO();
-										go3->type = GameObject::GO_TRIPLESHOT;
-										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
-										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
-										go3->scale.Set(9, 9, 1);
-										go3->enemyDamage = 0;
-										go3->hitboxSizeDivider = 3;
-
-									}
-									else if (random < 3)
-									{
-										float maxVel = 0.8;
-
-										GameObject* go3 = FetchGO();
-										go3->type = GameObject::GO_HEAL;
-										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
-										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
-										go3->scale.Set(5, 5, 1);
-										go3->enemyDamage = -5;
-										go3->hitboxSizeDivider = 3;
-									}
-								}
-							}
-						}
-						// Collision with big asteroid
-						else if (go2->type == GameObject::GO_BIGASTEROID && go2->active)
-						{
-							float dis = go->pos.DistanceSquared(go2->pos);
-							float rad = (go->scale.x + go2->scale.x / 4) * (go->scale.x + go2->scale.x / 4);
-							if (dis < rad)
-							{
-								if (go->type == GameObject::GO_MISSLE)
-								{
-									go2->hp -= basicBulletDamage * 2;
-									GameObject* explosion = FetchGO();
-									explosion->type = GameObject::GO_EXPLOSION;
-									explosion->pos = go2->pos;
-									explosion->scale.Set(1, 1, 1);
-									explosion->vel = 0;
-									explosion->explosionScale = 0;
-									explosion->scaleDown = false;
-									go->active = false;
-								}
-
-								if (go->type == GameObject::GO_BULLET)
-								{
-									go2->hp -= basicBulletDamage;
-									go->active = false;
-								}
-
-
-								if (go->type == GameObject::GO_BOMB)
-								{
-									go2->hp -= basicBulletDamage * 2;
-									GameObject* explosion = FetchGO();
-									explosion->type = GameObject::GO_EXPLOSION;
-									explosion->pos = go2->pos;
-									explosion->scale.Set(1, 1, 1);
-									explosion->vel = 0;
-									explosion->explosionScale = 0;
-									explosion->scaleDown = false;
-									go->active = false;
-								}
-								// Asteroid HP reaches 0
-								if (go2->hp <= 0)
-								{
-									go2->active = false;
-									m_objectCount--;
-									for (int i = 0; i < 4; ++i)
-									{
-										GameObject* go = FetchGO();
-										go->type = GameObject::GO_ASTEROID;
-										go->hp = round(1 * hpFactor);
-										go->scale.Set(4, 4, 4);
-										go->pos.Set(go2->pos.x, go2->pos.y, go->pos.z);
-										go->vel.Set(Math::RandFloatMinMax(-20, 0), Math::RandFloatMinMax(-20, 20), 0);
-									}
-									// Money gained
-									m_money += 10 + (bonusMoney * 3);
-								}
-							}
-						}
-						// Collison with FLAME DEMON
-						else if (go2->type == GameObject::GO_FLAMEDEMON && go2->active)
-						{
-							float dis = go->pos.DistanceSquared(go2->pos);
-							float rad = (go->scale.x + go2->scale.x / 4) * (go->scale.x + go2->scale.x / 4);
-							if (dis < rad)
-							{
-								if (go->type == GameObject::GO_MISSLE)
-								{
-									go2->hp -= basicBulletDamage * 2;
-									GameObject* explosion = FetchGO();
-									explosion->type = GameObject::GO_EXPLOSION;
-									explosion->pos = go2->pos;
-									explosion->scale.Set(1, 1, 1);
-									explosion->vel = 0;
-									explosion->explosionScale = 0;
-									explosion->scaleDown = false;
-									go->active = false;
-								}
-
-								if (go->type == GameObject::GO_BULLET)
-								{
-									go2->hp -= basicBulletDamage;
-									go->active = false;
-
-									std::cout << go2->hp << std::endl;
-								}
-
-								// Asteroid HP reaches 0
-								if (go2->hp <= 0)
-								{
-									go2->active = false;
-									m_objectCount--;
-									// Money gained
-									m_money += 10 + (bonusMoney * 3);
-
-									// Drop  Item
-									int random = rand() % 14;
-									if (random == 0)
-									{
-										float maxVel = 0.8;
-
-										GameObject* go3 = FetchGO();
-										go3->type = GameObject::GO_TRIPLESHOT;
-										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
-										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
-										go3->scale.Set(9, 9, 1);
-										go3->enemyDamage = 0;
-										go3->hitboxSizeDivider = 3;
-
-									}
-									else if (random < 3)
-									{
-										float maxVel = 0.8;
-
-										GameObject* go3 = FetchGO();
-										go3->type = GameObject::GO_HEAL;
-										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
-										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
-										go3->scale.Set(5, 5, 1);
-										go3->enemyDamage = -5;
-										go3->hitboxSizeDivider = 3;
-									}
-								}
-							}
-						}
-						
+			
 					}
-
 				}
+
 				// Magnet effect for powerups
 				if (go->type == GameObject::GO_BLACKHOLE)
 				{
@@ -1198,6 +942,7 @@ void Assignment1::Update(double dt)
 				go->vel = m_ship->direction * BULLET_SPEED;
 				go->scale.Set(6.0f, 4.0f, 4.0f);
 				go->angle = m_ship->angle;
+				go->hitboxSizeDivider = 3;
 
 				prevElapsedMissle = elapsedTime;
 			}
@@ -1310,6 +1055,7 @@ void Assignment1::Update(double dt)
 
 void Assignment1::Collision(GameObject* go)
 {
+	// Collision check
 	float dis = go->pos.DistanceSquared(m_ship->pos);
 	float cRad = (m_ship->scale.x / go->hitboxSizeDivider + go->scale.x) * (m_ship->scale.x / go->hitboxSizeDivider + go->scale.x);
 	if (dis < cRad)
@@ -1326,6 +1072,11 @@ void Assignment1::Collision(GameObject* go)
 		go->active = false;
 		m_objectCount--;
 		m_ship->hp -= go->enemyDamage;
+
+		if (m_ship->hp > m_ship->maxHP)
+		{
+			m_ship->hp = m_ship->maxHP;
+		}
 	}
 	//Exercise 13: asteroids should wrap around the screen like the ship
 	//Wrap(go->pos.x, m_worldWidth);
@@ -1334,6 +1085,7 @@ void Assignment1::Collision(GameObject* go)
 	// unspawn offscreen
 	if (go->type == GameObject::GO_ENEMYBULLET ||
 		go->type == GameObject::GO_BULLET ||
+		go->type == GameObject::GO_BOMB||
 		go->type == GameObject::GO_HEAL ||
 		go->type == GameObject::GO_TRIPLESHOT)
 	{
@@ -1346,8 +1098,99 @@ void Assignment1::Collision(GameObject* go)
 			go->active = false;
 		}
 	}
+}
 
-	std::cout << m_ship->hp << std::endl;
+void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
+{
+	float dis = bullet->pos.DistanceSquared(target->pos);
+	float rad = (bullet->scale.x + target->scale.x / 4) * (bullet->scale.x + target->scale.x / 4);
+	if (dis < rad)
+	{
+		if (bullet->type == GameObject::GO_MISSLE)
+		{
+			target->hp -= basicBulletDamage * 2;
+			GameObject* explosion = FetchGO();
+			explosion->type = GameObject::GO_EXPLOSION;
+			explosion->pos = target->pos;
+			explosion->scale.Set(1, 1, 1);
+			explosion->vel = 0;
+			explosion->explosionScale = 0;
+			explosion->scaleDown = false;
+			bullet->active = false;
+		}
+
+		if (bullet->type == GameObject::GO_BOMB)
+		{
+			target->hp -= basicBulletDamage * 2;
+			GameObject* explosion = FetchGO();
+			explosion->type = GameObject::GO_EXPLOSION;
+			explosion->pos = target->pos;
+			explosion->scale.Set(1, 1, 1);
+			explosion->vel = 0;
+			explosion->explosionScale = 0;
+			explosion->scaleDown = false;
+			bullet->active = false;
+		}
+
+
+		if (bullet->type == GameObject::GO_BULLET)
+		{
+			target->hp -= basicBulletDamage;
+			bullet->active = false;
+		}
+
+
+		// Asteroid HP reaches 0
+		if (target->hp <= 0)
+		{
+			target->active = false;
+			m_objectCount--;
+			// Money gained
+			m_money += 1 + bonusMoney;
+
+			m_objectCount--;
+			if (target->type == GameObject::GO_BIGASTEROID)
+			{
+				for (int i = 0; i < 4; ++i)
+				{
+					GameObject* go = FetchGO();
+					go->type = GameObject::GO_ASTEROID;
+					go->hp = round(1 * hpFactor);
+					go->scale.Set(4, 4, 4);
+					go->pos.Set(target->pos.x, target->pos.y, go->pos.z);
+					go->vel.Set(Math::RandFloatMinMax(-20, 0), Math::RandFloatMinMax(-20, 20), 0);
+				}
+			}
+
+			// Drop  Item
+			int random = rand() % 14;
+			if (random == 0)
+			{
+				float maxVel = 0.8;
+
+				GameObject* go3 = FetchGO();
+				go3->type = GameObject::GO_TRIPLESHOT;
+				go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), target->pos.z);
+				go3->pos.Set(target->pos.x, target->pos.y, target->pos.z);
+				go3->scale.Set(9, 9, 1);
+				go3->enemyDamage = 0;
+				go3->hitboxSizeDivider = 3;
+
+			}
+			else if (random < 3)
+			{
+				float maxVel = 0.8;
+
+				GameObject* go3 = FetchGO();
+				go3->type = GameObject::GO_HEAL;
+				go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), target->pos.z);
+				go3->pos.Set(target->pos.x, target->pos.y, target->pos.z);
+				go3->scale.Set(5, 5, 1);
+				go3->enemyDamage = -5;
+				go3->hitboxSizeDivider = 3;
+			}
+		}
+	}
 }
 
 float Assignment1::CalculateAdditionalForce(GameObject* go1, GameObject* go2)
