@@ -83,6 +83,7 @@ void Assignment1::Init()
 	upgradeScreen = false;
 	isAlive = true;
 	gameStart = false;
+	heroFacingLeft = false;
 
 	movementLastPressed = ' ';
 
@@ -145,6 +146,10 @@ void Assignment1::Update(double dt)
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
 	HeroSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERO]);
+	HeroSprite->PlayAnimation("IDLE", -1, 0.5f);
+	HeroSprite->Update(dt);
+
+	HeroSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERO_LEFT]);
 	HeroSprite->PlayAnimation("IDLE", -1, 0.5f);
 	HeroSprite->Update(dt);
 
@@ -390,6 +395,8 @@ void Assignment1::Update(double dt)
 		{
 			m_ship->direction = Vector3(-1, 0, 0);
 			m_ship->vel = Vector3(-20, 0, 0);
+
+			heroFacingLeft = true;
 			//m_force += m_ship->direction * ROTATION_SPEED;
 			//m_torque += Vector3(-m_ship->scale.x, -m_ship->scale.y, 0).Cross(Vector3(ROTATION_SPEED, 0, 0));
 			//if (movementLastPressed == 'D')
@@ -408,6 +415,7 @@ void Assignment1::Update(double dt)
 		{
 			m_ship->direction = Vector3(1, 0, 0);
 			m_ship->vel = Vector3(20, 0, 0);
+			heroFacingLeft = false;
 			//m_force += m_ship->direction * ROTATION_SPEED;
 			//m_torque += Vector3(-m_ship->scale.x, m_ship->scale.y, 0).Cross(Vector3(ROTATION_SPEED, 0, 0));
 			//if (movementLastPressed == 'A')
@@ -1225,11 +1233,19 @@ void Assignment1::RenderGO(GameObject* go)
 		//Exercise 4a: render a sphere with radius 1
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 10);
-		modelStack.Rotate(go->angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_HERO], false);
 
-		modelStack.Rotate(-go->angle, 0, 0, 1);
+		if (heroFacingLeft == true)
+		{
+			modelStack.PushMatrix();
+			modelStack.Rotate(180, 0, 0, 1);
+			RenderMesh(meshList[GEO_HERO_LEFT], false);
+			modelStack.PopMatrix();
+		}
+		else
+		{
+			RenderMesh(meshList[GEO_HERO], false);
+		}
 
 		// Display health bar if asteroid is damaged
 		if (go->hp < go->maxHP)

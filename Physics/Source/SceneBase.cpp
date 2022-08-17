@@ -178,6 +178,12 @@ void SceneBase::Init()
 	SpriteAnimation* sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERO]);
 	sa->AddAnimation("IDLE", 0, 4);
 
+	meshList[GEO_HERO_LEFT] = MeshBuilder::GenerateSpriteAnimation("Hero Left", 1, 4);
+	meshList[GEO_HERO_LEFT]->textureID = LoadTexture("Image//HeroIdle.png", false);
+	meshList[GEO_HERO_LEFT]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* saLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERO_LEFT]);
+	saLeft->AddAnimation("IDLE", 0, 4);
+
 	meshList[GEO_FDEMON] = MeshBuilder::GenerateSpriteAnimation("Fdemon", 1, 6);
 	meshList[GEO_FDEMON]->textureID = LoadTexture("Image//FlameDemon.png", true);
 	meshList[GEO_FDEMON]->material.kAmbient.Set(1, 1, 1);
