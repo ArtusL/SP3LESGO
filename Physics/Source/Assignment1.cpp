@@ -1105,7 +1105,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 		if (bullet->type == GameObject::GO_BULLET)
 		{
 			target->hp -= basicBulletDamage;
-			target->active = false;
+			bullet->active = false;
 		}
 
 
