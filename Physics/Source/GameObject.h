@@ -10,27 +10,25 @@ struct GameObject
 		GO_NONE = 0,
 		GO_BALL,
 		GO_CUBE,
-
+		GO_BACKGROUND,
+		 
 		// Enemy types
 		GO_ASTEROID,
 		GO_BIGASTEROID,
 		GO_ENEMYSHIP,
-		GO_FLAMEDEMON,
+		//GO_ROTATINGASTEROID,
 		
 		GO_BLACKHOLE,
 		GO_WHITEHOLE,
 
 		GO_SHIP,
 		GO_HEAL,
-
 		GO_BULLET,
 		GO_SPLITBULLET,
 		GO_ENEMYBULLET,
 		GO_MISSLE,
 		GO_EXPLOSION,
 		GO_RING,
-		GO_RINGAURA,
-		GO_BOMB,
 		GO_TRIPLESHOT,
 		GO_TOTAL, //must be last
 	};
@@ -44,12 +42,8 @@ struct GameObject
 	float angle;
 	float hp;
 	float maxHP;
-	float enemyDamage;
-	float speedFactor;
 	float prevEnemyBullet;
 	float explosionScale;
-	float ringaurascale;
-	float hitboxSizeDivider;
 	bool scaleDown;
 
 	float momentOfInertia;

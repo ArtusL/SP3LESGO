@@ -61,7 +61,6 @@ public:
 		GEO_ASTEROID,
 		GEO_ENEMYSHIP,
 		GEO_BIGASTEROID,
-		GEO_FLAMEDEMON,
 
 
 		GEO_SHIP,
@@ -69,8 +68,6 @@ public:
 		GEO_ENEMYBULLET,
 		GEO_BOW,
 		GEO_RING,
-		GEO_RINGAURA,
-		GEO_BOMB,
 		GEO_EXPLOSION,
 		GEO_TRIPLESHOT,
 
@@ -100,6 +97,8 @@ protected:
 	unsigned m_parameters[U_TOTAL];
 
 	Camera camera;
+	Camera camera2;
+	bool cam2;
 
 	MS modelStack;
 	MS viewStack;
