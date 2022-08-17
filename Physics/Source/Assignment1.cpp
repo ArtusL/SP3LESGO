@@ -690,6 +690,7 @@ void Assignment1::Update(double dt)
 					go->type != GameObject::GO_RINGAURA &&
 					go->type != GameObject::GO_BLACKHOLE &&
 					go->type != GameObject::GO_MISSLE &&
+					go->type != GameObject::GO_BOMB &&
 					go->type != GameObject::GO_EXPLOSION &&
 					go->type != GameObject::GO_HEAL &&
 					go->type != GameObject::GO_TRIPLESHOT)
@@ -866,6 +867,7 @@ void Assignment1::Update(double dt)
 								go2->type != GameObject::GO_RINGAURA &&
 								go2->type != GameObject::GO_BLACKHOLE &&
 								go2->type != GameObject::GO_MISSLE &&
+								go2->type != GameObject::GO_BOMB &&
 								go2->type != GameObject::GO_EXPLOSION &&
 								go2->type != GameObject::GO_TRIPLESHOT &&
 								go2->type != GameObject::GO_HEAL)
@@ -1068,6 +1070,7 @@ void Assignment1::Collision(GameObject* go)
 	// unspawn offscreen
 	if (go->type == GameObject::GO_ENEMYBULLET ||
 		go->type == GameObject::GO_BULLET ||
+		go->type == GameObject::GO_BOMB||
 		go->type == GameObject::GO_HEAL ||
 		go->type == GameObject::GO_TRIPLESHOT)
 	{
@@ -1098,7 +1101,20 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 			explosion->vel = 0;
 			explosion->explosionScale = 0;
 			explosion->scaleDown = false;
-			target->active = false;
+			bullet->active = false;
+		}
+
+		if (bullet->type == GameObject::GO_BOMB)
+		{
+			target->hp -= basicBulletDamage * 2;
+			GameObject* explosion = FetchGO();
+			explosion->type = GameObject::GO_EXPLOSION;
+			explosion->pos = target->pos;
+			explosion->scale.Set(1, 1, 1);
+			explosion->vel = 0;
+			explosion->explosionScale = 0;
+			explosion->scaleDown = false;
+			bullet->active = false;
 		}
 
 
