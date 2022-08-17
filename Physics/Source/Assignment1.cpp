@@ -144,7 +144,22 @@ void Assignment1::Update(double dt)
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
+	HeroSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERO]);
+	HeroSprite->PlayAnimation("IDLE", -1, 0.5f);
+	HeroSprite->Update(dt);
 
+	//FdemonSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FDEMON]);
+	//FdemonSprite->PlayAnimation("IDLE", -1, 2.0f);
+	//FdemonSprite->Update(dt);
+
+	BdemonSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_BDEMON]);
+	BdemonSprite->PlayAnimation("IDLE", -1, 1.0f);
+	BdemonSprite->Update(dt);
+
+
+	//NightmareSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_NIGHTMARE]);
+	//NightmareSprite->PlayAnimation("IDLE", -1, 1.0f);
+	//NightmareSprite->Update(dt);
 
 
 	// Enter to begin game
@@ -1430,7 +1445,7 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.Rotate(go->angle, 0, 0, 1);
 
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_ENEMYSHIP], false);
+		RenderMesh(meshList[GEO_BDEMON], false);
 		modelStack.PopMatrix();
 
 
@@ -1494,7 +1509,7 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PushMatrix();
 
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_FLAMEDEMON], false);
+		RenderMesh(meshList[GEO_FDEMON], false);
 		modelStack.PopMatrix();
 
 		// Display health bar if asteroid is damaged
