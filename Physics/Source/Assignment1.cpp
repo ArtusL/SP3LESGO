@@ -717,25 +717,22 @@ void Assignment1::Update(double dt)
 
 
 
+
+		//********************************************************************************************************
 		// Collision Detection
+		//*********************************************************************************************************
 		for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 		{
 			GameObject* go = (GameObject*)*it;
 
-			// Prevent collision with player weapons
 			if (go->active)
 			{
 				go->pos += go->vel * dt * m_speed;
-				if (go->type != GameObject::GO_HERO &&
-					go->type != GameObject::GO_BULLET &&
-					go->type != GameObject::GO_RINGAURA &&
-					go->type != GameObject::GO_BLACKHOLE &&
-					go->type != GameObject::GO_MISSLE &&
-					go->type != GameObject::GO_BOMB &&
-					go->type != GameObject::GO_MOLOTOV &&
-					go->type != GameObject::GO_EXPLOSION &&
-					go->type != GameObject::GO_HEAL &&
-					go->type != GameObject::GO_TRIPLESHOT)
+				if (go->type == GameObject::GO_GHOST ||	               // Checks for Player vs Enemy Collision (Taking DMG)
+					go->type == GameObject::GO_FLAMEDEMON ||
+					go->type == GameObject::GO_BDEMON ||
+					go->type == GameObject::GO_NIGHTMARE ||
+					go->type == GameObject::GO_ENEMYBULLET)
 				{
 					Collision(go);
 				}
@@ -749,16 +746,11 @@ void Assignment1::Update(double dt)
 						if (go2->active)
 						{
 
-							if (go2->type != GameObject::GO_SHIP &&
-								go2->type != GameObject::GO_BULLET &&
-								go2->type != GameObject::GO_RINGAURA &&
-								go2->type != GameObject::GO_BLACKHOLE &&
-								go2->type != GameObject::GO_MISSLE &&
-								go2->type != GameObject::GO_BOMB &&
-								go2->type != GameObject::GO_MOLOTOV &&
-								go2->type != GameObject::GO_EXPLOSION &&
-								go2->type != GameObject::GO_TRIPLESHOT &&
-								go2->type != GameObject::GO_HEAL)
+							if (go2->type == GameObject::GO_GHOST ||
+								go2->type == GameObject::GO_FLAMEDEMON ||
+								go2->type == GameObject::GO_BDEMON ||
+								go2->type == GameObject::GO_NIGHTMARE ||
+								go2->type == GameObject::GO_ENEMYBULLET)
 							{
 
 								HitEnemy(go, go2);
@@ -781,24 +773,16 @@ void Assignment1::Update(double dt)
 						continue;
 					}
 
-					//Exercise 18: collision check between GO_BULLET and GO_ASTEROID
 					for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
 					{
 						GameObject* go2 = (GameObject*)*it2;
 						if (go2->active)
 						{
 
-							if (go2->type != GameObject::GO_HERO &&
-								go2->type != GameObject::GO_BULLET &&
-								go2->type != GameObject::GO_RINGAURA &&
-								go2->type != GameObject::GO_BLACKHOLE &&
-								go2->type != GameObject::GO_MISSLE &&
-								go2->type != GameObject::GO_BOMB &&
-								go2->type != GameObject::GO_MOLOTOV &&
-								go2->type != GameObject::GO_EXPLOSION &&
-								go2->type != GameObject::GO_ENEMYBULLET &&
-								go2->type != GameObject::GO_TRIPLESHOT &&
-								go2->type != GameObject::GO_HEAL)
+							if (go2->type == GameObject::GO_GHOST ||	  // Checks for Player WEAPON vs Enemy Collision (Dealing DMG)
+								go2->type == GameObject::GO_FLAMEDEMON ||
+								go2->type == GameObject::GO_BDEMON ||
+								go2->type == GameObject::GO_NIGHTMARE)
 							{
 
 								HitEnemy(go, go2);
