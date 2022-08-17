@@ -45,6 +45,7 @@ protected:
 
 	float m_hp;
 
+	// Player variable
 	float hpFactor;
 	int m_money;
 	float moneyFactor;
@@ -67,6 +68,7 @@ protected:
 	int maxEnemyCount;
 	int bonusMoney;
 
+	// Timers
 	double prevElapsedAsteroid;
 	double prevElapsedBullet;
 	double prevElapsedMissle;

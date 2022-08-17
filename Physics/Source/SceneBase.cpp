@@ -130,6 +130,9 @@ void SceneBase::Init()
 	meshList[GEO_ENEMYSHIP] = MeshBuilder::GenerateQuad("enemy ship", Color(1, 1, 1), 1.f);
 	meshList[GEO_ENEMYSHIP]->textureID = LoadTGA("Image//BDemon.tga");
 
+	meshList[GEO_FLAMEDEMON] = MeshBuilder::GenerateQuad("flame demon", Color(1, 1, 1), 1.f);
+	meshList[GEO_FLAMEDEMON]->textureID = LoadTGA("Image//FlameDemon.tga");
+
 
 
 	// Bullet types

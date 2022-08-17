@@ -451,13 +451,17 @@ void Assignment1::Update(double dt)
 
 		if (Application::IsKeyPressed('V'))
 		{
-			for (int i = 0; i < 2; ++i)
+			for (int i = 0; i < 1; ++i)
 			{
 				GameObject* go = FetchGO();
-				go->type = GameObject::GO_ASTEROID;
+				go->type = GameObject::GO_FLAMEDEMON;
 				go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
 				go->vel.Set(Math::RandFloatMinMax(-20, 20), Math::RandFloatMinMax(-20, 20), 0);
-				go->scale.Set(7, 7, 4);
+				go->scale.Set(15, 15, 1);
+				go->hp = 10;
+				go->maxHP = go->hp;
+				go->prevEnemyBullet = 0.0;
+				go->speedFactor = 1;
 			}
 		}
 
@@ -600,6 +604,35 @@ void Assignment1::Update(double dt)
 
 
 
+		//************************************ ENEMY ATTACKS ****************************************************
+		for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+		{
+			GameObject* enemy = (GameObject*)*it;
+			// Flame Demon: Periodially dashes to player
+			if (enemy->type == GameObject::GO_FLAMEDEMON)
+			{
+				float diff = elapsedTime - enemy->prevEnemyBullet;
+				if (diff > 3)
+				{
+					enemy->speedFactor = 10;
+					enemy->prevEnemyBullet = elapsedTime;
+				}
+				else
+				{
+					if (enemy->speedFactor > 1)
+					{
+						enemy->speedFactor -= 5 * dt;
+						if (enemy->speedFactor < 1)
+						{
+							enemy->speedFactor = 1;
+						}
+					}
+				}
+			}
+		}
+
+		//*******************************************************************************************************
+
 
 
 		// Collision Detection
@@ -627,6 +660,22 @@ void Assignment1::Update(double dt)
 				}
 
 				else if (go->type == GameObject::GO_ENEMYSHIP)
+				{
+					float dis = go->pos.DistanceSquared(m_ship->pos);
+					float cRad = (m_ship->scale.x / 3 + go->scale.x) * (m_ship->scale.x / 3 + go->scale.x);
+					if (dis < cRad)
+					{
+						go->active = false;
+						m_objectCount--;
+						m_ship->hp -= 5;
+
+					}
+					//Exercise 13: asteroids should wrap around the screen like the ship
+					Wrap(go->pos.x, m_worldWidth);
+					Wrap(go->pos.y, m_worldHeight);
+				}
+
+				else if (go->type == GameObject::GO_FLAMEDEMON)
 				{
 					float dis = go->pos.DistanceSquared(m_ship->pos);
 					float cRad = (m_ship->scale.x / 3 + go->scale.x) * (m_ship->scale.x / 3 + go->scale.x);
@@ -1046,6 +1095,69 @@ void Assignment1::Update(double dt)
 								}
 							}
 						}
+						// Collison with FLAME DEMON
+						else if (go2->type == GameObject::GO_FLAMEDEMON && go2->active)
+						{
+							float dis = go->pos.DistanceSquared(go2->pos);
+							float rad = (go->scale.x + go2->scale.x / 4) * (go->scale.x + go2->scale.x / 4);
+							if (dis < rad)
+							{
+								if (go->type == GameObject::GO_MISSLE)
+								{
+									go2->hp -= basicBulletDamage * 2;
+									GameObject* explosion = FetchGO();
+									explosion->type = GameObject::GO_EXPLOSION;
+									explosion->pos = go2->pos;
+									explosion->scale.Set(1, 1, 1);
+									explosion->vel = 0;
+									explosion->explosionScale = 0;
+									explosion->scaleDown = false;
+									go->active = false;
+								}
+
+								if (go->type == GameObject::GO_BULLET)
+								{
+									go2->hp -= basicBulletDamage;
+									go->active = false;
+
+									std::cout << go2->hp << std::endl;
+								}
+
+								// Asteroid HP reaches 0
+								if (go2->hp <= 0)
+								{
+									go2->active = false;
+									m_objectCount--;
+									// Money gained
+									m_money += 10 + (bonusMoney * 3);
+
+									// Drop  Item
+									int random = rand() % 14;
+									if (random == 0)
+									{
+										float maxVel = 0.8;
+
+										GameObject* go3 = FetchGO();
+										go3->type = GameObject::GO_TRIPLESHOT;
+										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
+										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
+										go3->scale.Set(9, 9, 1);
+
+									}
+									else if (random < 3)
+									{
+										float maxVel = 0.8;
+
+										GameObject* go3 = FetchGO();
+										go3->type = GameObject::GO_HEAL;
+										go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), go->pos.z);
+										go3->pos.Set(go2->pos.x, go2->pos.y, go2->pos.z);
+										go3->scale.Set(5, 5, 1);
+									}
+								}
+							}
+						}
+						
 					}
 
 				}
@@ -1330,6 +1442,46 @@ void Assignment1::RenderGO(GameObject* go)
 		//Exercise 4b: render a cube with length 2
 		break;
 
+	case GameObject::GO_FLAMEDEMON:
+		// Move towards player
+		if (go->speedFactor <= 1)
+		{
+			go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
+			go->direction = go->direction.Normalized();
+		}
+		go->vel = (go->direction * 6 * go->speedFactor);
+
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+
+		// Rotate to player
+		modelStack.PushMatrix();
+
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_FLAMEDEMON], false);
+		modelStack.PopMatrix();
+
+		// Display health bar if asteroid is damaged
+		if (go->hp < go->maxHP)
+		{
+			float greenHealthPercent = (go->hp / go->maxHP) * 100;
+			float redHealthPercent = 100 - greenHealthPercent;
+
+			modelStack.PushMatrix();
+			modelStack.Translate(0, 1.3, 1);
+			modelStack.Scale(go->scale.x * 0.6, go->scale.y * 0.13, go->scale.z + 100);
+			RenderMesh(meshList[GEO_REDHEALTH], false);
+			modelStack.PopMatrix();
+
+			modelStack.PushMatrix();
+			modelStack.Translate(0, 1.3, 1.1);
+			modelStack.Scale(go->scale.x * 0.006 * greenHealthPercent, go->scale.y * 0.13, go->scale.z + 100);
+			RenderMesh(meshList[GEO_GREENHEALTH], false);
+			modelStack.PopMatrix();
+		}
+		modelStack.PopMatrix();
+		break;
 	case GameObject::GO_BIGASTEROID:
 
 		// Move towards player
