@@ -213,6 +213,14 @@ void SceneBase::Init()
 	SpriteAnimation* Ghostsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_GHOST]);
 	Ghostsprite->AddAnimation("IDLE", 0, 7);
 
+	// Projectile Animation
+	meshList[GEO_LASER] = MeshBuilder::GenerateSpriteAnimation("purple_projectile", 1, 11);
+	meshList[GEO_LASER]->textureID = LoadTexture("Image//purple_projectile.png", true);
+	meshList[GEO_LASER]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* PurpleShot = dynamic_cast<SpriteAnimation*>(meshList[GEO_LASER]);
+	PurpleShot->AddAnimation("Purple Projectile", 0, 60);
+
+
 	meshList[GEO_EXPLOSION] = MeshBuilder::GenerateSpriteAnimation("Explosion", 1, 11);
 	meshList[GEO_EXPLOSION]->textureID = LoadTexture("Image//Explosion.png", true);
 	meshList[GEO_EXPLOSION]->material.kAmbient.Set(1, 1, 1);

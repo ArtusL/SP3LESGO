@@ -593,7 +593,7 @@ void Assignment1::Update(double dt)
 				go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
 				go->vel.Set(Math::RandFloatMinMax(-20, 20), Math::RandFloatMinMax(-20, 20), 0);
 				go->scale.Set(15, 15, 1);
-				go->hp = 10000;
+				go->hp = 1000;
 				go->maxHP = go->hp;
 				go->prevEnemyBullet = elapsedTime;
 				go->speedFactor = 1;
@@ -837,7 +837,7 @@ void Assignment1::Update(double dt)
 				case 2:
 					if (diff > 1)
 					{
-						enemy->prevEnemyBullet = elapsedTime - 0.9;
+						enemy->prevEnemyBullet = elapsedTime - 0.96;
 						enemy->vel = 0;
 						GameObject* go2 = FetchGO();
 						go2->type = GameObject::GO_LASER;
@@ -847,7 +847,7 @@ void Assignment1::Update(double dt)
 						go2->enemyDamage = 1;
 						go2->hitboxSizeDivider = 5;
 
-						laserAngle++;
+						laserAngle += 2;
 
 
 						go2->direction = RotateVector(go2->pos, go2->angle * dt * shipSpeed);
@@ -856,7 +856,7 @@ void Assignment1::Update(double dt)
 
 						go2->vel = go2->direction * BULLET_SPEED * 0.8;
 
-						if (laserAngle >= 60)
+						if (laserAngle >= 120)
 						{
 							laserAngle = 0;
 							bossState = 0;
