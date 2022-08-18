@@ -49,6 +49,8 @@ protected:
 	SpriteAnimation* BdemonSprite;
 	SpriteAnimation* FireSprite;
 	SpriteAnimation* NightmareSprite;
+	SpriteAnimation* ExplosionSprite;
+	SpriteAnimation* BarrierSprite;
 	Vector3 m_force;
 	float shipSpeed;
 

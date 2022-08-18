@@ -168,9 +168,17 @@ void Assignment1::Update(double dt)
 	BdemonSprite->PlayAnimation("IDLE", -1, 1.0f);
 	BdemonSprite->Update(dt);
 
-	FireSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FIRE]);
-	FireSprite->PlayAnimation("IDLE", -1, 2.0f);
-	FireSprite->Update(dt);
+	//FireSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FIRE]);
+	//FireSprite->PlayAnimation("IDLE", -1, 2.0f);
+	//FireSprite->Update(dt);
+
+	ExplosionSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_EXPLOSION]);
+	ExplosionSprite->PlayAnimation("Explode", -1, 1.0f);
+	ExplosionSprite->Update(dt);
+
+	BarrierSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_RINGAURA]);
+	BarrierSprite->PlayAnimation("Aura", -1, 2.0f);
+	BarrierSprite->Update(dt);
 
 
 	// Enter to begin game
@@ -919,6 +927,8 @@ void Assignment1::Update(double dt)
 
 			GameObject* go = FetchGO();
 			go->type = GameObject::GO_RINGAURA;
+			BarrierSprite->PlayAnimation("Aura", -1, 4.0f);
+
 			ringUse = false;
 		}
 
@@ -1065,10 +1075,11 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				GameObject* explosion = FetchGO();
 				explosion->type = GameObject::GO_EXPLOSION;
 				explosion->pos = target->pos;
-				explosion->scale.Set(1, 1, 1);
+				explosion->scale.Set(5, 5, 5);
 				explosion->vel = 0;
 				explosion->explosionScale = 0;
 				explosion->scaleDown = false;
+				ExplosionSprite->PlayAnimation("Explode", 1, 1.0f);
 				bullet->active = false;
 
 				displayDamage.push_back(basicBulletDamage * 2);
@@ -1084,10 +1095,11 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				GameObject* explosion = FetchGO();
 				explosion->type = GameObject::GO_EXPLOSION;
 				explosion->pos = target->pos;
-				explosion->scale.Set(1, 1, 1);
+				explosion->scale.Set(5, 5, 5);
 				explosion->vel = 0;
 				explosion->explosionScale = 0;
 				explosion->scaleDown = false;
+				ExplosionSprite->PlayAnimation("Explode", 1, 1.0f);
 				bullet->active = false;
 
 				displayDamage.push_back(basicBulletDamage * 2);
@@ -1100,7 +1112,9 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 			if (bullet->type == GameObject::GO_MOLOTOV)
 			{
 				GameObject* fire = FetchGO();
+
 				fire->type = GameObject::GO_FIRE;
+				ExplosionSprite->PlayAnimation("Explode", 5, 1.0f);
 				fire->pos = target->pos;
 				fire->scale.Set(1, 1, 1);
 				fire->vel = 0;
@@ -1523,8 +1537,8 @@ void Assignment1::RenderGO(GameObject* go)
 	case GameObject::GO_RINGAURA:
 		go->pos = m_ship->pos;
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z -1);
-		modelStack.Scale(go->scale.x + ringAOE, go->scale.y + ringAOE, go->scale.z + 3);
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z +1);
+		modelStack.Scale(go->scale.x + ringAOE + 0.4, go->scale.y + ringAOE + 0.4, go->scale.z + 3);
 		RenderMesh(meshList[GEO_RINGAURA], false);
 		modelStack.PopMatrix();
 		break;
