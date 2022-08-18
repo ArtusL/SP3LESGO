@@ -117,6 +117,12 @@ protected:
 	bool gameStart;
 	bool heroFacingLeft;
 
+	// FOR DEBUG ONLY
+	int tempSpawnCount;
+	int shootCount;
+	int bossState;
+	int laserAngle;
+
 
 	char movementLastPressed;
 };
