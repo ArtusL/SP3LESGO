@@ -113,6 +113,7 @@ protected:
 	bool isAlive;
 	bool upgradeScreen;
 	bool gameStart;
+	bool heroFacingLeft;
 
 
 	char movementLastPressed;
