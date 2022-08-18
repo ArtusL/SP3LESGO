@@ -4,7 +4,9 @@
 #include "GameObject.h"
 #include <vector>
 #include "SceneBase.h"
-#include"SpriteAnimation.h"
+#include "SpriteAnimation.h"
+#include "System\filesystem.h"
+#include"..\Source\SoundController\SoundController.h"
 
 class Assignment1 : public SceneBase
 {
@@ -51,6 +53,7 @@ protected:
 	SpriteAnimation* NightmareSprite;
 	SpriteAnimation* ExplosionSprite;
 	SpriteAnimation* BarrierSprite;
+	CSoundController* cSoundController;
 	Vector3 m_force;
 	float shipSpeed;
 

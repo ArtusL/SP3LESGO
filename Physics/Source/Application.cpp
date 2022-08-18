@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "SoundController/SoundController.h"
+
 //#include "SceneVector.h"
 #include "SceneKinematics.h"
 #include "SceneAsteroid.h"
@@ -121,6 +123,9 @@ void Application::Init()
 		fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
 		//return -1;
 	}
+
+	CSoundController::GetInstance()->Init();
+	
 }
 
 void Application::Run()

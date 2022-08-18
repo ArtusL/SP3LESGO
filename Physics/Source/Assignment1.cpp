@@ -9,11 +9,17 @@ const float Assignment1::MAX_ROTATION_SPEED = 0.7f;
 const float Assignment1::GRAVITY_CONSTANT = 1.f;
 
 Assignment1::Assignment1()
+
+	:cSoundController(NULL)
 {
 }
 
 Assignment1::~Assignment1()
 {
+	if (cSoundController)
+	{
+		cSoundController = NULL;
+	}
 }
 
 static void Wrap(float& val, float bound)
@@ -31,7 +37,7 @@ static void Wrap(float& val, float bound)
 void Assignment1::Init()
 {
 	SceneBase::Init();
-
+	cSoundController = CSoundController::GetInstance();
 	//Calculating aspect ratio
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
@@ -122,6 +128,12 @@ void Assignment1::Init()
 
 	m_ship->momentOfInertia = m_ship->mass * m_ship->scale.x * m_ship->scale.x;
 
+	cSoundController = CSoundController::GetInstance();
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\Gameover.ogg"), 1, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\Explosion.ogg"), 2, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\Magic.ogg"), 3, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\Sound_Robot_Invasion.ogg"), 4, true, true);
+
 }
 
 GameObject* Assignment1::FetchGO()
@@ -148,9 +160,10 @@ GameObject* Assignment1::FetchGO()
 
 void Assignment1::Update(double dt)
 {
+
 	SceneBase::Update(dt);
 	elapsedTime += dt;
-
+	cSoundController->PlaySoundByID(4);
 	//Calculating aspect ratio
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
