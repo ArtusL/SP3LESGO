@@ -68,6 +68,13 @@ void Assignment1::Init()
 	molotovCost = 50;
 	healthRegenCost = 20;
 
+	// FOR DEBUG ONLY
+	tempSpawnCount = 0;
+	shootCount = 0;
+	bossState = 0;
+	laserAngle = 0;
+
+
 
 	basicBulletDamage = 1;
 	healthRegen = 0;
@@ -151,6 +158,11 @@ void Assignment1::Update(double dt)
 	HeroSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERO]);
 	HeroSprite->PlayAnimation("IDLE", -1, 0.5f);
 	HeroSprite->Update(dt);
+
+	HeroSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERO_LEFT]);
+	HeroSprite->PlayAnimation("IDLE", -1, 0.5f);
+	HeroSprite->Update(dt);
+
 
 	GhostSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_GHOST]);
 	GhostSprite->PlayAnimation("IDLE", -1, 0.5f);
@@ -486,90 +498,107 @@ void Assignment1::Update(double dt)
 
 		// Spawn asteroids periodically
 		diff = elapsedTime - prevElapsedAsteroid;
-		if (diff > 1)
-			if (diff > 1 && m_objectCount < maxEnemyCount)
-			{
-				for (int i = 0; i < 1; ++i)
-				{
-					GameObject* go = FetchGO();
-					int randomEnemy = rand() % 100;
-					int maxVel;
-
-					// Spawn Enemy Ship
-					if (randomEnemy < 10 && waveCount >= 4)
-					{
-						go->type = GameObject::GO_BDEMON;
-						go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
-						go->hp = round(7 * hpFactor);
-						go->scale.Set(14, 14, 14);
-						go->prevEnemyBullet = 0.0;
-						go->hitboxSizeDivider = 3;
-						go->enemyDamage = 5;
-						maxVel = 10;
-					}
-					// Spawn Big Asteroid
-					else if (randomEnemy < 15)
-					{
-						go->type = GameObject::GO_NIGHTMARE;
-						go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
-						go->hp = round(10 * hpFactor);
-						go->scale.Set(20, 20, 1);
-						go->hitboxSizeDivider = 6;
-						go->enemyDamage = 20;
-						maxVel = 5;
-					}
-					// Spawn Asteroids
-					else
-					{
-						go->type = GameObject::GO_GHOST;
-						go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
-						go->hp = round(1 * hpFactor);
-						go->scale.Set(10, 10, 10);
-						go->hitboxSizeDivider = 3.5;
-						go->enemyDamage = 2;
-						maxVel = 20;
-					}
-					go->angle = 0;
-					go->maxHP = go->hp;
-
-					// This spawn asteroids from the 4 sides
-					int random = rand() % 4;
-					switch (random)
-					{
-					case 0:
-						go->pos.Set(m_worldWidth + 1, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
-						break;
-					case 1:
-						go->pos.Set(0 - 1, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
-						break;
-					case 2:
-						go->pos.Set(Math::RandFloatMinMax(-20, 20), m_worldHeight + 1, go->pos.z);
-						break;
-					case 3:
-						go->pos.Set(Math::RandFloatMinMax(-20, 20), 0 - 1, go->pos.z);
-						break;
-					}
-					prevElapsedAsteroid = elapsedTime;
-					m_objectCount++;
-				}
-			}
-
-		if (Application::IsKeyPressed('V'))
+		if (diff > 1 && m_objectCount < maxEnemyCount && tempSpawnCount < 1)
 		{
 			for (int i = 0; i < 1; ++i)
 			{
 				GameObject* go = FetchGO();
-				go->type = GameObject::GO_FLAMEDEMON;
+				int randomEnemy = rand() % 100;
+				int maxVel;
+
+				// Spawn Enemy Ship
+				if (randomEnemy < 10 && waveCount >= 4)
+				{
+					go->type = GameObject::GO_BDEMON;
+					go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+					go->hp = round(7 * hpFactor);
+					go->scale.Set(14, 14, 14);
+					go->prevEnemyBullet = 0.0;
+					go->hitboxSizeDivider = 3;
+					go->enemyDamage = 5;
+					maxVel = 10;
+				}
+				// Spawn Big Asteroid
+				else if (randomEnemy < 15)
+				{
+					go->type = GameObject::GO_NIGHTMARE;
+					go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+					go->hp = round(10 * hpFactor);
+					go->scale.Set(20, 20, 1);
+					go->hitboxSizeDivider = 6;
+					go->enemyDamage = 20;
+					maxVel = 5;
+				}
+				// Spawn Asteroids
+				else if (randomEnemy < 40)
+				{
+					GameObject* go = FetchGO();
+					go->type = GameObject::GO_FLAMEDEMON;
+					go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+					go->scale.Set(15, 15, 1);
+					go->hp = round(10 * hpFactor);
+					go->maxHP = go->hp;
+					go->prevEnemyBullet = elapsedTime;
+					go->speedFactor = 1;
+					go->hitboxSizeDivider = 3;
+					go->enemyDamage = 5;
+				}
+				// Spawn Asteroids
+				else
+				{
+					go->type = GameObject::GO_GHOST;
+					go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+					go->hp = round(1 * hpFactor);
+					go->scale.Set(10, 10, 10);
+					go->hitboxSizeDivider = 3.5;
+					go->enemyDamage = 2;
+					maxVel = 20;
+				}
+				go->angle = 0;
+				go->maxHP = go->hp;
+
+				// This spawn asteroids from the 4 sides
+				int random = rand() % 4;
+				switch (random)
+				{
+				case 0:
+					go->pos.Set(m_worldWidth + 1, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+					break;
+				case 1:
+					go->pos.Set(0 - 1, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+					break;
+				case 2:
+					go->pos.Set(Math::RandFloatMinMax(-20, 20), m_worldHeight + 1, go->pos.z);
+					break;
+				case 3:
+					go->pos.Set(Math::RandFloatMinMax(-20, 20), 0 - 1, go->pos.z);
+					break;
+				}
+				prevElapsedAsteroid = elapsedTime;
+				m_objectCount++;
+			}
+		}
+
+		// ****************************** Manual Spawning ***************************************88
+
+
+		if (Application::IsKeyPressed('V') && tempSpawnCount < 1)
+		{
+			for (int i = 0; i < 1; ++i)
+			{
+				GameObject* go = FetchGO();
+				go->type = GameObject::GO_BOSS;
 				go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
 				go->vel.Set(Math::RandFloatMinMax(-20, 20), Math::RandFloatMinMax(-20, 20), 0);
 				go->scale.Set(15, 15, 1);
-				go->hp = 10;
+				go->hp = 10000;
 				go->maxHP = go->hp;
-				go->prevEnemyBullet = 0.0;
+				go->prevEnemyBullet = elapsedTime;
 				go->speedFactor = 1;
 				go->hitboxSizeDivider = 3;
-				go->enemyDamage = 5;
+				go->enemyDamage = 1;
 			}
+			tempSpawnCount++;
 		}
 
 		//Exercise 14: use a key to spawn a bullet
@@ -736,32 +765,130 @@ void Assignment1::Update(double dt)
 					}
 				}
 			}
+
+			// BOSS ENEMY
+			else if (enemy->type == GameObject::GO_BOSS)
+			{
+				float diff = elapsedTime - enemy->prevEnemyBullet;
+				switch (bossState)
+				{
+				case 0:
+					if (diff > 1)
+					{
+						float bladeCount = 8;
+						float angle = 360 / bladeCount;
+						for (int i = 0; i < 8; ++i)
+						{
+							GameObject* go2 = FetchGO();
+							go2->type = GameObject::GO_ENEMYBULLET;
+							go2->scale.Set(4.0f, 4.0f, 4.0f);
+							go2->pos = enemy->pos;
+							go2->angle = angle * i;
+							go2->enemyDamage = 10;
+							go2->hitboxSizeDivider = 3;
+
+
+							go2->direction = RotateVector(go2->pos, go2->angle * dt * shipSpeed);
+							go2->direction = go2->direction.Normalized();
+
+
+							go2->vel = go2->direction * BULLET_SPEED * 0.8;
+
+						}
+						shootCount++;
+						enemy->prevEnemyBullet = elapsedTime;
+
+						if (shootCount == 3)
+						{
+							bossState = 1;
+							shootCount = 0;
+						}
+					}
+					break;
+				case 1:
+					if (diff > 0.6)
+					{
+						enemy->speedFactor = 25;
+						enemy->prevEnemyBullet = elapsedTime;
+						enemy->direction += Vector3(Math::RandFloatMinMax(-1, 1), Math::RandFloatMinMax(-1, 1), 0);
+						shootCount++;
+					}
+					else
+					{
+						if (enemy->speedFactor > 1)
+						{
+							enemy->speedFactor -= 50 * dt;
+							if (enemy->speedFactor < 1)
+							{
+								enemy->speedFactor = 1;
+								if (shootCount == 3)
+								{
+									bossState = 2;
+									shootCount = 0;
+								}
+							}
+						}
+					}
+
+
+					break;
+				case 2:
+					if (diff > 1)
+					{
+						enemy->prevEnemyBullet = elapsedTime - 0.9;
+						enemy->vel = 0;
+						GameObject* go2 = FetchGO();
+						go2->type = GameObject::GO_LASER;
+						go2->scale.Set(4.0f, 4.0f, 4.0f);
+						go2->pos = enemy->pos;
+						go2->angle = laserAngle;
+						go2->enemyDamage = 1;
+						go2->hitboxSizeDivider = 5;
+
+						laserAngle++;
+
+
+						go2->direction = RotateVector(go2->pos, go2->angle * dt * shipSpeed);
+						go2->direction = go2->direction.Normalized();
+
+
+						go2->vel = go2->direction * BULLET_SPEED * 0.8;
+
+						if (laserAngle >= 60)
+						{
+							laserAngle = 0;
+							bossState = 0;
+						}
+
+					}
+					break;
+				}
+			}
 		}
 
 		//*******************************************************************************************************
 
 
 
+		//********************************************************************************************************
 		// Collision Detection
+		//*********************************************************************************************************
 		for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 		{
 			GameObject* go = (GameObject*)*it;
 
-			// Prevent collision with player weapons
 			if (go->active)
 			{
 				go->pos += go->vel * dt * m_speed;
-				if (go->type != GameObject::GO_HERO &&
-					go->type != GameObject::GO_BULLET &&
-					go->type != GameObject::GO_RINGAURA &&
-					go->type != GameObject::GO_BLACKHOLE &&
-					go->type != GameObject::GO_MISSLE &&
-					go->type != GameObject::GO_BOMB &&
-					go->type != GameObject::GO_MOLOTOV &&
-					go->type != GameObject::GO_FIRE &&
-					go->type != GameObject::GO_EXPLOSION &&
-					go->type != GameObject::GO_HEAL &&
-					go->type != GameObject::GO_TRIPLESHOT)
+
+
+				if (go->type == GameObject::GO_GHOST ||	               // Checks for Player vs Enemy Collision (Taking DMG)
+					go->type == GameObject::GO_FLAMEDEMON ||
+					go->type == GameObject::GO_BDEMON ||
+					go->type == GameObject::GO_NIGHTMARE ||
+					go->type == GameObject::GO_ENEMYBULLET ||
+					go->type == GameObject::GO_LASER ||
+					go->type == GameObject::GO_BOSS)
 				{
 					Collision(go);
 				}
@@ -775,17 +902,13 @@ void Assignment1::Update(double dt)
 						if (go2->active)
 						{
 
-							if (go2->type != GameObject::GO_SHIP &&
-								go2->type != GameObject::GO_BULLET &&
-								go2->type != GameObject::GO_RINGAURA &&
-								go2->type != GameObject::GO_BLACKHOLE &&
-								go2->type != GameObject::GO_MISSLE &&
-								go2->type != GameObject::GO_BOMB &&
-								go2->type != GameObject::GO_MOLOTOV &&
-								go2->type != GameObject::GO_FIRE &&
-								go2->type != GameObject::GO_EXPLOSION &&
-								go2->type != GameObject::GO_TRIPLESHOT &&
-								go2->type != GameObject::GO_HEAL)
+							if (go2->type == GameObject::GO_GHOST ||
+								go2->type == GameObject::GO_FLAMEDEMON ||
+								go2->type == GameObject::GO_BDEMON ||
+								go2->type == GameObject::GO_NIGHTMARE ||
+								go2->type == GameObject::GO_ENEMYBULLET ||
+								go2->type == GameObject::GO_BOSS ||
+								go->type == GameObject::GO_LASER)
 							{
 
 								HitEnemy(go, go2);
@@ -808,32 +931,24 @@ void Assignment1::Update(double dt)
 						continue;
 					}
 
-					//Exercise 18: collision check between GO_BULLET and GO_ASTEROID
 					for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
 					{
 						GameObject* go2 = (GameObject*)*it2;
 						if (go2->active)
 						{
 
-							if (go2->type != GameObject::GO_HERO &&
-								go2->type != GameObject::GO_BULLET &&
-								go2->type != GameObject::GO_RINGAURA &&
-								go2->type != GameObject::GO_BLACKHOLE &&
-								go2->type != GameObject::GO_MISSLE &&
-								go2->type != GameObject::GO_BOMB &&
-								go2->type != GameObject::GO_MOLOTOV &&
-								go2->type != GameObject::GO_FIRE &&
-								go2->type != GameObject::GO_EXPLOSION &&
-								go2->type != GameObject::GO_ENEMYBULLET &&
-								go2->type != GameObject::GO_TRIPLESHOT &&
-								go2->type != GameObject::GO_HEAL)
+							if (go2->type == GameObject::GO_GHOST ||	  // Checks for Player WEAPON vs Enemy Collision (Dealing DMG)
+								go2->type == GameObject::GO_FLAMEDEMON ||
+								go2->type == GameObject::GO_BDEMON ||
+								go2->type == GameObject::GO_NIGHTMARE ||
+								go2->type == GameObject::GO_BOSS)
 							{
 
 								HitEnemy(go, go2);
 							}
 
 						}
-			
+
 					}
 				}
 
@@ -945,9 +1060,11 @@ void Assignment1::Update(double dt)
 				{
 					GameObject* go2 = (GameObject*)*it2;
 					// Proceed if enemy type
-					if (go2->type == GameObject::GO_GHOST ||
+					if (go2->type == GameObject::GO_GHOST ||	  // Checks for Player WEAPON vs Enemy Collision (Dealing DMG)
+						go2->type == GameObject::GO_FLAMEDEMON ||
+						go2->type == GameObject::GO_BDEMON ||
 						go2->type == GameObject::GO_NIGHTMARE ||
-						go2->type == GameObject::GO_BDEMON)
+						go2->type == GameObject::GO_BOSS)
 					{
 						if (go2->active && it != it2)
 						{
@@ -1019,6 +1136,7 @@ void Assignment1::Collision(GameObject* go)
 	// Collision check
 	float dis = go->pos.DistanceSquared(m_ship->pos);
 	float cRad = (m_ship->scale.x / go->hitboxSizeDivider + go->scale.x) * (m_ship->scale.x / go->hitboxSizeDivider + go->scale.x);
+
 	if (dis < cRad)
 	{
 		if (go->type == GameObject::GO_TRIPLESHOT)
@@ -1030,7 +1148,14 @@ void Assignment1::Collision(GameObject* go)
 			}
 		}
 
-		go->active = false;
+		if (go->type != GameObject::GO_BOSS &&
+			go->type != GameObject::GO_LASER)
+		{
+			go->active = false;
+		}
+
+
+		//go->active = false;
 		m_objectCount--;
 		m_ship->hp -= go->enemyDamage;
 
@@ -1038,6 +1163,8 @@ void Assignment1::Collision(GameObject* go)
 		{
 			m_ship->hp = m_ship->maxHP;
 		}
+
+
 	}
 	//Exercise 13: asteroids should wrap around the screen like the ship
 	//Wrap(go->pos.x, m_worldWidth);
@@ -1046,8 +1173,9 @@ void Assignment1::Collision(GameObject* go)
 	// unspawn offscreen
 	if (go->type == GameObject::GO_ENEMYBULLET ||
 		go->type == GameObject::GO_BULLET ||
-		go->type == GameObject::GO_BOMB||
+		go->type == GameObject::GO_BOMB ||
 		go->type == GameObject::GO_HEAL ||
+		go->type == GameObject::GO_LASER ||
 		go->type == GameObject::GO_TRIPLESHOT)
 	{
 
@@ -1278,9 +1406,19 @@ void Assignment1::RenderGO(GameObject* go)
 		//Exercise 4a: render a sphere with radius 1
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 10);
-		modelStack.Rotate(go->angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_HERO], false);
+
+		if (heroFacingLeft == true)
+		{
+			modelStack.PushMatrix();
+			modelStack.Rotate(180, 0, 0, 1);
+			RenderMesh(meshList[GEO_HERO_LEFT], false);
+			modelStack.PopMatrix();
+		}
+		else
+		{
+			RenderMesh(meshList[GEO_HERO], false);
+		}
 
 		modelStack.Rotate(-go->angle, 0, 0, 1);
 
@@ -1479,6 +1617,43 @@ void Assignment1::RenderGO(GameObject* go)
 		//Exercise 4b: render a cube with length 2
 		break;
 
+	case GameObject::GO_BOSS:
+		// Move towards player
+		if (go->speedFactor <= 1)
+		{
+			go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
+			go->direction = go->direction.Normalized();
+		}
+		go->vel = (go->direction * 6 * go->speedFactor);
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BOSS], false);
+
+		// Display health bar if asteroid is damaged
+		if (go->hp < go->maxHP)
+		{
+			float greenHealthPercent = (go->hp / go->maxHP) * 100;
+			float redHealthPercent = 100 - greenHealthPercent;
+
+			modelStack.PushMatrix();
+			modelStack.Translate(0, 0.5, 0);
+			modelStack.Scale(go->scale.x * 0.04, go->scale.y * 0.008, go->scale.z);
+			RenderMesh(meshList[GEO_REDHEALTH], false);
+			modelStack.PopMatrix();
+
+			modelStack.PushMatrix();
+			modelStack.Translate(0, 0.5, 0.1);
+			modelStack.Scale(go->scale.x * 0.0004 * greenHealthPercent, go->scale.y * 0.008, go->scale.z);
+			RenderMesh(meshList[GEO_GREENHEALTH], false);
+			modelStack.PopMatrix();
+		}
+		modelStack.PopMatrix();
+		//Exercise 4b: render a cube with length 2
+		break;
+
+	case GameObject::GO_LASER:
 	case GameObject::GO_ENEMYBULLET:
 		modelStack.PushMatrix();
 
@@ -1878,7 +2053,8 @@ void Assignment1::Render()
 		{
 			ss.str("");
 			ss << displayDamage.at(it);
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 3, damageTextX.at(it), damageTextY.at(it));
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 3, damageTextX.at(it) + 0.2, damageTextY.at(it) - 0.2);
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 0), 3, damageTextX.at(it), damageTextY.at(it));
 
 			damageTextY.at(it) += 0.08;
 			double diff = elapsedTime - damageTimer.at(it);
