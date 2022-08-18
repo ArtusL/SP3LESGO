@@ -180,9 +180,9 @@ void Assignment1::Update(double dt)
 	BdemonSprite->PlayAnimation("IDLE", -1, 1.0f);
 	BdemonSprite->Update(dt);
 
-	//FireSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FIRE]);
-	//FireSprite->PlayAnimation("IDLE", -1, 2.0f);
-	//FireSprite->Update(dt);
+	FireSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FIRE]);
+	FireSprite->PlayAnimation("Fire", -1, 1.0f);
+	FireSprite->Update(dt);
 
 	ExplosionSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_EXPLOSION]);
 	ExplosionSprite->PlayAnimation("Explode", -1, 1.0f);
@@ -895,7 +895,7 @@ void Assignment1::Update(double dt)
 					Collision(go);
 				}
 
-				else if (go->type == GameObject::GO_RINGAURA)
+				else if (go->type == GameObject::GO_RINGAURA || go->type == GameObject::GO_FIRE || go->type == GameObject::GO_EXPLOSION)
 				{
 					//Exercise 18: collision check between GO_BULLET and GO_ASTEROID
 					for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
@@ -1017,6 +1017,7 @@ void Assignment1::Update(double dt)
 				go->vel = Vector3(Math::RandFloatMinMax(-1,1), 2, 0) * BULLET_SPEED;
 				go->scale.Set(5.0f, 5.0f, 4.0f);
 				go->angle = m_ship->angle;
+				go->hitboxSizeDivider = 3;
 				prevElapsedBomb = elapsedTime;
 			}
 		}
@@ -1034,6 +1035,7 @@ void Assignment1::Update(double dt)
 					go->vel = Vector3(Math::RandFloatMinMax(-1, 1), Math::RandFloatMinMax(-1, 1), 0) * BULLET_SPEED;
 					go->scale.Set(5.0f, 5.0f, 4.0f);
 					go->angle = m_ship->angle;
+					go->hitboxSizeDivider = 3;
 					prevElapsedMolotov = elapsedTime;
 				}
 			}
@@ -1044,6 +1046,7 @@ void Assignment1::Update(double dt)
 
 			GameObject* go = FetchGO();
 			go->type = GameObject::GO_RINGAURA;
+			go->scale.Set(8, 8, 8);
 			BarrierSprite->PlayAnimation("Aura", -1, 4.0f);
 
 			ringUse = false;
@@ -1193,7 +1196,7 @@ void Assignment1::Collision(GameObject* go)
 
 void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 {
-	if (bullet->type == GameObject::GO_MISSLE || bullet->type == GameObject::GO_BOMB || bullet->type == GameObject::GO_BULLET || bullet->type == GameObject::GO_MOLOTOV)
+	if (bullet->type == GameObject::GO_MISSLE || bullet->type == GameObject::GO_BOMB || bullet->type == GameObject::GO_BULLET || bullet->type == GameObject::GO_MOLOTOV || bullet->type == GameObject::GO_EXPLOSION || bullet->type == GameObject::GO_FIRE)
 	{
 		float dis = bullet->pos.DistanceSquared(target->pos);
 		float rad = (bullet->scale.x + target->scale.x / 4) * (bullet->scale.x + target->scale.x / 4);
@@ -1205,7 +1208,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				GameObject* explosion = FetchGO();
 				explosion->type = GameObject::GO_EXPLOSION;
 				explosion->pos = target->pos;
-				explosion->scale.Set(5, 5, 5);
+				explosion->scale.Set(20, 20, 10);
 				explosion->vel = 0;
 				explosion->explosionScale = 0;
 				explosion->scaleDown = false;
@@ -1225,7 +1228,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				GameObject* explosion = FetchGO();
 				explosion->type = GameObject::GO_EXPLOSION;
 				explosion->pos = target->pos;
-				explosion->scale.Set(5, 5, 5);
+				explosion->scale.Set(40, 40, 10);
 				explosion->vel = 0;
 				explosion->explosionScale = 0;
 				explosion->scaleDown = false;
@@ -1242,19 +1245,44 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 			if (bullet->type == GameObject::GO_MOLOTOV)
 			{
 				GameObject* fire = FetchGO();
-
 				fire->type = GameObject::GO_FIRE;
-				ExplosionSprite->PlayAnimation("Explode", 5, 1.0f);
 				fire->pos = target->pos;
-				fire->scale.Set(1, 1, 1);
+				fire->scale.Set(14, 14, 14);
+				fire->direction = Vector3(0, 1, 0);
 				fire->vel = 0;
+				FireSprite->PlayAnimation("Fire", 1, 1.0f);
 				bullet->active = false;
 
-				//displayDamage.push_back(0);
-				//damageTextX.push_back(target->pos.x / 2);
-				//damageTextY.push_back(target->pos.y / 2);
-				//translateTextY.push_back(0);
-				//damageTimer.push_back(elapsedTime);
+				displayDamage.push_back(0);
+				damageTextX.push_back(target->pos.x / 2);
+				damageTextY.push_back(target->pos.y / 2);
+				translateTextY.push_back(0);
+				damageTimer.push_back(elapsedTime);
+			}
+
+
+			if (bullet->type == GameObject::GO_EXPLOSION)
+			{
+
+				target->hp -= basicBulletDamage * 3;			
+				
+				displayDamage.push_back(basicBulletDamage * 3);
+				damageTextX.push_back(target->pos.x / 2);
+				damageTextY.push_back(target->pos.y / 2);
+				translateTextY.push_back(0);
+				damageTimer.push_back(elapsedTime);
+			}
+
+			if (bullet->type == GameObject::GO_FIRE)
+			{
+
+				target->hp -= basicBulletDamage * 0.1;
+
+				displayDamage.push_back(basicBulletDamage * 0.1);
+				damageTextX.push_back(target->pos.x / 2);
+				damageTextY.push_back(target->pos.y / 2);
+				translateTextY.push_back(0);
+				damageTimer.push_back(elapsedTime);
 			}
 
 
@@ -1327,7 +1355,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 	else if (bullet->type == GameObject::GO_RINGAURA)
 	{
 		float dis = bullet->pos.DistanceSquared(target->pos);
-		float rad = (bullet->scale.x + ringAOE + target->scale.x / 3) * (bullet->scale.x + ringAOE + target->scale.x / 3);
+		float rad = (/*bullet->scale.x +*/ ringAOE + target->scale.x / 4) * (/*bullet->scale.x +*/ ringAOE + target->scale.x / 4);
 		if (dis < rad)
 		{
 
@@ -1343,24 +1371,24 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				m_objectCount--;
 				// Money gained
 				m_money += 1 + bonusMoney;
-
-				m_objectCount--;
-				if (target->type == GameObject::GO_NIGHTMARE)
-				{
-					for (int i = 0; i < 4; ++i)
-					{
-						GameObject* go = FetchGO();
-						go->type = GameObject::GO_GHOST;
-						go->hp = round(1 * hpFactor);
-						go->scale.Set(4, 4, 4);
-						go->pos.Set(target->pos.x, target->pos.y, go->pos.z);
-						go->vel.Set(Math::RandFloatMinMax(-20, 0), Math::RandFloatMinMax(-20, 20), 0);
-					}
-				}
-
 				// Drop  Item
 				if (target->type != GameObject::GO_ENEMYBULLET)
 				{
+					m_objectCount--;
+					if (target->type == GameObject::GO_NIGHTMARE)
+					{
+						for (int i = 0; i < 4; ++i)
+						{
+							GameObject* go = FetchGO();
+							go->type = GameObject::GO_GHOST;
+							go->hp = round(1 * hpFactor);
+							go->scale.Set(4, 4, 4);
+							go->pos.Set(target->pos.x, target->pos.y, go->pos.z);
+							go->vel.Set(Math::RandFloatMinMax(-20, 0), Math::RandFloatMinMax(-20, 20), 0);
+						}
+					}
+
+
 					int random = rand() % 14;
 					if (random == 0)
 					{
@@ -1714,7 +1742,7 @@ void Assignment1::RenderGO(GameObject* go)
 		go->pos = m_ship->pos;
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z +1);
-		modelStack.Scale(go->scale.x + ringAOE + 0.4, go->scale.y + ringAOE + 0.4, go->scale.z + 3);
+		modelStack.Scale(go->scale.x + ringAOE ,go->scale.y + ringAOE, go->scale.z + 3);
 		RenderMesh(meshList[GEO_RINGAURA], false);
 		modelStack.PopMatrix();
 		break;
@@ -1729,25 +1757,6 @@ void Assignment1::RenderGO(GameObject* go)
 		RenderMesh(meshList[GEO_BOMB], false);
 		modelStack.PopMatrix();
 		break;
-		//// Scale the explosion effect
-		//if (go->scaleDown == false)
-		//{
-		//	go->explosionScale += 0.2;
-		//	if (go->explosionScale > 4)
-		//	{
-		//		go->scaleDown = true;
-		//	}
-		//}
-
-		//if (go->scaleDown == true)
-		//{
-		//	go->explosionScale -= 0.2;
-		//	if (go->explosionScale <= 0)
-		//	{
-		//		go->active = false;
-		//	}
-		//}
-		//break;
 
 	case GameObject::GO_MOLOTOV:
 		go->angle += 2.5;
@@ -1762,10 +1771,27 @@ void Assignment1::RenderGO(GameObject* go)
 	case GameObject::GO_FIRE:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
-		modelStack.Rotate(go->angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_FIRE], false);
 		modelStack.PopMatrix();
+		if (go->scaleDown == false)
+		{
+			go->explosionScale += 0.2;
+			if (go->explosionScale > 4)
+			{
+				go->scaleDown = true;
+			}
+		}
+
+		if (go->scaleDown == true)
+		{
+			go->explosionScale -= 0.2;
+			if (go->explosionScale <= 0)
+			{
+				go->active = false;
+			}
+		}
+		break;
 
 
 	case GameObject::GO_EXPLOSION:
