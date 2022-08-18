@@ -151,10 +151,6 @@ void SceneBase::Init()
 	meshList[GEO_RING] = MeshBuilder::GenerateQuad("ring", Color(1, 1, 1), 1.f);
 	meshList[GEO_RING]->textureID = LoadTGA("Image//Perk_Ring.tga");
 
-	meshList[GEO_EXPLOSION] = MeshBuilder::GenerateSphere("explosion", Color(1, 0, 0), 10.f, 20);
-
-	meshList[GEO_RINGAURA] = MeshBuilder::GenerateSphere("Protection", Color(0, 1, 0), 10.f, 20);
-
 	meshList[GEO_MOLOTOV] = MeshBuilder::GenerateQuad("ring", Color(1, 1, 1), 1.f);
 	meshList[GEO_MOLOTOV]->textureID = LoadTGA("Image//Perk_Ring.tga");
 
@@ -200,13 +196,25 @@ void SceneBase::Init()
 	meshList[GEO_NIGHTMARE]->textureID = LoadTexture("Image//Nightmare.png", true);
 	meshList[GEO_NIGHTMARE]->material.kAmbient.Set(1, 1, 1);
 	SpriteAnimation* Nightmaresprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_NIGHTMARE]);
-	Bdemonsprite->AddAnimation("IDLE", 0, 4);
+	Nightmaresprite->AddAnimation("IDLE", 0, 4);
 
 	meshList[GEO_GHOST] = MeshBuilder::GenerateSpriteAnimation("Ghost", 1, 7);
 	meshList[GEO_GHOST]->textureID = LoadTexture("Image//ghost-idle.png", true);
 	meshList[GEO_GHOST]->material.kAmbient.Set(1, 1, 1);
 	SpriteAnimation* Ghostsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_GHOST]);
-	Bdemonsprite->AddAnimation("IDLE", 0, 7);
+	Ghostsprite->AddAnimation("IDLE", 0, 7);
+
+	meshList[GEO_EXPLOSION] = MeshBuilder::GenerateSpriteAnimation("Explosion", 1, 11);
+	meshList[GEO_EXPLOSION]->textureID = LoadTexture("Image//Explosion.png", true);
+	meshList[GEO_EXPLOSION]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* Explosionsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_EXPLOSION]);
+	Explosionsprite->AddAnimation("Explode", 0, 11);
+
+	meshList[GEO_RINGAURA] = MeshBuilder::GenerateSpriteAnimation("Aura", 2, 5);
+	meshList[GEO_RINGAURA]->textureID = LoadTexture("Image//Shield.png", true);
+	meshList[GEO_RINGAURA]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* Barriersprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_RINGAURA]);
+	Barriersprite->AddAnimation("Aura", 0, 10);
 
 	bLightEnabled = false;
 }
