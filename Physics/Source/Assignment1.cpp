@@ -1828,7 +1828,7 @@ void Assignment1::Render()
 		if (molotovCost < 55)
 		{
 			ss.str("");
-			ss << "[B]  Molotov cocktail:$" << bombCost << " LVL" << bomblvl;
+			ss << "[B]  Molotov cocktail:$" << molotovCost << " LVL" << molotovlvl;
 			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 15);
 		}
 		else
