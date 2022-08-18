@@ -51,6 +51,7 @@ protected:
 	SpriteAnimation* NightmareSprite;
 	SpriteAnimation* ExplosionSprite;
 	SpriteAnimation* BarrierSprite;
+	SpriteAnimation* PurpleShot;
 	Vector3 m_force;
 	float shipSpeed;
 
