@@ -205,6 +205,10 @@ void Assignment1::Update(double dt)
 	BarrierSprite->PlayAnimation("Aura", -1, 2.0f);
 	BarrierSprite->Update(dt);
 
+	PurpleShot = dynamic_cast<SpriteAnimation*>(meshList[GEO_LASER]);
+	PurpleShot->PlayAnimation("Purple Projectile", -1, 2.0f);
+	PurpleShot->Update(dt);
+
 
 	// Enter to begin game
 	if (!gameStart)
@@ -515,7 +519,7 @@ void Assignment1::Update(double dt)
 		diff = elapsedTime - prevElapsedAsteroid;
 		if (diff > 1 && m_objectCount < maxEnemyCount && tempSpawnCount < 1)
 		{
-			for (int i = 0; i < 1; ++i)
+			for (int i = 0; i < 10; ++i)
 			{
 				GameObject* go = FetchGO();
 				int randomEnemy = rand() % 100;
@@ -606,7 +610,7 @@ void Assignment1::Update(double dt)
 				go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
 				go->vel.Set(Math::RandFloatMinMax(-20, 20), Math::RandFloatMinMax(-20, 20), 0);
 				go->scale.Set(15, 15, 1);
-				go->hp = 10000;
+				go->hp = 1000;
 				go->maxHP = go->hp;
 				go->prevEnemyBullet = elapsedTime;
 				go->speedFactor = 1;
@@ -850,26 +854,29 @@ void Assignment1::Update(double dt)
 				case 2:
 					if (diff > 1)
 					{
-						enemy->prevEnemyBullet = elapsedTime - 0.9;
+						enemy->prevEnemyBullet = elapsedTime - 0.96;
 						enemy->vel = 0;
 						GameObject* go2 = FetchGO();
 						go2->type = GameObject::GO_LASER;
-						go2->scale.Set(4.0f, 4.0f, 4.0f);
+						go2->scale.Set(2.0f, 2.0f, 4.0f);
 						go2->pos = enemy->pos;
 						go2->angle = laserAngle;
 						go2->enemyDamage = 1;
-						go2->hitboxSizeDivider = 5;
+						go2->hitboxSizeDivider = 6;
 
-						laserAngle++;
+						laserAngle += 2;
 
 
 						go2->direction = RotateVector(go2->pos, go2->angle * dt * shipSpeed);
 						go2->direction = go2->direction.Normalized();
 
+						go2->angle = atan2(go2->direction.y, go2->direction.x) - 90;
+						go2->angle = (go2->angle / Math::PI) * 180.0 - 90.0f;
+
 
 						go2->vel = go2->direction * BULLET_SPEED * 0.8;
 
-						if (laserAngle >= 60)
+						if (laserAngle >= 120)
 						{
 							laserAngle = 0;
 							bossState = 0;
@@ -1153,7 +1160,15 @@ void Assignment1::Collision(GameObject* go)
 {
 	// Collision check
 	float dis = go->pos.DistanceSquared(m_ship->pos);
-	float cRad = (m_ship->scale.x / go->hitboxSizeDivider + go->scale.x) * (m_ship->scale.x / go->hitboxSizeDivider + go->scale.x);
+	float cRad = 0;
+	if (go->type != GameObject::GO_LASER)
+	{
+		cRad = (m_ship->scale.x / go->hitboxSizeDivider + go->scale.x) * (m_ship->scale.x / go->hitboxSizeDivider + go->scale.x);
+	}
+	else
+	{
+		cRad = (m_ship->scale.x / go->hitboxSizeDivider + go->scale.x) * (m_ship->scale.x / go->hitboxSizeDivider + go->scale.x) / go->hitboxSizeDivider;
+	}
 
 	if (dis < cRad)
 	{
@@ -1701,8 +1716,19 @@ void Assignment1::RenderGO(GameObject* go)
 
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 2);
 		modelStack.Rotate(go->angle, 0, 0, 1);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_ENEMYBULLET], false);
+
+		if (go->type == GameObject::GO_LASER)
+		{
+			go->scale.x = 15;
+			go->scale.y = 15;
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(meshList[GEO_LASER], false);
+		}
+		else
+		{
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(meshList[GEO_ENEMYBULLET], false);
+		}
 		modelStack.PopMatrix();
 
 		break;
