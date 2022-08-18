@@ -778,14 +778,14 @@ void Assignment1::Update(double dt)
 					if (diff > 1)
 					{
 						float bladeCount = 8;
-						float angle = 360 / bladeCount;
+						float angle = 360 / bladeCount;;
 						for (int i = 0; i < 8; ++i)
 						{
 							GameObject* go2 = FetchGO();
 							go2->type = GameObject::GO_ENEMYBULLET;
 							go2->scale.Set(4.0f, 4.0f, 4.0f);
 							go2->pos = enemy->pos;
-							go2->angle = angle * i;
+							go2->angle = angle * i + Math::RandFloatMinMax(0, 50);
 							go2->enemyDamage = 10;
 							go2->hitboxSizeDivider = 3;
 
