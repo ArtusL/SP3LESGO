@@ -427,6 +427,7 @@ void Assignment1::Update(double dt)
 		{
 			m_ship->direction = Vector3(-1, 0, 0);
 			m_ship->vel = Vector3(-20, 0, 0);
+			heroFacingLeft = true;
 			//m_force += m_ship->direction * ROTATION_SPEED;
 			//m_torque += Vector3(-m_ship->scale.x, -m_ship->scale.y, 0).Cross(Vector3(ROTATION_SPEED, 0, 0));
 			//if (movementLastPressed == 'D')
@@ -445,6 +446,7 @@ void Assignment1::Update(double dt)
 		{
 			m_ship->direction = Vector3(1, 0, 0);
 			m_ship->vel = Vector3(20, 0, 0);
+			heroFacingLeft = false;
 			//m_force += m_ship->direction * ROTATION_SPEED;
 			//m_torque += Vector3(-m_ship->scale.x, m_ship->scale.y, 0).Cross(Vector3(ROTATION_SPEED, 0, 0));
 			//if (movementLastPressed == 'A')
@@ -1321,6 +1323,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 		}
 	}
 
+
 	else if (bullet->type == GameObject::GO_RINGAURA)
 	{
 		float dis = bullet->pos.DistanceSquared(target->pos);
@@ -1420,7 +1423,6 @@ void Assignment1::RenderGO(GameObject* go)
 			RenderMesh(meshList[GEO_HERO], false);
 		}
 
-		modelStack.Rotate(-go->angle, 0, 0, 1);
 
 		// Display health bar if asteroid is damaged
 		if (go->hp < go->maxHP)
@@ -1652,7 +1654,6 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PopMatrix();
 		//Exercise 4b: render a cube with length 2
 		break;
-
 	case GameObject::GO_LASER:
 	case GameObject::GO_ENEMYBULLET:
 		modelStack.PushMatrix();
