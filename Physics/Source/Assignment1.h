@@ -47,6 +47,7 @@ protected:
 	SpriteAnimation* GhostSprite;
 	SpriteAnimation* FdemonSprite;
 	SpriteAnimation* BdemonSprite;
+	SpriteAnimation* FireSprite;
 	SpriteAnimation* NightmareSprite;
 	Vector3 m_force;
 	float shipSpeed;
@@ -73,6 +74,7 @@ protected:
 	int bomblvl;
 	int molotovCost;
 	int molotovlvl;
+	int molotovAmount;
 	int healthRegenCost;
 	int basicBulletDamage;
 	int healthRegenAmount;

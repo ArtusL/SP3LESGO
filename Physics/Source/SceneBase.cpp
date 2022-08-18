@@ -155,10 +155,10 @@ void SceneBase::Init()
 
 	meshList[GEO_RINGAURA] = MeshBuilder::GenerateSphere("Protection", Color(0, 1, 0), 10.f, 20);
 
-	meshList[GEO_MOLOTOV] = MeshBuilder::GenerateQuad("ring", Color(1, 1, 1), 1.f);
-	meshList[GEO_MOLOTOV]->textureID = LoadTGA("Image//Perk_Ring.tga");
+	meshList[GEO_MOLOTOV] = MeshBuilder::GenerateQuad("molotov", Color(1, 1, 1), 1.f);
+	meshList[GEO_MOLOTOV]->textureID = LoadTGA("Image//Molotov.tga");
 
-	meshList[GEO_FIRE] = MeshBuilder::GenerateQuad("ring", Color(1, 1, 1), 1.f);
+	meshList[GEO_FIRE] = MeshBuilder::GenerateQuad("Flame", Color(1, 1, 1), 1.f);
 	meshList[GEO_FIRE]->textureID = LoadTGA("Image//Perk_Ring.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);

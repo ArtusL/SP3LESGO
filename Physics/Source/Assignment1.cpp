@@ -65,6 +65,7 @@ void Assignment1::Init()
 	missleCost = 20;
 	ringCost = 250;
 	bombCost = 50;
+	molotovCost = 50;
 	healthRegenCost = 20;
 
 
@@ -77,6 +78,9 @@ void Assignment1::Init()
 	ringAOE = 6.0f;
 	bomblvl = 0;
 	bombRate = 0.75;
+	molotovlvl = 0;
+	molotovRate = 0.3;
+	molotovAmount = 1;
 
 	doubleBullet = false;
 	tripleShot = false;
@@ -148,9 +152,13 @@ void Assignment1::Update(double dt)
 	HeroSprite->PlayAnimation("IDLE", -1, 0.5f);
 	HeroSprite->Update(dt);
 
-	//GhostSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_GHOST]);
-	//GhostSprite->PlayAnimation("IDLE", -1, 0.5f);
-	//GhostSprite->Update(dt);
+	GhostSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_GHOST]);
+	GhostSprite->PlayAnimation("IDLE", -1, 0.5f);
+	GhostSprite->Update(dt);
+
+	NightmareSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_NIGHTMARE]);
+	NightmareSprite->PlayAnimation("IDLE", -1, 0.5f);
+	NightmareSprite->Update(dt);
 
 	FdemonSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FDEMON]);
 	FdemonSprite->PlayAnimation("IDLE", -1, 0.8f);
@@ -159,6 +167,10 @@ void Assignment1::Update(double dt)
 	BdemonSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_BDEMON]);
 	BdemonSprite->PlayAnimation("IDLE", -1, 1.0f);
 	BdemonSprite->Update(dt);
+
+	FireSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FIRE]);
+	FireSprite->PlayAnimation("IDLE", -1, 2.0f);
+	FireSprite->Update(dt);
 
 
 	// Enter to begin game
@@ -298,16 +310,21 @@ void Assignment1::Update(double dt)
 					}
 					else
 					{
-						if (molotovlvl <= 8)
+						if (molotovlvl <= 3)
 						{
-							molotovRate += 0.35;
+							molotovAmount++;
+							molotovlvl++;
+						}
+						else if (molotovlvl <=8)
+						{
+							molotovRate += 0.15;
 							molotovlvl++;
 						}
 					}
 					if (molotovlvl <= 8)
 					{
 						m_money -= molotovCost;
-						molotovCost += 30;
+						molotovCost += 35;
 					}
 				}
 			}
@@ -733,6 +750,7 @@ void Assignment1::Update(double dt)
 					go->type != GameObject::GO_MISSLE &&
 					go->type != GameObject::GO_BOMB &&
 					go->type != GameObject::GO_MOLOTOV &&
+					go->type != GameObject::GO_FIRE &&
 					go->type != GameObject::GO_EXPLOSION &&
 					go->type != GameObject::GO_HEAL &&
 					go->type != GameObject::GO_TRIPLESHOT)
@@ -756,6 +774,7 @@ void Assignment1::Update(double dt)
 								go2->type != GameObject::GO_MISSLE &&
 								go2->type != GameObject::GO_BOMB &&
 								go2->type != GameObject::GO_MOLOTOV &&
+								go2->type != GameObject::GO_FIRE &&
 								go2->type != GameObject::GO_EXPLOSION &&
 								go2->type != GameObject::GO_TRIPLESHOT &&
 								go2->type != GameObject::GO_HEAL)
@@ -795,6 +814,7 @@ void Assignment1::Update(double dt)
 								go2->type != GameObject::GO_MISSLE &&
 								go2->type != GameObject::GO_BOMB &&
 								go2->type != GameObject::GO_MOLOTOV &&
+								go2->type != GameObject::GO_FIRE &&
 								go2->type != GameObject::GO_EXPLOSION &&
 								go2->type != GameObject::GO_ENEMYBULLET &&
 								go2->type != GameObject::GO_TRIPLESHOT &&
@@ -881,13 +901,16 @@ void Assignment1::Update(double dt)
 			diff = elapsedTime - prevElapsedMolotov;
 			if (diff > 1 / molotovRate)
 			{
-				GameObject* go = FetchGO();
-				go->type = GameObject::GO_MOLOTOV;
-				go->pos = m_ship->pos;
-				go->vel = Vector3(Math::RandFloatMinMax(-1, 1), Math::RandFloatMinMax(-1, 1), 0) * BULLET_SPEED;
-				go->scale.Set(5.0f, 5.0f, 4.0f);
-				go->angle = m_ship->angle;
-				prevElapsedMolotov = elapsedTime;
+				for (int i = 0; i < molotovAmount; i++)
+				{
+					GameObject* go = FetchGO();
+					go->type = GameObject::GO_MOLOTOV;
+					go->pos = m_ship->pos;
+					go->vel = Vector3(Math::RandFloatMinMax(-1, 1), Math::RandFloatMinMax(-1, 1), 0) * BULLET_SPEED;
+					go->scale.Set(5.0f, 5.0f, 4.0f);
+					go->angle = m_ship->angle;
+					prevElapsedMolotov = elapsedTime;
+				}
 			}
 		}
 
@@ -1077,17 +1100,17 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 			if (bullet->type == GameObject::GO_MOLOTOV)
 			{
 				GameObject* fire = FetchGO();
-				fire->type = GameObject::GO_EXPLOSION;
+				fire->type = GameObject::GO_FIRE;
 				fire->pos = target->pos;
 				fire->scale.Set(1, 1, 1);
 				fire->vel = 0;
 				bullet->active = false;
 
-				displayDamage.push_back(0);
-				damageTextX.push_back(target->pos.x / 2);
-				damageTextY.push_back(target->pos.y / 2);
-				translateTextY.push_back(0);
-				damageTimer.push_back(elapsedTime);
+				//displayDamage.push_back(0);
+				//damageTextX.push_back(target->pos.x / 2);
+				//damageTextY.push_back(target->pos.y / 2);
+				//translateTextY.push_back(0);
+				//damageTimer.push_back(elapsedTime);
 			}
 
 
@@ -1546,6 +1569,15 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PopMatrix();
 		break;
 
+	case GameObject::GO_FIRE:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Rotate(go->angle, 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_FIRE], false);
+		modelStack.PopMatrix();
+
+
 	case GameObject::GO_EXPLOSION:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
@@ -1775,6 +1807,40 @@ void Assignment1::Render()
 				ss.str("");
 				ss << "[L]  Bomb Fire Rate:$" << bombCost << " LVL" << bomblvl;
 				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 20);
+			}
+
+		}
+
+		if (molotovCost < 55)
+		{
+			ss.str("");
+			ss << "[B]  Molotov cocktail:$" << bombCost << " LVL" << bomblvl;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 15);
+		}
+		else
+		{
+
+			if (molotovlvl <= 3)
+			{
+				ss.str("");
+				ss << "[B]  Add Molotov:$" << molotovCost<< " LVL" << molotovlvl;
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 15);
+			}
+
+			else if (molotovlvl <= 8 && molotovlvl >= 4)
+			{
+				ss.str("");
+				ss << "[B]  Molotov Fire Rate:$" << molotovCost << " LVL" << molotovlvl;
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 15);
+			}
+
+
+			else
+			{
+
+				ss.str("");
+				ss << "[B]  Molotov Fire Rate:SOLD" << " LVL" << molotovlvl;
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 15);
 			}
 
 		}
