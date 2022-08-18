@@ -56,8 +56,8 @@ struct GameObject
 	float speedFactor;
 	float prevEnemyBullet;
 	float explosionScale;
-	float ringaurascale;
 	float hitboxSizeDivider;
+	float timer;
 	bool scaleDown;
 
 	float momentOfInertia;

@@ -158,11 +158,8 @@ void SceneBase::Init()
 	meshList[GEO_MOLOTOV] = MeshBuilder::GenerateQuad("molotov", Color(1, 1, 1), 1.f);
 	meshList[GEO_MOLOTOV]->textureID = LoadTGA("Image//Molotov.tga");
 
-	meshList[GEO_MOLOTOV] = MeshBuilder::GenerateQuad("ring", Color(1, 1, 1), 1.f);
-	meshList[GEO_MOLOTOV]->textureID = LoadTGA("Image//Perk_Ring.tga");
-
-	meshList[GEO_FIRE] = MeshBuilder::GenerateQuad("Flame", Color(1, 1, 1), 1.f);
-	meshList[GEO_FIRE]->textureID = LoadTGA("Image//Perk_Ring.tga");
+	meshList[GEO_MOLOTOV] = MeshBuilder::GenerateQuad("molotov", Color(1, 1, 1), 1.f);
+	meshList[GEO_MOLOTOV]->textureID = LoadTGA("Image//Molotov.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//font.tga");
@@ -215,6 +212,12 @@ void SceneBase::Init()
 	meshList[GEO_EXPLOSION]->material.kAmbient.Set(1, 1, 1);
 	SpriteAnimation* Explosionsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_EXPLOSION]);
 	Explosionsprite->AddAnimation("Explode", 0, 11);
+
+	meshList[GEO_FIRE] = MeshBuilder::GenerateSpriteAnimation("Molotovflame", 1, 5);
+	meshList[GEO_FIRE]->textureID = LoadTexture("Image//MolotovFire.png", true);
+	meshList[GEO_FIRE]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* Firesprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FIRE]);
+	Firesprite->AddAnimation("Fire", 0, 4);
 
 	meshList[GEO_RINGAURA] = MeshBuilder::GenerateSpriteAnimation("Aura", 2, 5);
 	meshList[GEO_RINGAURA]->textureID = LoadTexture("Image//Shield.png", true);
