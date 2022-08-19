@@ -88,14 +88,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Common\Source;$(SolutionDir)\glfw\include;$(SolutionDir)\glew\include;$(SolutionDir)/FreeImage;$(SolutionDir)/SOIL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Common\Source;$(SolutionDir)\glfw\include;$(SolutionDir)\glew\include;$(SolutionDir)/FreeImage;$(SolutionDir)/SOIL;$(SolutionDir)/irrKlang;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);$(SolutionDir)\glew\lib;$(SolutionDir)\glfw\lib-vc2019;$(SolutionDir)\FreeImage;$(SolutionDir)\SOIL\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Common.lib;winmm.lib;opengl32.lib;glu32.lib;glew32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);$(SolutionDir)\glew\lib;$(SolutionDir)\glfw\lib-vc2019;$(SolutionDir)\FreeImage;$(SolutionDir)\SOIL\lib;$(SolutionDir)\irrKlang\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common.lib;winmm.lib;opengl32.lib;glu32.lib;glew32.lib;glfw3.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
     </Link>
@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Common\Source\GameControl\Settings.cpp" />
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Assignment1.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
@@ -167,10 +168,14 @@
     <ClCompile Include="Source\SceneKinematics.cpp" />
     <ClCompile Include="Source\SceneVector.cpp" />
     <ClCompile Include="Source\shader.cpp" />
+    <ClCompile Include="Source\SoundController\SoundController.cpp" />
+    <ClCompile Include="Source\SoundController\SoundInfo.cpp" />
     <ClCompile Include="Source\SpriteAnimation.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Common\Source\DesignPatterns\SingletonTemplate.h" />
+    <ClInclude Include="..\Common\Source\GameControl\Settings.h" />
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\Assignment1.h" />
     <ClInclude Include="Source\Camera.h" />
@@ -188,6 +193,8 @@
     <ClInclude Include="Source\SceneKinematics.h" />
     <ClInclude Include="Source\SceneVector.h" />
     <ClInclude Include="Source\shader.hpp" />
+    <ClInclude Include="Source\SoundController\SoundController.h" />
+    <ClInclude Include="Source\SoundController\SoundInfo.h" />
     <ClInclude Include="Source\SpriteAnimation.h" />
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\Vertex.h" />

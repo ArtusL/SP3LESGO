@@ -5,6 +5,9 @@
 #include <vector>
 #include "SceneBase.h"
 #include"SpriteAnimation.h"
+#include "SpriteAnimation.h"
+#include "System\filesystem.h"
+#include"..\Source\SoundController\SoundController.h"
 
 class Assignment1 : public SceneBase
 {
@@ -39,6 +42,7 @@ protected:
 	std::vector<float> damageTextY;
 	std::vector<float> translateTextY;
 	std::vector<double> damageTimer;
+	CSoundController* cSoundController;
 	float m_speed;
 	float m_worldWidth;
 	float m_worldHeight;
