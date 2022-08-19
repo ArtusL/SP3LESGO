@@ -106,7 +106,7 @@ void SceneBase::Init()
 	meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 1), 10, 10, 1.f);
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 2.f);
 
-	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("background", Color(1, 1, 1),1.f);
+	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("background", Color(1, 1, 1), 1.f);
 	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//background.tga");
 
 	meshList[GEO_BOSS] = MeshBuilder::GenerateQuad("boss", Color(1, 1, 1), 1.f);
@@ -168,17 +168,11 @@ void SceneBase::Init()
 	meshList[GEO_ENEMYBULLET] = MeshBuilder::GenerateQuad("enemy bullet", Color(1, 1, 1), 1.f);
 	meshList[GEO_ENEMYBULLET]->textureID = LoadTGA("Image//enemybullet.tga");
 
-	meshList[GEO_BOW]= MeshBuilder::GenerateQuad("missle", Color(1, 1, 1), 1.f);
+	meshList[GEO_BOW] = MeshBuilder::GenerateQuad("missle", Color(1, 1, 1), 1.f);
 	meshList[GEO_BOW]->textureID = LoadTGA("Image//Cards.tga");
 
 	meshList[GEO_BOMB] = MeshBuilder::GenerateQuad("Bomb", Color(1, 1, 1), 1.f);
 	meshList[GEO_BOMB]->textureID = LoadTGA("Image//Bomb.tga");
-
-	meshList[GEO_ARROW] = MeshBuilder::GenerateQuad("Arrow1", Color(1, 1, 1), 1.f);
-	meshList[GEO_ARROW]->textureID = LoadTGA("Image/arrow1.tga");
-
-	meshList[GEO_FLAMINGARROW] = MeshBuilder::GenerateQuad("Arrow2", Color(1, 1, 1), 1.f);
-	meshList[GEO_FLAMINGARROW]->textureID = LoadTGA("Image//arrow2.tga");
 
 	meshList[GEO_RING] = MeshBuilder::GenerateQuad("ring", Color(1, 1, 1), 1.f);
 	meshList[GEO_RING]->textureID = LoadTGA("Image//Perk_Ring.tga");
@@ -192,6 +186,13 @@ void SceneBase::Init()
 
 	meshList[GEO_MOLOTOV] = MeshBuilder::GenerateQuad("molotov", Color(1, 1, 1), 1.f);
 	meshList[GEO_MOLOTOV]->textureID = LoadTGA("Image//Molotov.tga");
+
+
+	meshList[GEO_ARROW] = MeshBuilder::GenerateQuad("Arrow1", Color(1, 1, 1), 1.f);
+	meshList[GEO_ARROW]->textureID = LoadTGA("Image/arrow1.tga");
+
+	meshList[GEO_FLAMINGARROW] = MeshBuilder::GenerateQuad("Arrow2", Color(1, 1, 1), 1.f);
+	meshList[GEO_FLAMINGARROW]->textureID = LoadTGA("Image//arrow2.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//font.tga");
@@ -229,7 +230,6 @@ void SceneBase::Init()
 	meshList[GEO_BOSS_LEFT]->material.kAmbient.Set(1, 1, 1);
 	SpriteAnimation* NightborneSpriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_BOSS_LEFT]);
 	NightborneSpriteLeft->AddAnimation("Move Left", 0, 6);
-
 
 	// Projectile Animation
 	meshList[GEO_LASER] = MeshBuilder::GenerateSpriteAnimation("purple_projectile", 8, 8);

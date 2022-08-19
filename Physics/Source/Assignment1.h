@@ -77,8 +77,8 @@ protected:
 	int fireRateCost;
 	int damageUpCost;
 	int missleCost;
-	int ringCost;
 	int misslelvl;
+	int ringCost;
 	int ringlvl;
 	int bombCost;
 	int bomblvl;
