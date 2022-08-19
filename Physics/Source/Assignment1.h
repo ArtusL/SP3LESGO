@@ -50,7 +50,10 @@ protected:
 	SpriteAnimation* HeroSprite;
 	SpriteAnimation* GhostSprite;
 	SpriteAnimation* FdemonSprite;
+	SpriteAnimation* FdemonATKSprite;
 	SpriteAnimation* BdemonSprite;
+	SpriteAnimation* NightborneSprite;
+	SpriteAnimation* NightborneSpriteLeft;
 	SpriteAnimation* FireSprite;
 	SpriteAnimation* NightmareSprite;
 	SpriteAnimation* ExplosionSprite;
@@ -131,6 +134,8 @@ protected:
 	bool upgradeScreen;
 	bool gameStart;
 	bool heroFacingLeft;
+
+	//enemy
 
 	// FOR DEBUG ONLY
 	int tempSpawnCount;
