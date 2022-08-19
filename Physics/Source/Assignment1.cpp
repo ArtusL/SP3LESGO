@@ -140,6 +140,10 @@ void Assignment1::Init()
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\StrongAttack.ogg"), 8, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Gameover.ogg"), 9, true);
 
+	//shop purchase
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\PurchaseRing.ogg"), 10, true);
+
+
 }
 
 GameObject* Assignment1::FetchGO()
@@ -239,6 +243,7 @@ void Assignment1::Update(double dt)
 		cSoundController->StopSoundByID(4);
 
 		cSoundController->PlaySoundByID(2);
+
 		if (keyDelay > 0)
 		{
 			keyDelay -= 1.0 * dt;
@@ -253,6 +258,8 @@ void Assignment1::Update(double dt)
 					fireRate += 1;
 					m_money -= fireRateCost;
 					fireRateCost += 10;
+					cSoundController->StopSoundByID(10);
+					cSoundController->PlaySoundByID(10);
 				}
 			}
 			if (Application::IsKeyPressed('O'))
@@ -263,6 +270,8 @@ void Assignment1::Update(double dt)
 					m_money -= damageUpCost;
 					basicBulletDamage++;
 					damageUpCost += 15;
+					cSoundController->StopSoundByID(10);
+					cSoundController->PlaySoundByID(10);
 				}
 			}
 			if (Application::IsKeyPressed('P'))
@@ -277,6 +286,8 @@ void Assignment1::Update(double dt)
 					healthRegenAmount++;
 					m_money -= healthRegenCost;
 					healthRegenCost += 25;
+					cSoundController->StopSoundByID(10);
+					cSoundController->PlaySoundByID(10);
 				}
 			}
 			if (Application::IsKeyPressed('J'))
@@ -296,6 +307,8 @@ void Assignment1::Update(double dt)
 					}
 					m_money -= missleCost;
 					missleCost += 15;
+					cSoundController->StopSoundByID(10);
+					cSoundController->PlaySoundByID(10);
 				}
 			}
 
@@ -322,6 +335,8 @@ void Assignment1::Update(double dt)
 						m_money -= ringCost;
 						ringCost += 50;
 					}
+					cSoundController->StopSoundByID(10);
+					cSoundController->PlaySoundByID(10);
 				}
 			}
 
@@ -348,6 +363,8 @@ void Assignment1::Update(double dt)
 						m_money -= bombCost;
 						bombCost += 30;
 					}
+					cSoundController->StopSoundByID(10);
+					cSoundController->PlaySoundByID(10);
 				}
 			}
 
@@ -380,6 +397,8 @@ void Assignment1::Update(double dt)
 						m_money -= molotovCost;
 						molotovCost += 35;
 					}
+					cSoundController->StopSoundByID(10);
+					cSoundController->PlaySoundByID(10);
 				}
 			}
 		}
@@ -932,6 +951,7 @@ void Assignment1::Update(double dt)
 					go->type == GameObject::GO_BOSS)
 				{
 					Collision(go);
+		
 				}
 
 				else if (go->type == GameObject::GO_RINGAURA || go->type == GameObject::GO_FIRE || go->type == GameObject::GO_EXPLOSION)
@@ -1216,7 +1236,8 @@ void Assignment1::Collision(GameObject* go)
 			m_ship->hp = m_ship->maxHP;
 		}
 
-
+		cSoundController->StopSoundByID(8);
+		cSoundController->PlaySoundByID(8);
 	}
 	//Exercise 13: asteroids should wrap around the screen like the ship
 	//Wrap(go->pos.x, m_worldWidth);
@@ -1318,6 +1339,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				damageTextY.push_back(target->pos.y / 2);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
+			/*	cSoundController->StopSoundByID(5);*/
+				cSoundController->PlaySoundByID(5);
 			}
 
 			if (bullet->type == GameObject::GO_FIRE)
@@ -1343,6 +1366,9 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				damageTextY.push_back(target->pos.y / 2);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
+
+				cSoundController->StopSoundByID(7);
+				cSoundController->PlaySoundByID(7);
 			}
 
 			// Asteroid HP reaches 0
