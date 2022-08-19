@@ -147,6 +147,7 @@ void Assignment1::Init()
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Gameover.ogg"), 9, true);
 	//shop purchase
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\PurchaseRing.ogg"), 10, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\SwordSlash.wav"), 11, true);
 
 
 }
@@ -924,6 +925,8 @@ void Assignment1::Update(double dt)
 						enemy->speedFactor = 10;
 						enemy->prevEnemyBullet = elapsedTime;
 						enemy->direction += Vector3(Math::RandFloatMinMax(-0.5, 0.5), Math::RandFloatMinMax(-0.5, 0.5), 0);
+						cSoundController->StopSoundByID(11);
+						cSoundController->PlaySoundByID(11);
 
 						shootCount++;
 					}
