@@ -82,6 +82,11 @@ protected:
 	int molotovCost;
 	int molotovlvl;
 	int molotovAmount;
+	int arrowCost;
+	int arrowlvl;
+	int arrowAmount;
+	int flamingarrowCost;
+	int flamingarrowlvl;
 	int healthRegenCost;
 	int basicBulletDamage;
 	int healthRegenAmount;
@@ -97,14 +102,17 @@ protected:
 
 	// Timers
 	double prevElapsedAsteroid;
+	double prevElapsedArrow;
+	double prevElapsedBomb;
 	double prevElapsedBullet;
 	double prevElapsedMissle;
-	double prevElapsedBomb;
 	double prevElapsedMolotov;
 	double prevHealthRegen;
 	double missleRate;
 	double molotovRate;
 	double bombRate;
+	double arrowRate;
+	double flamingarrowRate;
 	double keyDelay;
 	double elapsedTime;
 	double waveTimer;
@@ -113,6 +121,8 @@ protected:
 	bool missleUse;
 	bool ringUse;
 	bool bombUse;
+	bool flamingarrowUse;
+	bool arrowUse;
 	bool molotovUse;
 	bool healthRegen;
 	bool doubleBullet;

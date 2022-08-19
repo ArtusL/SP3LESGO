@@ -57,7 +57,7 @@ void Assignment1::Init()
 
 	//Exercise 2b: Initialize m_hp and m_score
 	m_hp = 100;
-	m_money = 10000;
+	m_money = 3800;
 	m_objectCount = 0;
 	waveCount = 5;
 	gravity = -4;
@@ -72,6 +72,8 @@ void Assignment1::Init()
 	ringCost = 250;
 	bombCost = 50;
 	molotovCost = 50;
+	arrowCost = 20;
+	flamingarrowCost = 1000;
 	healthRegenCost = 20;
 
 	// FOR DEBUG ONLY
@@ -94,9 +96,16 @@ void Assignment1::Init()
 	molotovlvl = 0;
 	molotovRate = 0.3;
 	molotovAmount = 1;
+	arrowlvl = 0;
+	arrowRate = 0.5;
+	arrowAmount = 3;
+	flamingarrowlvl = 0;
+	flamingarrowCost = 1000;
+
 
 	doubleBullet = false;
 	tripleShot = false;
+	flamingarrowUse = false;
 	upgradeScreen = false;
 	isAlive = true;
 	gameStart = false;
@@ -151,7 +160,7 @@ GameObject* Assignment1::FetchGO()
 
 	//Get Size before adding 10
 	int prevSize = m_goList.size();
-	for (int i = 0; i < 10; ++i) {
+	for (int i = 0; i < 1000; ++i) {
 		m_goList.push_back(new GameObject(GameObject::GO_GHOST));
 	}
 	m_goList.at(prevSize)->active = true;
@@ -163,7 +172,7 @@ void Assignment1::Update(double dt)
 
 	SceneBase::Update(dt);
 	elapsedTime += dt;
-	cSoundController->PlaySoundByID(4);
+	/*cSoundController->PlaySoundByID(4);*/
 	//Calculating aspect ratio
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
@@ -283,7 +292,7 @@ void Assignment1::Update(double dt)
 				}
 			}
 
-			if (Application::IsKeyPressed('K'))
+			if (Application::IsKeyPressed('K') && ringCost <= 450)
 			{
 				keyDelay = 0.3;
 				if (m_money >= ringCost)
@@ -301,7 +310,7 @@ void Assignment1::Update(double dt)
 							ringlvl++;
 						}
 					}
-					if (ringlvl <= 4)
+					if (ringlvl <= 5)
 					{
 						m_money -= ringCost;
 						ringCost += 50;
@@ -309,7 +318,7 @@ void Assignment1::Update(double dt)
 				}
 			}
 
-			if (Application::IsKeyPressed('L'))
+			if (Application::IsKeyPressed('L') && bombCost <= 290)
 			{
 				keyDelay = 0.3;
 				if (m_money >= bombCost)
@@ -327,16 +336,16 @@ void Assignment1::Update(double dt)
 							bomblvl++;
 						}
 					}
-					if (bomblvl <= 8)
+					if (bomblvl <= 9)
 					{
 						m_money -= bombCost;
 						bombCost += 30;
 					}
+
 				}
 			}
 
-
-			if (Application::IsKeyPressed('B'))
+			if (Application::IsKeyPressed('B') && molotovCost <= 330)
 			{
 				keyDelay = 0.3;
 				if (m_money >= molotovCost)
@@ -353,17 +362,62 @@ void Assignment1::Update(double dt)
 							molotovAmount++;
 							molotovlvl++;
 						}
-						else if (molotovlvl <=8)
+						else if (molotovlvl <= 8)
 						{
 							molotovRate += 0.15;
 							molotovlvl++;
 						}
 					}
-					if (molotovlvl <= 8)
+					if (molotovlvl <= 9)
 					{
 						m_money -= molotovCost;
 						molotovCost += 35;
 					}
+				}
+			}
+
+			if (Application::IsKeyPressed('N') && arrowCost <= 220)
+			{
+				keyDelay = 0.3;
+				if (m_money >= arrowCost)
+				{
+					if (arrowCost < 30)
+					{
+						arrowUse = true;
+						arrowlvl++;
+					}
+					else
+					{
+						if (arrowlvl <= 4)
+						{
+							arrowAmount++;
+							arrowlvl++;
+						}
+						else if (arrowlvl <= 8)
+						{
+							arrowRate += 0.15;
+							arrowlvl++;
+						}
+					}
+					if (arrowlvl <= 9)
+					{
+						m_money -= arrowCost;
+						arrowCost += 25;
+					}
+				}
+			}
+
+			if (Application::IsKeyPressed('L') && flamingarrowCost <= 1000 && arrowlvl == 9 && molotovlvl == 9)
+			{
+				keyDelay = 0.3;
+				if (m_money >= flamingarrowCost)
+				{
+
+					flamingarrowUse = true;
+					flamingarrowlvl++;
+					m_money -= flamingarrowCost;
+					flamingarrowCost += 1000;
+
 				}
 			}
 		}
@@ -479,30 +533,6 @@ void Assignment1::Update(double dt)
 		{
 			upgradeScreen = true;
 		}
-
-
-
-
-		//Exercise 8: use 2 keys to increase and decrease mass of ship
-		if (Application::IsKeyPressed('O'))
-		{
-			m_ship->mass += 1.0f * dt;
-			m_ship->momentOfInertia = m_ship->mass * m_ship->scale.x * m_ship->scale.x * m_ship->scale.x;
-
-		}
-		if (Application::IsKeyPressed('P'))
-		{
-			//m_ship->mass -= 1.0f * dt;
-			//if (m_ship->mass >= 0)
-			//	m_ship->mass -= 0.1f;
-
-			if (m_ship->mass >= 0.1f)
-				m_ship->mass = 0.1f;
-			m_ship->momentOfInertia = m_ship->mass * m_ship->scale.x * m_ship->scale.x;
-		}
-
-
-
 
 		// Wave count increases after a certain period
 		float diff = elapsedTime - waveTimer;
@@ -865,7 +895,7 @@ void Assignment1::Update(double dt)
 						go2->enemyDamage = 1;
 						go2->hitboxSizeDivider = 6;
 
-						laserAngle += 2;
+						laserAngle += 10;
 
 						go2->direction = RotateVector(go2->pos, go2->angle * dt * shipSpeed);
 						go2->direction = go2->direction.Normalized();
@@ -876,7 +906,7 @@ void Assignment1::Update(double dt)
 
 						go2->vel = go2->direction * BULLET_SPEED * 0.8;
 
-						if (laserAngle >= 120)
+						if (laserAngle >= 1000)
 						{
 							laserAngle = 0;
 							bossState = 0;
@@ -942,7 +972,7 @@ void Assignment1::Update(double dt)
 				}
 
 				//Exercise 16: unspawn bullets when they leave screen
-				else if (go->type == GameObject::GO_BULLET || go->type == GameObject::GO_MISSLE || go->type == GameObject::GO_BOMB || go->type == GameObject::GO_MOLOTOV)
+				else if (go->type == GameObject::GO_BULLET || go->type == GameObject::GO_MISSLE || go->type == GameObject::GO_BOMB || go->type == GameObject::GO_MOLOTOV || go->type == GameObject::GO_ARROW || go->type == GameObject::GO_FLAMINGARROW)
 				{
 					if (go->pos.x > m_worldWidth
 						|| go->pos.x <0
@@ -1034,29 +1064,72 @@ void Assignment1::Update(double dt)
 				GameObject* go = FetchGO();
 				go->type = GameObject::GO_BOMB;
 				go->pos = m_ship->pos;
-				go->vel = Vector3(Math::RandFloatMinMax(-1,1), 2, 0) * BULLET_SPEED;
+				go->vel = Vector3(Math::RandFloatMinMax(-1, 1), 2, 0) * BULLET_SPEED;
 				go->scale.Set(5.0f, 5.0f, 4.0f);
 				go->angle = m_ship->angle;
 				go->hitboxSizeDivider = 3;
 				prevElapsedBomb = elapsedTime;
 			}
 		}
-
-		if (molotovUse == true)
+		if (flamingarrowUse == false)
 		{
-			diff = elapsedTime - prevElapsedMolotov;
-			if (diff > 1 / molotovRate)
+			if (arrowUse == true)
 			{
-				for (int i = 0; i < molotovAmount; i++)
+				diff = elapsedTime - prevElapsedArrow;
+				if (diff > 1 / arrowRate)
+				{
+					for (int i = 0; i < arrowAmount; i++)
+					{
+						GameObject* go = FetchGO();
+						go->type = GameObject::GO_ARROW;
+						go->pos = m_ship->pos;
+						go->direction = m_ship->pos - Vector3(worldPosX + Math::RandFloatMinMax(10, -10), worldPosY + Math::RandFloatMinMax(10, -10), m_ship->pos.z);
+						go->direction = go->direction.Normalized();
+						go->vel = -(go->direction * BULLET_SPEED * 0.8);
+						go->scale.Set(6.0f, 6.0f, 6.0f);
+						go->angle = m_ship->angle + 45;
+						prevElapsedArrow = elapsedTime;
+					}
+				}
+			}
+		}
+		if (flamingarrowUse == true)
+		{
+			diff = elapsedTime - prevElapsedArrow;
+			if (diff > 1 / arrowRate)
+			{
+				for (int i = 0; i < arrowAmount; i++)
 				{
 					GameObject* go = FetchGO();
-					go->type = GameObject::GO_MOLOTOV;
+					go->type = GameObject::GO_FLAMINGARROW;
 					go->pos = m_ship->pos;
-					go->vel = Vector3(Math::RandFloatMinMax(-1, 1), Math::RandFloatMinMax(-1, 1), 0) * BULLET_SPEED;
-					go->scale.Set(5.0f, 5.0f, 4.0f);
-					go->angle = m_ship->angle;
-					go->hitboxSizeDivider = 3;
-					prevElapsedMolotov = elapsedTime;
+					go->direction = m_ship->pos - Vector3(worldPosX + Math::RandFloatMinMax(10, -10), worldPosY + Math::RandFloatMinMax(10, -10), m_ship->pos.z);
+					go->direction = go->direction.Normalized();
+					go->vel = -(go->direction * BULLET_SPEED * 0.8);
+					go->scale.Set(6.0f, 6.0f, 6.0f);
+					go->angle = m_ship->angle + 45;
+					prevElapsedArrow = elapsedTime;
+				}
+			}
+		}
+		if (flamingarrowUse == false)
+		{
+			if (molotovUse == true)
+			{
+				diff = elapsedTime - prevElapsedMolotov;
+				if (diff > 1 / molotovRate)
+				{
+					for (int i = 0; i < molotovAmount; i++)
+					{
+						GameObject* go = FetchGO();
+						go->type = GameObject::GO_MOLOTOV;
+						go->pos = m_ship->pos;
+						go->vel = Vector3(Math::RandFloatMinMax(-1, 1), Math::RandFloatMinMax(-1, 1), 0) * BULLET_SPEED;
+						go->scale.Set(5.0f, 5.0f, 4.0f);
+						go->angle = m_ship->angle;
+						go->hitboxSizeDivider = 3;
+						prevElapsedMolotov = elapsedTime;
+					}
 				}
 			}
 		}
@@ -1224,7 +1297,7 @@ void Assignment1::Collision(GameObject* go)
 
 void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 {
-	if (bullet->type == GameObject::GO_MISSLE || bullet->type == GameObject::GO_BOMB || bullet->type == GameObject::GO_BULLET || bullet->type == GameObject::GO_MOLOTOV || bullet->type == GameObject::GO_EXPLOSION || bullet->type == GameObject::GO_FIRE)
+	if (bullet->type == GameObject::GO_MISSLE || bullet->type == GameObject::GO_BOMB || bullet->type == GameObject::GO_BULLET || bullet->type == GameObject::GO_MOLOTOV || bullet->type == GameObject::GO_EXPLOSION || bullet->type == GameObject::GO_FIRE || bullet->type == GameObject::GO_ARROW || bullet->type == GameObject::GO_FLAMINGARROW)
 	{
 		float dis = bullet->pos.DistanceSquared(target->pos);
 		float rad = (bullet->scale.x + target->scale.x / 4) * (bullet->scale.x + target->scale.x / 4);
@@ -1270,6 +1343,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				damageTimer.push_back(elapsedTime);
 			}
 
+
+
 			if (bullet->type == GameObject::GO_MOLOTOV)
 			{
 				GameObject* fire = FetchGO();
@@ -1292,8 +1367,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 			if (bullet->type == GameObject::GO_EXPLOSION)
 			{
 
-				target->hp -= basicBulletDamage * 3;			
-				
+				target->hp -= basicBulletDamage * 3;
+
 				displayDamage.push_back(basicBulletDamage * 3);
 				damageTextX.push_back(target->pos.x / 2);
 				damageTextY.push_back(target->pos.y / 2);
@@ -1317,6 +1392,37 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 			if (bullet->type == GameObject::GO_BULLET)
 			{
 				target->hp -= basicBulletDamage;
+				bullet->active = false;
+
+				displayDamage.push_back(basicBulletDamage);
+				damageTextX.push_back(target->pos.x / 2);
+				damageTextY.push_back(target->pos.y / 2);
+				translateTextY.push_back(0);
+				damageTimer.push_back(elapsedTime);
+			}
+
+			if (bullet->type == GameObject::GO_ARROW)
+			{
+				target->hp -= basicBulletDamage;
+				bullet->active = false;
+
+				displayDamage.push_back(basicBulletDamage);
+				damageTextX.push_back(target->pos.x / 2);
+				damageTextY.push_back(target->pos.y / 2);
+				translateTextY.push_back(0);
+				damageTimer.push_back(elapsedTime);
+			}
+
+			if (bullet->type == GameObject::GO_FLAMINGARROW)
+			{
+				target->hp -= basicBulletDamage;
+				GameObject* fire = FetchGO();
+				fire->type = GameObject::GO_FIRE;
+				fire->pos = target->pos;
+				fire->scale.Set(14, 14, 14);
+				fire->direction = Vector3(0, 1, 0);
+				fire->vel = 0;
+				FireSprite->PlayAnimation("Fire", 1, 1.0f);
 				bullet->active = false;
 
 				displayDamage.push_back(basicBulletDamage);
@@ -1742,6 +1848,26 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PopMatrix();
 		break;
 
+	case GameObject::GO_ARROW:
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Rotate(go->angle, 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_ARROW], false);
+		modelStack.PopMatrix();
+		break;
+
+	case GameObject::GO_FLAMINGARROW:
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Rotate(go->angle, 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_FLAMINGARROW], false);
+		modelStack.PopMatrix();
+		break;
+
 	case GameObject::GO_HEAL:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
@@ -1779,8 +1905,8 @@ void Assignment1::RenderGO(GameObject* go)
 	case GameObject::GO_RINGAURA:
 		go->pos = m_ship->pos;
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z +1);
-		modelStack.Scale(go->scale.x + ringAOE ,go->scale.y + ringAOE, go->scale.z + 3);
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 1);
+		modelStack.Scale(go->scale.x + ringAOE, go->scale.y + ringAOE, go->scale.z + 3);
 		RenderMesh(meshList[GEO_RINGAURA], false);
 		modelStack.PopMatrix();
 		break;
@@ -1789,7 +1915,7 @@ void Assignment1::RenderGO(GameObject* go)
 		go->angle += 2.5;
 		go->vel.y += gravity * m_speed;
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y , go->pos.z + 3);
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Rotate(go->angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_BOMB], false);
@@ -2077,7 +2203,7 @@ void Assignment1::Render()
 			if (molotovlvl <= 3)
 			{
 				ss.str("");
-				ss << "[B]  Add Molotov:$" << molotovCost<< " LVL" << molotovlvl;
+				ss << "[B]  Add Molotov:$" << molotovCost << " LVL" << molotovlvl;
 				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 15);
 			}
 
@@ -2098,6 +2224,54 @@ void Assignment1::Render()
 			}
 
 		}
+
+		if (arrowCost < 30)
+		{
+			ss.str("");
+			ss << "[N]  Arrow shot:$" << arrowCost << " LVL" << arrowlvl;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10);
+		}
+		else
+		{
+
+			if (arrowlvl <= 3)
+			{
+				ss.str("");
+				ss << "[N]  Add Arrows:$" << arrowCost << " LVL" << arrowlvl;
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10);
+			}
+
+			else if (arrowlvl <= 8 && arrowlvl >= 4)
+			{
+				ss.str("");
+				ss << "[N]  Arrow Fire Rate:$" << arrowCost << " LVL" << arrowlvl;
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10);
+			}
+
+			else if (arrowlvl == 9 && molotovlvl == 9 && flamingarrowlvl == 0)
+			{
+				ss.str("");
+				ss << "[N]  Flaming Arrows:$" << flamingarrowCost << " LVL" << flamingarrowlvl;
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10);
+			}
+
+			else if (arrowlvl == 9 && molotovlvl == 9 && flamingarrowlvl == 1)
+			{
+				ss.str("");
+				ss << "[N]  Flaming Arrows:SOLD" << " LVL" << flamingarrowlvl;
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10);
+			}
+
+			else
+			{
+
+				ss.str("");
+				ss << "[N]  arrow Fire Rate:SOLD" << " LVL" << arrowlvl;
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10);
+			}
+
+		}
+
 	}
 
 	if (!gameStart)

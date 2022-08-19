@@ -151,6 +151,12 @@ void SceneBase::Init()
 	meshList[GEO_BOMB] = MeshBuilder::GenerateQuad("Bomb", Color(1, 1, 1), 1.f);
 	meshList[GEO_BOMB]->textureID = LoadTGA("Image//Bomb.tga");
 
+	meshList[GEO_ARROW] = MeshBuilder::GenerateQuad("Arrow1", Color(1, 1, 1), 1.f);
+	meshList[GEO_ARROW]->textureID = LoadTGA("Image/arrow1.tga");
+
+	meshList[GEO_FLAMINGARROW] = MeshBuilder::GenerateQuad("Arrow2", Color(1, 1, 1), 1.f);
+	meshList[GEO_FLAMINGARROW]->textureID = LoadTGA("Image//arrow2.tga");
+
 	meshList[GEO_RING] = MeshBuilder::GenerateQuad("ring", Color(1, 1, 1), 1.f);
 	meshList[GEO_RING]->textureID = LoadTGA("Image//Perk_Ring.tga");
 
