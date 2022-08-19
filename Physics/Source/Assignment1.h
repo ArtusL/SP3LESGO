@@ -50,12 +50,14 @@ protected:
 	SpriteAnimation* HeroSprite;
 	SpriteAnimation* GhostSprite;
 	SpriteAnimation* FdemonSprite;
+	SpriteAnimation* FdemonATKSprite;
 	SpriteAnimation* BdemonSprite;
 	SpriteAnimation* FireSprite;
 	SpriteAnimation* NightmareSprite;
 	SpriteAnimation* ExplosionSprite;
 	SpriteAnimation* BarrierSprite;
 	SpriteAnimation* PurpleShot;
+
 	Vector3 m_force;
 	float shipSpeed;
 
@@ -121,6 +123,9 @@ protected:
 	bool upgradeScreen;
 	bool gameStart;
 	bool heroFacingLeft;
+
+
+	//enemy
 
 	// FOR DEBUG ONLY
 	int tempSpawnCount;

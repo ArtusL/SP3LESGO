@@ -100,6 +100,7 @@ void Assignment1::Init()
 	upgradeScreen = false;
 	isAlive = true;
 	gameStart = false;
+	//FdAttack = false;
 
 	movementLastPressed = ' ';
 
@@ -129,10 +130,15 @@ void Assignment1::Init()
 	m_ship->momentOfInertia = m_ship->mass * m_ship->scale.x * m_ship->scale.x;
 
 	cSoundController = CSoundController::GetInstance();
-	cSoundController->LoadSound(FileSystem::getPath("Sound\\Gameover.ogg"), 1, true);
-	cSoundController->LoadSound(FileSystem::getPath("Sound\\Explosion.ogg"), 2, true);
-	cSoundController->LoadSound(FileSystem::getPath("Sound\\Magic.ogg"), 3, true);
-	cSoundController->LoadSound(FileSystem::getPath("Sound\\Sound_Robot_Invasion.ogg"), 4, true, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\AMainMenu.ogg"), 1, true,true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\AShop.ogg"), 2, true, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\AGamePlay1.ogg"), 3, true, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\AGamePlay2.ogg"), 4, true, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\Explosion.ogg"), 5, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\Magic.ogg"), 6, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\Slash.ogg"), 7, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\StrongAttack.ogg"), 8, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\Gameover.ogg"), 9, true);
 
 }
 
@@ -163,7 +169,7 @@ void Assignment1::Update(double dt)
 
 	SceneBase::Update(dt);
 	elapsedTime += dt;
-	cSoundController->PlaySoundByID(4);
+	cSoundController->PlaySoundByID(1);
 	//Calculating aspect ratio
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
@@ -188,6 +194,10 @@ void Assignment1::Update(double dt)
 	FdemonSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FDEMON]);
 	FdemonSprite->PlayAnimation("IDLE", -1, 0.8f);
 	FdemonSprite->Update(dt);
+
+	//FdemonATKSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FDEMON_ATTACK]);
+	//FdemonATKSprite->PlayAnimation("ATTACK", -1, 1.0f);
+	//FdemonATKSprite->Update(dt);
 
 	BdemonSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_BDEMON]);
 	BdemonSprite->PlayAnimation("IDLE", -1, 1.0f);
@@ -217,12 +227,18 @@ void Assignment1::Update(double dt)
 		if (Application::IsKeyPressed(' '))
 		{
 			gameStart = true;
+		
 		}
 	}
 
 	// Player ship ugrade screen
 	if (upgradeScreen == true && gameStart)
 	{
+		cSoundController->StopSoundByID(1);
+		cSoundController->StopSoundByID(3);
+		cSoundController->StopSoundByID(4);
+
+		cSoundController->PlaySoundByID(2);
 		if (keyDelay > 0)
 		{
 			keyDelay -= 1.0 * dt;
@@ -377,6 +393,9 @@ void Assignment1::Update(double dt)
 	else if (gameStart)
 	{
 
+	cSoundController->StopSoundByID(1);
+	cSoundController->StopSoundByID(2);
+	cSoundController->PlaySoundByID(4);
 		// ************************* CURSOR CODE ****************************************
 		{
 
@@ -1617,7 +1636,7 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PushMatrix();
 
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_FLAMEDEMON], false);
+		RenderMesh(meshList[GEO_FDEMON], false);
 		modelStack.PopMatrix();
 
 		// Display health bar if asteroid is damaged
