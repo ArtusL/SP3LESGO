@@ -52,12 +52,13 @@ protected:
 	SpriteAnimation* FdemonSprite;
 	SpriteAnimation* FdemonATKSprite;
 	SpriteAnimation* BdemonSprite;
+	SpriteAnimation* NightborneSprite;
+	SpriteAnimation* NightborneSpriteLeft;
 	SpriteAnimation* FireSprite;
 	SpriteAnimation* NightmareSprite;
 	SpriteAnimation* ExplosionSprite;
 	SpriteAnimation* BarrierSprite;
 	SpriteAnimation* PurpleShot;
-
 	Vector3 m_force;
 	float shipSpeed;
 
@@ -123,7 +124,6 @@ protected:
 	bool upgradeScreen;
 	bool gameStart;
 	bool heroFacingLeft;
-
 
 	//enemy
 

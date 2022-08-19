@@ -135,6 +135,7 @@ void SceneBase::Init()
 	meshList[GEO_HERO_LEFT]->material.kAmbient.Set(1, 1, 1);
 	SpriteAnimation* saLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERO_LEFT]);
 	saLeft->AddAnimation("IDLE", 0, 4);
+
 	// Enemy types
 	meshList[GEO_FDEMON] = MeshBuilder::GenerateSpriteAnimation("Fdemon", 1, 6);
 	meshList[GEO_FDEMON]->textureID = LoadTexture("Image//FlameDemon.png", true);
@@ -159,8 +160,6 @@ void SceneBase::Init()
 	meshList[GEO_GHOST]->material.kAmbient.Set(1, 1, 1);
 	SpriteAnimation* Ghostsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_GHOST]);
 	Ghostsprite->AddAnimation("IDLE", 0, 7);
-
-
 
 	// Bullet types
 	meshList[GEO_CLUB] = MeshBuilder::GenerateQuad("basic bullet", Color(1, 1, 1), 1.f);
@@ -199,8 +198,33 @@ void SceneBase::Init()
 	meshList[GEO_TRIPLESHOT]->textureID = LoadTGA("Image//tripleshot.tga");
 
 
+	// Boss Animation
+	meshList[GEO_BOSSATTACK] = MeshBuilder::GenerateSpriteAnimation("Boss Attack", 1, 12);
+	meshList[GEO_BOSSATTACK]->textureID = LoadTexture("Image//Nightborne_Attack.png", true);
+	meshList[GEO_BOSSATTACK]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* NightborneSpriteAttack = dynamic_cast<SpriteAnimation*>(meshList[GEO_BOSSATTACK]);
+	NightborneSpriteAttack->AddAnimation("Attack Right", 0, 12);
 
-	
+	meshList[GEO_BOSSATTACK_LEFT] = MeshBuilder::GenerateSpriteAnimation("Boss Attack Left", 1, 12);
+	meshList[GEO_BOSSATTACK_LEFT]->textureID = LoadTexture("Image//Nightborne_Attack.png", false);
+	meshList[GEO_BOSSATTACK_LEFT]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* NightborneSpriteAttackLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_BOSSATTACK_LEFT]);
+	NightborneSpriteAttackLeft->AddAnimation("Attack Left", 0, 12);
+
+	meshList[GEO_BOSS] = MeshBuilder::GenerateSpriteAnimation("Boss Attack Left", 1, 6);
+	meshList[GEO_BOSS]->textureID = LoadTexture("Image//NightBorneMove.png", true);
+	meshList[GEO_BOSS]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* NightborneSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_BOSS]);
+	NightborneSprite->AddAnimation("Move Right", 0, 6);
+
+
+	meshList[GEO_BOSS_LEFT] = MeshBuilder::GenerateSpriteAnimation("Boss Attack Left", 1, 6);
+	meshList[GEO_BOSS_LEFT]->textureID = LoadTexture("Image//NightBorneMove.png", false);
+	meshList[GEO_BOSS_LEFT]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* NightborneSpriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_BOSS_LEFT]);
+	NightborneSpriteLeft->AddAnimation("Move Left", 0, 6);
+
+
 	// Projectile Animation
 	meshList[GEO_LASER] = MeshBuilder::GenerateSpriteAnimation("purple_projectile", 8, 8);
 	meshList[GEO_LASER]->textureID = LoadTexture("Image//purple_projectile.png", true);

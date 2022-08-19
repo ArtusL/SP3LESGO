@@ -61,6 +61,7 @@ struct GameObject
 	float hitboxSizeDivider;
 	float timer;
 	bool scaleDown;
+	bool facingLeft;
 
 	float momentOfInertia;
 	float angularVelocity;

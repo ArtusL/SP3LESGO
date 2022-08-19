@@ -56,7 +56,7 @@ void Assignment1::Init()
 	}
 
 	//Exercise 2b: Initialize m_hp and m_score
-	m_hp = 100;
+	m_hp = 100000;
 	m_money = 10000;
 	m_objectCount = 0;
 	waveCount = 5;
@@ -100,7 +100,6 @@ void Assignment1::Init()
 	upgradeScreen = false;
 	isAlive = true;
 	gameStart = false;
-	//FdAttack = false;
 
 	movementLastPressed = ' ';
 
@@ -129,7 +128,6 @@ void Assignment1::Init()
 
 	m_ship->momentOfInertia = m_ship->mass * m_ship->scale.x * m_ship->scale.x;
 
-	cSoundController = CSoundController::GetInstance();
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\AMainMenu.ogg"), 1, true,true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\AShop.ogg"), 2, true, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\AGamePlay1.ogg"), 3, true, true);
@@ -139,7 +137,6 @@ void Assignment1::Init()
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Slash.ogg"), 7, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\StrongAttack.ogg"), 8, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Gameover.ogg"), 9, true);
-
 	//shop purchase
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\PurchaseRing.ogg"), 10, true);
 
@@ -199,10 +196,6 @@ void Assignment1::Update(double dt)
 	FdemonSprite->PlayAnimation("IDLE", -1, 0.8f);
 	FdemonSprite->Update(dt);
 
-	//FdemonATKSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FDEMON_ATTACK]);
-	//FdemonATKSprite->PlayAnimation("ATTACK", -1, 1.0f);
-	//FdemonATKSprite->Update(dt);
-
 	BdemonSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_BDEMON]);
 	BdemonSprite->PlayAnimation("IDLE", -1, 1.0f);
 	BdemonSprite->Update(dt);
@@ -231,7 +224,6 @@ void Assignment1::Update(double dt)
 		if (Application::IsKeyPressed(' '))
 		{
 			gameStart = true;
-		
 		}
 	}
 
@@ -241,9 +233,7 @@ void Assignment1::Update(double dt)
 		cSoundController->StopSoundByID(1);
 		cSoundController->StopSoundByID(3);
 		cSoundController->StopSoundByID(4);
-
 		cSoundController->PlaySoundByID(2);
-
 		if (keyDelay > 0)
 		{
 			keyDelay -= 1.0 * dt;
@@ -412,9 +402,9 @@ void Assignment1::Update(double dt)
 	else if (gameStart)
 	{
 
-	cSoundController->StopSoundByID(1);
-	cSoundController->StopSoundByID(2);
-	cSoundController->PlaySoundByID(4);
+		cSoundController->StopSoundByID(1);
+		cSoundController->StopSoundByID(2);
+		cSoundController->PlaySoundByID(4);
 		// ************************* CURSOR CODE ****************************************
 		{
 
@@ -648,13 +638,14 @@ void Assignment1::Update(double dt)
 				go->type = GameObject::GO_BOSS;
 				go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
 				go->vel.Set(Math::RandFloatMinMax(-20, 20), Math::RandFloatMinMax(-20, 20), 0);
-				go->scale.Set(15, 15, 1);
+				go->scale.Set(30, 30, 1);
 				go->hp = 10000;
 				go->maxHP = go->hp;
 				go->prevEnemyBullet = elapsedTime;
 				go->speedFactor = 1;
-				go->hitboxSizeDivider = 3;
+				go->hitboxSizeDivider = 8;
 				go->enemyDamage = 1;
+				go->facingLeft = true;
 			}
 			tempSpawnCount++;
 		}
@@ -827,6 +818,22 @@ void Assignment1::Update(double dt)
 			// BOSS ENEMY
 			else if (enemy->type == GameObject::GO_BOSS)
 			{
+				NightborneSpriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_BOSS_LEFT]);
+				NightborneSpriteLeft->PlayAnimation("Move Left", -1, 0.8f);
+				NightborneSpriteLeft->Update(dt);
+
+
+				NightborneSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_BOSS]);
+				NightborneSprite->PlayAnimation("Move Right", -1, 0.8f);
+				NightborneSprite->Update(dt);
+
+				NightborneSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_BOSSATTACK]);
+				NightborneSprite->PlayAnimation("Attack Right", 3, 0.65f);
+				NightborneSprite->Update(dt);
+
+				NightborneSpriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_BOSSATTACK_LEFT]);
+				NightborneSpriteLeft->PlayAnimation("Attack Left", 3, 0.65f);
+				NightborneSpriteLeft->Update(dt);
 				float diff = elapsedTime - enemy->prevEnemyBullet;
 				switch (bossState)
 				{
@@ -860,22 +867,27 @@ void Assignment1::Update(double dt)
 						{
 							bossState = 1;
 							shootCount = 0;
+							enemy->hitboxSizeDivider = 3;
+							NightborneSprite->Reset();
+							NightborneSpriteLeft->Reset();
 						}
 					}
 					break;
 				case 1:
+
 					if (diff > 0.6)
 					{
-						enemy->speedFactor = 25;
+						enemy->speedFactor = 10;
 						enemy->prevEnemyBullet = elapsedTime;
-						enemy->direction += Vector3(Math::RandFloatMinMax(-1, 1), Math::RandFloatMinMax(-1, 1), 0);
+						enemy->direction += Vector3(Math::RandFloatMinMax(-0.5, 0.5), Math::RandFloatMinMax(-0.5, 0.5), 0);
+
 						shootCount++;
 					}
 					else
 					{
 						if (enemy->speedFactor > 1)
 						{
-							enemy->speedFactor -= 50 * dt;
+							enemy->speedFactor -= 20 * dt;
 							if (enemy->speedFactor < 1)
 							{
 								enemy->speedFactor = 1;
@@ -883,6 +895,9 @@ void Assignment1::Update(double dt)
 								{
 									bossState = 2;
 									shootCount = 0;
+									enemy->hitboxSizeDivider = 8;
+									NightborneSprite->Reset();
+									NightborneSpriteLeft->Reset();
 								}
 							}
 						}
@@ -903,7 +918,7 @@ void Assignment1::Update(double dt)
 						go2->enemyDamage = 1;
 						go2->hitboxSizeDivider = 6;
 
-						laserAngle += 2;
+						laserAngle += 6;
 
 						go2->direction = RotateVector(go2->pos, go2->angle * dt * shipSpeed);
 						go2->direction = go2->direction.Normalized();
@@ -914,7 +929,7 @@ void Assignment1::Update(double dt)
 
 						go2->vel = go2->direction * BULLET_SPEED * 0.8;
 
-						if (laserAngle >= 120)
+						if (laserAngle >= 350)
 						{
 							laserAngle = 0;
 							bossState = 0;
@@ -940,6 +955,14 @@ void Assignment1::Update(double dt)
 			if (go->active)
 			{
 				go->pos += go->vel * dt * m_speed;
+				if (go->pos.x > m_ship->pos.x)
+				{
+					go->facingLeft = true;
+				}
+				else
+				{
+					go->facingLeft = false;
+				}
 
 
 				if (go->type == GameObject::GO_GHOST ||	               // Checks for Player vs Enemy Collision (Taking DMG)
@@ -948,10 +971,11 @@ void Assignment1::Update(double dt)
 					go->type == GameObject::GO_NIGHTMARE ||
 					go->type == GameObject::GO_ENEMYBULLET ||
 					go->type == GameObject::GO_LASER ||
-					go->type == GameObject::GO_BOSS)
+					go->type == GameObject::GO_BOSS ||
+					go->type == GameObject::GO_TRIPLESHOT ||
+					go->type == GameObject::GO_HEAL)
 				{
 					Collision(go);
-		
 				}
 
 				else if (go->type == GameObject::GO_RINGAURA || go->type == GameObject::GO_FIRE || go->type == GameObject::GO_EXPLOSION)
@@ -1200,7 +1224,8 @@ void Assignment1::Collision(GameObject* go)
 	// Collision check
 	float dis = go->pos.DistanceSquared(m_ship->pos);
 	float cRad = 0;
-	if (go->type != GameObject::GO_LASER)
+	if (go->type != GameObject::GO_LASER &&
+		go->type != GameObject::GO_BOSS)
 	{
 		cRad = (m_ship->scale.x / go->hitboxSizeDivider + go->scale.x) * (m_ship->scale.x / go->hitboxSizeDivider + go->scale.x);
 	}
@@ -1215,6 +1240,7 @@ void Assignment1::Collision(GameObject* go)
 		{
 			if (dis < cRad)
 			{
+				std::cout << "GET";
 				tripleShot = true;
 				tripleShotTimer = 6;
 			}
@@ -1288,6 +1314,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				damageTextY.push_back(target->pos.y / 2);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
+
 			}
 
 			if (bullet->type == GameObject::GO_BOMB)
@@ -1339,7 +1366,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				damageTextY.push_back(target->pos.y / 2);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
-			/*	cSoundController->StopSoundByID(5);*/
+				/*	cSoundController->StopSoundByID(5);*/
 				cSoundController->PlaySoundByID(5);
 			}
 
@@ -1366,7 +1393,6 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				damageTextY.push_back(target->pos.y / 2);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
-
 				cSoundController->StopSoundByID(7);
 				cSoundController->PlaySoundByID(7);
 			}
@@ -1732,7 +1758,38 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_BOSS], false);
+		if (bossState == 1)
+		{
+			modelStack.PushMatrix();
+			if (go->facingLeft == true)
+			{
+				modelStack.PushMatrix();
+				modelStack.Rotate(180, 0, 0, 1);
+				RenderMesh(meshList[GEO_BOSSATTACK_LEFT], false);
+				modelStack.PopMatrix();
+			}
+			else
+			{
+				RenderMesh(meshList[GEO_BOSSATTACK], false);
+			}
+			modelStack.PopMatrix();
+		}
+		else
+		{
+			if (go->facingLeft == true)
+			{
+				modelStack.PushMatrix();
+				modelStack.Rotate(180, 0, 0, 1);
+				RenderMesh(meshList[GEO_BOSS_LEFT], false);
+				modelStack.PopMatrix();
+
+			}
+			else
+			{
+				RenderMesh(meshList[GEO_BOSS], false);
+			}
+		}
+
 
 		// Display health bar if asteroid is damaged
 		if (go->hp < go->maxHP)
