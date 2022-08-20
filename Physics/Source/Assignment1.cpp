@@ -707,7 +707,7 @@ void Assignment1::Update(double dt)
 		// ****************************** Manual Spawning ***************************************88
 
 
-		// WORM ENEMY
+		// BOSS
 		if (Application::IsKeyPressed('V') && tempSpawnCount < 1)
 		{
 			GameObject* go = FetchGO();
@@ -726,15 +726,16 @@ void Assignment1::Update(double dt)
 		}
 
 
-		// BOSS
-		if (Application::IsKeyPressed('C') && tempSpawnCount < 3)
+		// WORM ENEMY
+		if (Application::IsKeyPressed('C') && tempSpawnCount < 1)
 		{
 			for (int i = 0; i < 1; ++i)
 			{
 
 
 				GameObject* prevBody;
-				for (int i = 0; i < 10; i++)
+				int segmentCount = 50;
+				for (int i = 0; i < segmentCount; i++)
 				{
 					GameObject* go = FetchGO();
 					if (i == 0)
@@ -743,11 +744,12 @@ void Assignment1::Update(double dt)
 						go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
 						go->scale.Set(10, 10, 1);
 						go->vel.Set(2, 2, 0);
+						go->timer = 10;
 
 						go->prevNode = nullptr;
 						go->nextNode = nullptr;
 					}
-					else if (i == 10 - 1)
+					else if (i == segmentCount - 1)
 					{
 						go->type = GameObject::GO_WORMTAIL;
 						go->pos = prevBody->pos;
@@ -783,7 +785,7 @@ void Assignment1::Update(double dt)
 					go->maxHP = go->hp;
 					go->prevEnemyBullet = elapsedTime;
 					go->speedFactor = 1;
-					go->hitboxSizeDivider = 8;
+					go->hitboxSizeDivider = 3.5;
 					go->enemyDamage = 1;
 					go->facingLeft = true;
 					go->reachTarget = true;
@@ -1130,7 +1132,12 @@ void Assignment1::Update(double dt)
 					go->type == GameObject::GO_LASER ||
 					go->type == GameObject::GO_BOSS ||
 					go->type == GameObject::GO_TRIPLESHOT ||
-					go->type == GameObject::GO_HEAL)
+					go->type == GameObject::GO_HEAL ||
+					go->type == GameObject::GO_WORMHEAD ||
+					go->type == GameObject::GO_WORMBODY1 ||
+					go->type == GameObject::GO_WORMBODY2 ||
+					go->type == GameObject::GO_WORMTAIL
+					)
 				{
 					Collision(go);
 				}
@@ -1354,7 +1361,8 @@ void Assignment1::Update(double dt)
 						go2->type == GameObject::GO_FLAMEDEMON ||
 						go2->type == GameObject::GO_BDEMON ||
 						go2->type == GameObject::GO_NIGHTMARE ||
-						go2->type == GameObject::GO_BOSS)
+						go2->type == GameObject::GO_BOSS
+						)
 					{
 						if (go2->active && it != it2)
 						{
@@ -1427,7 +1435,11 @@ void Assignment1::Collision(GameObject* go)
 	float dis = go->pos.DistanceSquared(m_ship->pos);
 	float cRad = 0;
 	if (go->type != GameObject::GO_LASER &&
-		go->type != GameObject::GO_BOSS)
+		go->type != GameObject::GO_BOSS  &&			
+		go->type == GameObject::GO_WORMHEAD &&
+		go->type == GameObject::GO_WORMBODY1 &&
+		go->type == GameObject::GO_WORMBODY2 &&
+		go->type == GameObject::GO_WORMTAIL)
 	{
 		cRad = (m_ship->scale.x / go->hitboxSizeDivider + go->scale.x) * (m_ship->scale.x / go->hitboxSizeDivider + go->scale.x);
 	}
@@ -1448,7 +1460,11 @@ void Assignment1::Collision(GameObject* go)
 		}
 
 		if (go->type != GameObject::GO_BOSS &&
-			go->type != GameObject::GO_LASER)
+			go->type != GameObject::GO_LASER &&
+			go->type == GameObject::GO_WORMHEAD &&
+			go->type == GameObject::GO_WORMBODY1 &&
+			go->type == GameObject::GO_WORMBODY2 &&
+			go->type == GameObject::GO_WORMTAIL)
 		{
 			go->active = false;
 		}
@@ -1991,9 +2007,23 @@ void Assignment1::RenderGO(GameObject* go)
 			go->type != GameObject::GO_WORMBODY2 &&
 			go->type != GameObject::GO_WORMTAIL)
 		{
-			go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
-			go->direction = go->direction.Normalized();
-			go->vel = (go->direction * 15);
+
+			if (go->timer > 5)
+			{
+				go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
+				go->direction = go->direction.Normalized();
+				go->vel = (go->direction * 15);
+			}
+			else if (go->timer < 3)
+			{
+				go->vel = (go->direction * 80);
+			}
+			go->timer -= 0.04;
+			if (go->timer < 0)
+			{
+				go->timer = 10;
+			}
+
 		}
 
 		// Worm moving code
@@ -2009,6 +2039,9 @@ void Assignment1::RenderGO(GameObject* go)
 					GameObject* nextObj;
 					GameObject* prevObj;
 
+					GameObject* head;
+					head = go2;
+
 					// Worm moving code using linked list
 					while (true)
 					{
@@ -2016,6 +2049,7 @@ void Assignment1::RenderGO(GameObject* go)
 						if (current->prevNode != nullptr)
 						{
 							prevObj = current->prevNode;
+							prevObj->timer = head->timer;
 							float dis = current->pos.DistanceSquared(prevObj->pos);
 
 							//*******************************************************************************************************************
@@ -2034,13 +2068,28 @@ void Assignment1::RenderGO(GameObject* go)
 								current->direction = prevObj->pos - Vector3(current->pos.x, current->pos.y, current->pos.z);
 								current->vel = prevObj->vel;
 								current->reachTarget = false;
+
+
 							}
 							// Move current body towards its target position
 							if (current->reachTarget == false)
 							{
 								current->direction = current->targetPos - Vector3(current->pos.x, current->pos.y, current->pos.z);
 								current->direction = current->direction.Normalized();
-								current->vel = current->direction * 15;
+								if (head->timer > 3)
+								{
+									current->vel = current->direction * 15;
+								}
+								else
+								{
+									current->vel = current->direction * 80;
+									if (head->timer <= 0)
+									{
+										current->vel = current->direction * 15;
+										current->direction = current->direction.Normalized();
+									}
+								}
+
 								current->angle = atan2(prevObj->pos.y - current->pos.y, prevObj->pos.x - current->pos.x);
 								current->angle = (current->angle / Math::PI) * 180.0 - 90.f;
 
@@ -2073,8 +2122,11 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PushMatrix();
 		if (go->type == GameObject::GO_WORMHEAD)
 		{
-			go->angle = atan2(m_ship->pos.y - go->pos.y, m_ship->pos.x - go->pos.x);
-			go->angle = (go->angle / Math::PI) * 180.0 - 90.0f;
+			if (go->timer > 5)
+			{
+				go->angle = atan2(m_ship->pos.y - go->pos.y, m_ship->pos.x - go->pos.x);
+				go->angle = (go->angle / Math::PI) * 180.0 - 90.0f;
+			}
 		}
 		else
 		{
