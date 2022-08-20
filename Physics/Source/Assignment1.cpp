@@ -148,6 +148,7 @@ void Assignment1::Init()
 	//shop purchase
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\PurchaseRing.ogg"), 10, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\SwordSlash.wav"), 11, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\WormRoar.wav"), 12, true);
 
 
 }
@@ -597,10 +598,10 @@ void Assignment1::Update(double dt)
 		worldPosY = m_worldHeight - (worldPosY);
 
 
-		std::cout << worldPosX << std::endl;
-		std::cout << m_ship->pos.x << std::endl;
+		//std::cout << worldPosX << std::endl;
+		//std::cout << m_ship->pos.x << std::endl;
 
-		std::cout << "Diff: " << worldPosX - m_ship->pos.x << std::endl;
+		//std::cout << "Diff: " << worldPosX - m_ship->pos.x << std::endl;
 
 
 		m_ship->angle = atan2(m_ship->pos.y - worldPosY, m_ship->pos.x - worldPosX);
@@ -724,17 +725,17 @@ void Assignment1::Update(double dt)
 			go->facingLeft = true;
 			tempSpawnCount++;
 		}
-
+		
 
 		// WORM ENEMY
-		if (Application::IsKeyPressed('C') && tempSpawnCount < 1)
+		if (Application::IsKeyPressed('C') && tempSpawnCount < 2)
 		{
 			for (int i = 0; i < 1; ++i)
 			{
 
 
 				GameObject* prevBody;
-				int segmentCount = 50;
+				int segmentCount = 30;
 				for (int i = 0; i < segmentCount; i++)
 				{
 					GameObject* go = FetchGO();
@@ -757,7 +758,7 @@ void Assignment1::Update(double dt)
 						go->vel.Set(0, 0, 0);
 
 						go->prevNode = prevBody;
-						prevBody->nextNode = go;
+						go->prevNode->nextNode = go;
 						go->nextNode = nullptr;
 					}
 					else
@@ -778,10 +779,10 @@ void Assignment1::Update(double dt)
 						go->scale.Set(10, 10, 1);
 
 						go->prevNode = prevBody;
-						prevBody->nextNode = go;
+						go->prevNode->nextNode = go;
 						go->nextNode = nullptr;
 					}
-					go->hp = 100;
+					go->hp = 70;
 					go->maxHP = go->hp;
 					go->prevEnemyBullet = elapsedTime;
 					go->speedFactor = 1;
@@ -1097,6 +1098,7 @@ void Assignment1::Update(double dt)
 					}
 					break;
 				}
+				break;
 			}
 		}
 
@@ -1189,7 +1191,12 @@ void Assignment1::Update(double dt)
 								go2->type == GameObject::GO_FLAMEDEMON ||
 								go2->type == GameObject::GO_BDEMON ||
 								go2->type == GameObject::GO_NIGHTMARE ||
-								go2->type == GameObject::GO_BOSS)
+								go2->type == GameObject::GO_BOSS ||
+								go2->type == GameObject::GO_WORMHEAD ||
+								go2->type == GameObject::GO_WORMBODY1 ||
+								go2->type == GameObject::GO_WORMBODY2 ||
+								go2->type == GameObject::GO_WORMTAIL
+								)
 							{
 
 								HitEnemy(go, go2);
@@ -1436,10 +1443,10 @@ void Assignment1::Collision(GameObject* go)
 	float cRad = 0;
 	if (go->type != GameObject::GO_LASER &&
 		go->type != GameObject::GO_BOSS  &&			
-		go->type == GameObject::GO_WORMHEAD &&
-		go->type == GameObject::GO_WORMBODY1 &&
-		go->type == GameObject::GO_WORMBODY2 &&
-		go->type == GameObject::GO_WORMTAIL)
+		go->type != GameObject::GO_WORMHEAD &&
+		go->type != GameObject::GO_WORMBODY1 &&
+		go->type != GameObject::GO_WORMBODY2 &&
+		go->type != GameObject::GO_WORMTAIL)
 	{
 		cRad = (m_ship->scale.x / go->hitboxSizeDivider + go->scale.x) * (m_ship->scale.x / go->hitboxSizeDivider + go->scale.x);
 	}
@@ -1461,10 +1468,10 @@ void Assignment1::Collision(GameObject* go)
 
 		if (go->type != GameObject::GO_BOSS &&
 			go->type != GameObject::GO_LASER &&
-			go->type == GameObject::GO_WORMHEAD &&
-			go->type == GameObject::GO_WORMBODY1 &&
-			go->type == GameObject::GO_WORMBODY2 &&
-			go->type == GameObject::GO_WORMTAIL)
+			go->type != GameObject::GO_WORMHEAD &&
+			go->type != GameObject::GO_WORMBODY1 &&
+			go->type != GameObject::GO_WORMBODY2 &&
+			go->type != GameObject::GO_WORMTAIL)
 		{
 			go->active = false;
 		}
@@ -1670,6 +1677,51 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 						go->vel.Set(Math::RandFloatMinMax(-20, 0), Math::RandFloatMinMax(-20, 20), 0);
 					}
 				}
+
+
+				//*** Worm Segment seperation code*********************************
+				if (target->type == GameObject::GO_WORMHEAD)
+				{
+					if (target->nextNode != nullptr)
+					{
+						target->nextNode->type = GameObject::GO_WORMHEAD;
+						target->nextNode->prevNode = nullptr;
+						target->prevNode = nullptr;
+						//delete target->nextNode->prevNode;
+					}
+				}
+				
+				if (target->type == GameObject::GO_WORMBODY1 ||
+					target->type == GameObject::GO_WORMBODY2)
+				{
+					if (target->nextNode != nullptr)
+					{
+						target->nextNode->type = GameObject::GO_WORMHEAD;
+						target->nextNode->prevNode = nullptr;
+						//target->nextNode = nullptr;
+						//delete target->nextNode->prevNode;
+						//delete target->nextNode;
+					}
+
+					if (target->prevNode != nullptr)
+					{
+						target->prevNode->type = GameObject::GO_WORMTAIL;
+						target->prevNode->nextNode = nullptr;
+						//target->prevNode = nullptr;
+						//delete target->prevNode->nextNode;
+						//delete target->prevNode;
+					}
+				}
+
+				if (target->type == GameObject::GO_WORMTAIL)
+				{
+					target->prevNode->type = GameObject::GO_WORMTAIL;
+					target->prevNode->nextNode = nullptr;
+					target->prevNode = nullptr;
+
+					//delete target;
+				}
+
 
 				// Drop  Item
 				int random = rand() % 14;
@@ -2016,6 +2068,7 @@ void Assignment1::RenderGO(GameObject* go)
 			}
 			else if (go->timer < 3)
 			{
+				cSoundController->PlaySoundByID(12);
 				go->vel = (go->direction * 80);
 			}
 			go->timer -= 0.04;
@@ -2130,8 +2183,11 @@ void Assignment1::RenderGO(GameObject* go)
 		}
 		else
 		{
-			go->angle = atan2(go->prevNode->pos.y - go->pos.y, go->prevNode->pos.x - go->pos.x);
-			go->angle = (go->angle / Math::PI) * 180.0 - 90.f;
+			if (go->prevNode != nullptr)
+			{
+				go->angle = atan2(go->prevNode->pos.y - go->pos.y, go->prevNode->pos.x - go->pos.x);
+				go->angle = (go->angle / Math::PI) * 180.0 - 90.f;
+			}
 		}
 
 		modelStack.Rotate(go->angle, 0, 0, 1);
