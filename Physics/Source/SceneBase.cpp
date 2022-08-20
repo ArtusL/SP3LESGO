@@ -161,6 +161,22 @@ void SceneBase::Init()
 	SpriteAnimation* Ghostsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_GHOST]);
 	Ghostsprite->AddAnimation("IDLE", 0, 7);
 
+
+	// Boss 2?
+
+	meshList[GEO_WORMHEAD] = MeshBuilder::GenerateQuad("Worm Head", Color(1, 0, 0), 1.f);
+	meshList[GEO_WORMHEAD]->textureID = LoadTGA("Image//worm_head.tga");
+
+	meshList[GEO_WORMBODY1] = MeshBuilder::GenerateQuad("Worm Body 1", Color(1, 0, 0), 1.f);
+	meshList[GEO_WORMBODY1]->textureID = LoadTGA("Image//worm_body1.tga");
+
+	meshList[GEO_WORMBODY2] = MeshBuilder::GenerateQuad("Worm Body 2", Color(1, 0, 0), 1.f);
+	meshList[GEO_WORMBODY2]->textureID = LoadTGA("Image//worm_body2.tga");
+
+
+	meshList[GEO_WORMTAIL] = MeshBuilder::GenerateQuad("Worm Tail", Color(1, 0, 0), 1.f);
+	meshList[GEO_WORMTAIL]->textureID = LoadTGA("Image//worm_tail.tga");
+
 	// Bullet types
 	meshList[GEO_CLUB] = MeshBuilder::GenerateQuad("basic bullet", Color(1, 1, 1), 1.f);
 	meshList[GEO_CLUB]->textureID = LoadTGA("Image//Dagger.tga");
@@ -316,7 +332,7 @@ void SceneBase::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, fl
 	modelStack.PushMatrix();
 	modelStack.LoadIdentity();
 	modelStack.Translate(x, y, 0);
-	modelStack.Scale(size, size, size);
+	modelStack.Scale(size / 1.443, size, size);
 	glUniform1i(m_parameters[U_TEXT_ENABLED], 1);
 	glUniform3fv(m_parameters[U_TEXT_COLOR], 1, &color.r);
 	glUniform1i(m_parameters[U_LIGHTENABLED], 0);

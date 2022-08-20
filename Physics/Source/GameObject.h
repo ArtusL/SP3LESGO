@@ -16,6 +16,11 @@ struct GameObject
 		GO_BIGASTEROID,
 		GO_ENEMYSHIP,
 		GO_BOSS,
+
+		GO_WORMHEAD,
+		GO_WORMBODY1,
+		GO_WORMBODY2,
+		GO_WORMTAIL,
 		
 		GO_GHOST,
 		GO_FLAMEDEMON,
@@ -51,6 +56,7 @@ struct GameObject
 	Vector3 vel;
 	Vector3 scale;
 	Vector3 direction;
+	Vector3 targetPos;
 	bool active;
 	float mass;
 	float angle;
@@ -64,6 +70,10 @@ struct GameObject
 	float timer;
 	bool scaleDown;
 	bool facingLeft;
+	bool reachTarget;
+
+	GameObject* nextNode;
+	GameObject* prevNode;
 
 	float momentOfInertia;
 	float angularVelocity;

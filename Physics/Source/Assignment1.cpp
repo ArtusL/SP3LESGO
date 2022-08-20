@@ -464,19 +464,6 @@ void Assignment1::Update(double dt)
 
 			// Window Height: 750
 			// Window Width: 1000
-			Application::GetCursorPos(&worldPosX, &worldPosY);
-
-
-			// Converting to world space
-			worldPosY /= 7.5;
-			worldPosX /= 10;
-			worldPosX *= 1.33333;
-
-			worldPosY = 100 - (worldPosY);
-
-
-			m_ship->angle = atan2(m_ship->pos.y - worldPosY, m_ship->pos.x - worldPosX);
-			m_ship->angle = (m_ship->angle / Math::PI) * 180.0;
 
 
 			// FOR PRINTING
@@ -501,6 +488,18 @@ void Assignment1::Update(double dt)
 
 		}
 		// **************************************************************************
+
+		camera.position.x = m_ship->pos.x - m_worldWidth * 0.5;
+		camera.position.y = m_ship->pos.y - m_worldHeight * 0.5;
+		camera.target.x = m_ship->pos.x - m_worldWidth * 0.5;
+		camera.target.y = m_ship->pos.y - m_worldHeight * 0.5;
+
+
+		camera.position.x = Math::Clamp(camera.position.x, 0.f, m_worldWidth / 2);
+		camera.position.y = Math::Clamp(camera.position.y, 0.f, m_worldHeight / 2);
+		camera.target.x = Math::Clamp(camera.target.x, 0.f, m_worldWidth / 2);
+		camera.target.y = Math::Clamp(camera.target.y, 0.f, m_worldHeight / 2);
+
 
 		m_force = Vector3(0, 0, 0);
 		m_ship->vel = Vector3(0, 0, 0);
@@ -573,6 +572,39 @@ void Assignment1::Update(double dt)
 				m_ship->mass = 0.1f;
 			m_ship->momentOfInertia = m_ship->mass * m_ship->scale.x * m_ship->scale.x;
 		}
+
+		Application::GetCursorPos(&worldPosX, &worldPosY);
+
+
+
+		// Converting to world space
+
+		worldPosX /= 10;
+		worldPosY /= 10;
+
+
+		// CHANGE BELOW if m_worldheight/m_worldwidth is changed
+		// eg. m_worldHeight is 100
+		//     then set below values to 1
+		//
+		worldPosX *= 1;
+		worldPosY *= 1;
+
+		worldPosX += camera.position.x;
+		worldPosY -= camera.position.y;
+		 
+
+		worldPosY = m_worldHeight - (worldPosY);
+
+
+		std::cout << worldPosX << std::endl;
+		std::cout << m_ship->pos.x << std::endl;
+
+		std::cout << "Diff: " << worldPosX - m_ship->pos.x << std::endl;
+
+
+		m_ship->angle = atan2(m_ship->pos.y - worldPosY, m_ship->pos.x - worldPosX);
+		m_ship->angle = (m_ship->angle / Math::PI) * 180.0;
 
 
 
@@ -675,22 +707,100 @@ void Assignment1::Update(double dt)
 		// ****************************** Manual Spawning ***************************************88
 
 
+		// WORM ENEMY
 		if (Application::IsKeyPressed('V') && tempSpawnCount < 1)
+		{
+			GameObject* go = FetchGO();
+			go->type = GameObject::GO_BOSS;
+			go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+			go->vel.Set(Math::RandFloatMinMax(-20, 20), Math::RandFloatMinMax(-20, 20), 0);
+			go->scale.Set(30, 30, 1);
+			go->hp = 10000;
+			go->maxHP = go->hp;
+			go->prevEnemyBullet = elapsedTime;
+			go->speedFactor = 1;
+			go->hitboxSizeDivider = 8;
+			go->enemyDamage = 1;
+			go->facingLeft = true;
+			tempSpawnCount++;
+		}
+
+
+		// BOSS
+		if (Application::IsKeyPressed('C') && tempSpawnCount < 3)
 		{
 			for (int i = 0; i < 1; ++i)
 			{
-				GameObject* go = FetchGO();
-				go->type = GameObject::GO_BOSS;
-				go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
-				go->vel.Set(Math::RandFloatMinMax(-20, 20), Math::RandFloatMinMax(-20, 20), 0);
-				go->scale.Set(30, 30, 1);
-				go->hp = 10000;
-				go->maxHP = go->hp;
-				go->prevEnemyBullet = elapsedTime;
-				go->speedFactor = 1;
-				go->hitboxSizeDivider = 8;
-				go->enemyDamage = 1;
-				go->facingLeft = true;
+
+
+				GameObject* prevBody;
+				for (int i = 0; i < 10; i++)
+				{
+					GameObject* go = FetchGO();
+					if (i == 0)
+					{
+						go->type = GameObject::GO_WORMHEAD;
+						go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+						go->scale.Set(10, 10, 1);
+						go->vel.Set(2, 2, 0);
+
+						go->prevNode = nullptr;
+						go->nextNode = nullptr;
+					}
+					else if (i == 10 - 1)
+					{
+						go->type = GameObject::GO_WORMTAIL;
+						go->pos = prevBody->pos;
+						go->scale.Set(10, 10, 1);
+						go->vel.Set(0, 0, 0);
+
+						go->prevNode = prevBody;
+						prevBody->nextNode = go;
+						go->nextNode = nullptr;
+					}
+					else
+					{
+
+						if (prevBody->type == GameObject::GO_WORMHEAD ||
+							prevBody->type == GameObject::GO_WORMBODY2)
+						{
+							go->type = GameObject::GO_WORMBODY1;
+						}
+						else
+						{
+							go->type = GameObject::GO_WORMBODY2;
+						}
+
+						go->pos = prevBody->pos;
+						go->vel.Set(0, 0, 0);
+						go->scale.Set(10, 10, 1);
+
+						go->prevNode = prevBody;
+						prevBody->nextNode = go;
+						go->nextNode = nullptr;
+					}
+					go->hp = 100;
+					go->maxHP = go->hp;
+					go->prevEnemyBullet = elapsedTime;
+					go->speedFactor = 1;
+					go->hitboxSizeDivider = 8;
+					go->enemyDamage = 1;
+					go->facingLeft = true;
+					go->reachTarget = true;
+					prevBody = go;
+				}
+				//GameObject* go = FetchGO();
+				//go->type = GameObject::GO_BOSS;
+				//go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+				//go->vel.Set(Math::RandFloatMinMax(-20, 20), Math::RandFloatMinMax(-20, 20), 0);
+				//go->scale.Set(30, 30, 1);
+				//go->hp = 100;
+				//go->maxHP = go->hp;
+				//go->prevEnemyBullet = elapsedTime;
+				//go->speedFactor = 1;
+				//go->hitboxSizeDivider = 8;
+				//go->enemyDamage = 1;
+				//go->facingLeft = true;
 			}
 			tempSpawnCount++;
 		}
@@ -1332,7 +1442,6 @@ void Assignment1::Collision(GameObject* go)
 		{
 			if (dis < cRad)
 			{
-				std::cout << "GET";
 				tripleShot = true;
 				tripleShotTimer = 6;
 			}
@@ -1490,6 +1599,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				damageTimer.push_back(elapsedTime);
 				cSoundController->StopSoundByID(7);
 				cSoundController->PlaySoundByID(7);
+
 			}
 
 			if (bullet->type == GameObject::GO_ARROW)
@@ -1734,7 +1844,6 @@ void Assignment1::RenderGO(GameObject* go)
 		break;
 
 	case GameObject::GO_BDEMON:
-		// Move towards player
 		go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
 		go->direction = go->direction.Normalized();
 		go->vel = (go->direction * 6);
@@ -1865,6 +1974,152 @@ void Assignment1::RenderGO(GameObject* go)
 			modelStack.PushMatrix();
 			modelStack.Translate(0, 0.5, 0.1);
 			modelStack.Scale(go->scale.x * 0.0004 * greenHealthPercent, go->scale.y * 0.008, go->scale.z);
+			RenderMesh(meshList[GEO_GREENHEALTH], false);
+			modelStack.PopMatrix();
+		}
+		modelStack.PopMatrix();
+		//Exercise 4b: render a cube with length 2
+		break;
+
+	case GameObject::GO_WORMHEAD:
+	case GameObject::GO_WORMBODY1:
+	case GameObject::GO_WORMBODY2:
+	case GameObject::GO_WORMTAIL:
+
+		// Worm Head will always towards player
+		if (go->type != GameObject::GO_WORMBODY1 &&
+			go->type != GameObject::GO_WORMBODY2 &&
+			go->type != GameObject::GO_WORMTAIL)
+		{
+			go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
+			go->direction = go->direction.Normalized();
+			go->vel = (go->direction * 15);
+		}
+
+		// Worm moving code
+		for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
+		{
+			GameObject* go2 = (GameObject*)*it2;
+			if (go2->active)
+			{
+
+				if (go2->type == GameObject::GO_WORMHEAD)
+				{
+					GameObject* current = go2;
+					GameObject* nextObj;
+					GameObject* prevObj;
+
+					// Worm moving code using linked list
+					while (true)
+					{
+						nextObj = current->nextNode;
+						if (current->prevNode != nullptr)
+						{
+							prevObj = current->prevNode;
+							float dis = current->pos.DistanceSquared(prevObj->pos);
+
+							//*******************************************************************************************************************
+							//	How the Worm movement works
+							// ********************************************************************************************************************
+							//	All the worm segments will spawn in the same position at first.
+							//	A body segment will not start moving until its previous segment moves far enough from current segment.
+							// 
+							//	From there a body segment will set its target location based on the previous segment's location.
+							//	It will only head to that target location and upon reaching it, it will reupdate its new target.
+							// 
+							//  This makes body segments only follow the segment that is connected instead of the head.
+							if (dis > 70 && current->reachTarget == true)
+							{
+								current->targetPos = prevObj->pos;
+								current->direction = prevObj->pos - Vector3(current->pos.x, current->pos.y, current->pos.z);
+								current->vel = prevObj->vel;
+								current->reachTarget = false;
+							}
+							// Move current body towards its target position
+							if (current->reachTarget == false)
+							{
+								current->direction = current->targetPos - Vector3(current->pos.x, current->pos.y, current->pos.z);
+								current->direction = current->direction.Normalized();
+								current->vel = current->direction * 15;
+								current->angle = atan2(prevObj->pos.y - current->pos.y, prevObj->pos.x - current->pos.x);
+								current->angle = (current->angle / Math::PI) * 180.0 - 90.f;
+
+								float dis2 = current->pos.DistanceSquared(current->targetPos);
+								if (dis2 < 100)
+								{
+									current->reachTarget = true;
+								}
+							}
+						}
+						if (current->nextNode != nullptr)
+						{
+							current = current->nextNode;
+						}
+						else
+						{
+							break;
+						}
+					}
+				}
+
+			}
+
+		}
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+
+		// Rotate to player
+		modelStack.PushMatrix();
+		if (go->type == GameObject::GO_WORMHEAD)
+		{
+			go->angle = atan2(m_ship->pos.y - go->pos.y, m_ship->pos.x - go->pos.x);
+			go->angle = (go->angle / Math::PI) * 180.0 - 90.0f;
+		}
+		else
+		{
+			go->angle = atan2(go->prevNode->pos.y - go->pos.y, go->prevNode->pos.x - go->pos.x);
+			go->angle = (go->angle / Math::PI) * 180.0 - 90.f;
+		}
+
+		modelStack.Rotate(go->angle, 0, 0, 1);
+
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+
+		if (go->type == GameObject::GO_WORMHEAD)
+		{
+			RenderMesh(meshList[GEO_WORMHEAD], false);
+		}
+		else if (go->type == GameObject::GO_WORMBODY1)
+		{
+			RenderMesh(meshList[GEO_WORMBODY1], false);
+		}
+		else if (go->type == GameObject::GO_WORMBODY2)
+		{
+			RenderMesh(meshList[GEO_WORMBODY2], false);
+		}
+		else if (go->type == GameObject::GO_WORMTAIL)
+		{
+			RenderMesh(meshList[GEO_WORMTAIL], false);
+		}
+		modelStack.PopMatrix();
+
+
+		// Display health bar if asteroid is damaged
+		if (go->hp < go->maxHP)
+		{
+			float greenHealthPercent = (go->hp / go->maxHP) * 100;
+			float redHealthPercent = 100 - greenHealthPercent;
+
+			modelStack.PushMatrix();
+			modelStack.Translate(0, 1.3, 1);
+			modelStack.Scale(go->scale.x * 0.6, go->scale.y * 0.13, go->scale.z);
+			RenderMesh(meshList[GEO_REDHEALTH], false);
+			modelStack.PopMatrix();
+
+			modelStack.PushMatrix();
+			modelStack.Translate(0, 1.3, 1.1);
+			modelStack.Scale(go->scale.x * 0.006 * greenHealthPercent, go->scale.y * 0.13, go->scale.z);
 			RenderMesh(meshList[GEO_GREENHEALTH], false);
 			modelStack.PopMatrix();
 		}
