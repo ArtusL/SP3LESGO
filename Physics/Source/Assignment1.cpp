@@ -728,14 +728,14 @@ void Assignment1::Update(double dt)
 		
 
 		// WORM ENEMY
-		if (Application::IsKeyPressed('C') && tempSpawnCount < 2)
+		if (Application::IsKeyPressed('C') && tempSpawnCount < 1)
 		{
 			for (int i = 0; i < 1; ++i)
 			{
 
 
 				GameObject* prevBody;
-				int segmentCount = 30;
+				int segmentCount = 25;
 				for (int i = 0; i < segmentCount; i++)
 				{
 					GameObject* go = FetchGO();
@@ -747,6 +747,8 @@ void Assignment1::Update(double dt)
 						go->vel.Set(2, 2, 0);
 						go->timer = 10;
 
+						go->enemyDamage = 35;
+
 						go->prevNode = nullptr;
 						go->nextNode = nullptr;
 					}
@@ -756,6 +758,8 @@ void Assignment1::Update(double dt)
 						go->pos = prevBody->pos;
 						go->scale.Set(10, 10, 1);
 						go->vel.Set(0, 0, 0);
+
+						go->enemyDamage = 5;
 
 						go->prevNode = prevBody;
 						go->prevNode->nextNode = go;
@@ -778,6 +782,8 @@ void Assignment1::Update(double dt)
 						go->vel.Set(0, 0, 0);
 						go->scale.Set(10, 10, 1);
 
+						go->enemyDamage = 5;
+
 						go->prevNode = prevBody;
 						go->prevNode->nextNode = go;
 						go->nextNode = nullptr;
@@ -787,7 +793,7 @@ void Assignment1::Update(double dt)
 					go->prevEnemyBullet = elapsedTime;
 					go->speedFactor = 1;
 					go->hitboxSizeDivider = 3.5;
-					go->enemyDamage = 1;
+
 					go->facingLeft = true;
 					go->reachTarget = true;
 					prevBody = go;
@@ -1537,8 +1543,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				bullet->active = false;
 
 				displayDamage.push_back(basicBulletDamage * 2);
-				damageTextX.push_back(target->pos.x / 2);
-				damageTextY.push_back(target->pos.y / 2);
+				damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
+				damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
 
@@ -1558,8 +1564,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				bullet->active = false;
 
 				displayDamage.push_back(basicBulletDamage * 2);
-				damageTextX.push_back(target->pos.x / 2);
-				damageTextY.push_back(target->pos.y / 2);
+				damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
+				damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
 			}
@@ -1576,8 +1582,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				bullet->active = false;
 
 				displayDamage.push_back(0);
-				damageTextX.push_back(target->pos.x / 2);
-				damageTextY.push_back(target->pos.y / 2);
+				damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
+				damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
 			}
@@ -1589,8 +1595,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				target->hp -= basicBulletDamage * 3;
 
 				displayDamage.push_back(basicBulletDamage * 3);
-				damageTextX.push_back(target->pos.x / 2);
-				damageTextY.push_back(target->pos.y / 2);
+				damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
+				damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
 				/*	cSoundController->StopSoundByID(5);*/
@@ -1603,8 +1609,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				target->hp -= basicBulletDamage/* * 0.1*/;
 
 				displayDamage.push_back(basicBulletDamage * 0.1);
-				damageTextX.push_back(target->pos.x / 2);
-				damageTextY.push_back(target->pos.y / 2);
+				damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
+				damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
 			}
@@ -1616,8 +1622,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				bullet->active = false;
 
 				displayDamage.push_back(basicBulletDamage);
-				damageTextX.push_back(target->pos.x / 2);
-				damageTextY.push_back(target->pos.y / 2);
+				damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
+				damageTextY.push_back((target->pos.y - camera.position.y ) * 59 / 100);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
 				cSoundController->StopSoundByID(7);
@@ -1631,8 +1637,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				bullet->active = false;
 
 				displayDamage.push_back(basicBulletDamage);
-				damageTextX.push_back(target->pos.x / 2);
-				damageTextY.push_back(target->pos.y / 2);
+				damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
+				damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
 			}
@@ -1650,8 +1656,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				bullet->active = false;
 
 				displayDamage.push_back(basicBulletDamage);
-				damageTextX.push_back(target->pos.x / 2);
-				damageTextY.push_back(target->pos.y / 2);
+				damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
+				damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
 			}
@@ -1687,17 +1693,18 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 						target->nextNode->type = GameObject::GO_WORMHEAD;
 						target->nextNode->prevNode = nullptr;
 						target->prevNode = nullptr;
+						target->nextNode->enemyDamage = 35;
 						//delete target->nextNode->prevNode;
 					}
-				}
-				
-				if (target->type == GameObject::GO_WORMBODY1 ||
-					target->type == GameObject::GO_WORMBODY2)
+				}		
+				else if (target->type == GameObject::GO_WORMBODY1 ||target->type == GameObject::GO_WORMBODY2)
 				{
 					if (target->nextNode != nullptr)
 					{
 						target->nextNode->type = GameObject::GO_WORMHEAD;
 						target->nextNode->prevNode = nullptr;
+						target->nextNode->timer = 10;
+						target->nextNode->enemyDamage = 35;
 						//target->nextNode = nullptr;
 						//delete target->nextNode->prevNode;
 						//delete target->nextNode;
@@ -1707,17 +1714,20 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 					{
 						target->prevNode->type = GameObject::GO_WORMTAIL;
 						target->prevNode->nextNode = nullptr;
+						target->prevNode->enemyDamage = 5;
 						//target->prevNode = nullptr;
 						//delete target->prevNode->nextNode;
 						//delete target->prevNode;
 					}
 				}
-
-				if (target->type == GameObject::GO_WORMTAIL)
+				else if (target->type == GameObject::GO_WORMTAIL)
 				{
-					target->prevNode->type = GameObject::GO_WORMTAIL;
-					target->prevNode->nextNode = nullptr;
-					target->prevNode = nullptr;
+					if (target->prevNode != nullptr)
+					{
+						target->prevNode->type = GameObject::GO_WORMTAIL;
+						target->prevNode->nextNode = nullptr;
+						target->prevNode->enemyDamage = 5;
+					}
 
 					//delete target;
 				}
@@ -2060,15 +2070,20 @@ void Assignment1::RenderGO(GameObject* go)
 			go->type != GameObject::GO_WORMTAIL)
 		{
 
-			if (go->timer > 5)
+			if (go->timer > 4)
 			{
 				go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
 				go->direction = go->direction.Normalized();
 				go->vel = (go->direction * 15);
 			}
+			else if (go->timer < 5 && go->timer > 3)
+			{
+				cSoundController->StopSoundByID(12);
+				cSoundController->PlaySoundByID(12);
+			}
 			else if (go->timer < 3)
 			{
-				cSoundController->PlaySoundByID(12);
+
 				go->vel = (go->direction * 80);
 			}
 			go->timer -= 0.04;
@@ -2076,7 +2091,7 @@ void Assignment1::RenderGO(GameObject* go)
 			{
 				go->timer = 10;
 			}
-
+			std::cout << go->pos.x << std::endl;
 		}
 
 		// Worm moving code
@@ -2175,7 +2190,7 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PushMatrix();
 		if (go->type == GameObject::GO_WORMHEAD)
 		{
-			if (go->timer > 5)
+			if (go->timer > 4)
 			{
 				go->angle = atan2(m_ship->pos.y - go->pos.y, m_ship->pos.x - go->pos.x);
 				go->angle = (go->angle / Math::PI) * 180.0 - 90.0f;
@@ -2810,7 +2825,7 @@ void Assignment1::Render()
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
 
 		ss.str("");
-		ss << "$:" << m_money;
+		ss << "$: " << m_money;
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 50, 0);
 
 		//Exercise 5b: Render position, velocity & mass of ship
@@ -2831,6 +2846,8 @@ void Assignment1::Render()
 		ss.str("");
 		ss << "Wave: " << waveCount;
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 55, 55);
+
+
 
 		// For Debugging
 		/*ss.str("");
