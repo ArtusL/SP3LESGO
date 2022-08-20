@@ -42,6 +42,7 @@ protected:
 	std::vector<float> damageTextY;
 	std::vector<float> translateTextY;
 	std::vector<double> damageTimer;
+	std::vector<bool> damageEnemy;
 	CSoundController* cSoundController;
 	float m_speed;
 	float m_worldWidth;
@@ -120,6 +121,7 @@ protected:
 	double elapsedTime;
 	double waveTimer;
 	double tripleShotTimer;
+	double iFrames;
 
 	bool missleUse;
 	bool ringUse;

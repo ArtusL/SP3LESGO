@@ -64,6 +64,7 @@ void Assignment1::Init()
 
 	hpFactor = moneyFactor = 1;
 	bonusMoney = 1;
+	iFrames = 0;
 
 	fireRate = 5;
 	fireRateCost = 10;
@@ -76,8 +77,8 @@ void Assignment1::Init()
 	flamingarrowCost = 1000;
 	healthRegenCost = 20;
 
-	// FOR DEBUG ONLY
 	tempSpawnCount = 0;
+
 	shootCount = 0;
 	bossState = 0;
 	laserAngle = 0;
@@ -143,7 +144,7 @@ void Assignment1::Init()
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Explosion.ogg"), 5, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Magic.ogg"), 6, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Slash.ogg"), 7, true);
-	cSoundController->LoadSound(FileSystem::getPath("Sound\\StrongAttack.ogg"), 8, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\Grunt.wav"), 8, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Gameover.ogg"), 9, true);
 	//shop purchase
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\PurchaseRing.ogg"), 10, true);
@@ -652,7 +653,7 @@ void Assignment1::Update(double dt)
 					go->hp = round(10 * hpFactor);
 					go->scale.Set(20, 20, 1);
 					go->hitboxSizeDivider = 6;
-					go->enemyDamage = 20;
+					go->enemyDamage = 10;
 					maxVel = 5;
 				}
 				// Spawn Asteroids
@@ -666,8 +667,8 @@ void Assignment1::Update(double dt)
 					go->maxHP = go->hp;
 					go->prevEnemyBullet = elapsedTime;
 					go->speedFactor = 1;
-					go->hitboxSizeDivider = 3;
-					go->enemyDamage = 5;
+					go->hitboxSizeDivider = 4;
+					go->enemyDamage = 10;
 				}
 				// Spawn Asteroids
 				else
@@ -721,7 +722,7 @@ void Assignment1::Update(double dt)
 			go->prevEnemyBullet = elapsedTime;
 			go->speedFactor = 1;
 			go->hitboxSizeDivider = 8;
-			go->enemyDamage = 1;
+			go->enemyDamage = 20;
 			go->facingLeft = true;
 			tempSpawnCount++;
 		}
@@ -759,7 +760,7 @@ void Assignment1::Update(double dt)
 						go->scale.Set(10, 10, 1);
 						go->vel.Set(0, 0, 0);
 
-						go->enemyDamage = 5;
+						go->enemyDamage = 20;
 
 						go->prevNode = prevBody;
 						go->prevNode->nextNode = go;
@@ -782,7 +783,7 @@ void Assignment1::Update(double dt)
 						go->vel.Set(0, 0, 0);
 						go->scale.Set(10, 10, 1);
 
-						go->enemyDamage = 5;
+						go->enemyDamage = 20;
 
 						go->prevNode = prevBody;
 						go->prevNode->nextNode = go;
@@ -1013,7 +1014,7 @@ void Assignment1::Update(double dt)
 							go2->scale.Set(4.0f, 4.0f, 4.0f);
 							go2->pos = enemy->pos;
 							go2->angle = angle * i + Math::RandFloatMinMax(0, 50);
-							go2->enemyDamage = 10;
+							go2->enemyDamage = 13;
 							go2->hitboxSizeDivider = 3;
 
 
@@ -1039,6 +1040,7 @@ void Assignment1::Update(double dt)
 					break;
 				case 1:
 
+					enemy->enemyDamage = 35;
 					if (diff > 0.6)
 					{
 						enemy->speedFactor = 10;
@@ -1072,6 +1074,7 @@ void Assignment1::Update(double dt)
 
 					break;
 				case 2:
+					enemy->enemyDamage = 20;
 					if (diff > 1)
 					{
 						enemy->prevEnemyBullet = elapsedTime - 0.96;
@@ -1081,7 +1084,7 @@ void Assignment1::Update(double dt)
 						go2->scale.Set(2.0f, 2.0f, 4.0f);
 						go2->pos = enemy->pos;
 						go2->angle = laserAngle;
-						go2->enemyDamage = 1;
+						go2->enemyDamage = 13;
 						go2->hitboxSizeDivider = 6;
 
 						laserAngle += 6;
@@ -1432,6 +1435,12 @@ void Assignment1::Update(double dt)
 			}
 		}
 
+		// Invincibility frames
+		if (iFrames > 0)
+		{
+			iFrames -= 1 * dt;
+		}
+
 		// If health reaches zero
 		if (m_ship->hp <= 0)
 		{
@@ -1472,28 +1481,38 @@ void Assignment1::Collision(GameObject* go)
 			}
 		}
 
-		if (go->type != GameObject::GO_BOSS &&
-			go->type != GameObject::GO_LASER &&
-			go->type != GameObject::GO_WORMHEAD &&
-			go->type != GameObject::GO_WORMBODY1 &&
-			go->type != GameObject::GO_WORMBODY2 &&
-			go->type != GameObject::GO_WORMTAIL)
+		if (go->type == GameObject::GO_TRIPLESHOT ||
+			go->type == GameObject::GO_HEAL ||
+			go->type == GameObject::GO_ENEMYBULLET
+			)
 		{
+			m_objectCount--;
 			go->active = false;
 		}
 
 
-		//go->active = false;
-		m_objectCount--;
-		m_ship->hp -= go->enemyDamage;
+		if (iFrames <= 0)
+		{
+			m_ship->hp -= go->enemyDamage;
+			iFrames = 1;
+
+			displayDamage.push_back(go->enemyDamage);
+			damageTextX.push_back((m_ship->pos.x - camera.position.x) * 79 / 192);
+			damageTextY.push_back((m_ship->pos.y - camera.position.y) * 59 / 100);
+			translateTextY.push_back(0);
+			damageTimer.push_back(elapsedTime);
+			damageEnemy.push_back(false);
+
+			cSoundController->StopSoundByID(8);
+			cSoundController->PlaySoundByID(8);
+		}
+
 
 		if (m_ship->hp > m_ship->maxHP)
 		{
 			m_ship->hp = m_ship->maxHP;
 		}
 
-		cSoundController->StopSoundByID(8);
-		cSoundController->PlaySoundByID(8);
 	}
 	//Exercise 13: asteroids should wrap around the screen like the ship
 	//Wrap(go->pos.x, m_worldWidth);
@@ -1547,6 +1566,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
+				damageEnemy.push_back(true);
 
 			}
 
@@ -1568,6 +1588,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
+				damageEnemy.push_back(true);
 			}
 
 			if (bullet->type == GameObject::GO_MOLOTOV)
@@ -1586,6 +1607,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
+				damageEnemy.push_back(true);
 			}
 
 
@@ -1599,6 +1621,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
+				damageEnemy.push_back(true);
 				/*	cSoundController->StopSoundByID(5);*/
 				cSoundController->PlaySoundByID(5);
 			}
@@ -1613,6 +1636,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
+				damageEnemy.push_back(true);
 			}
 
 
@@ -1626,6 +1650,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				damageTextY.push_back((target->pos.y - camera.position.y ) * 59 / 100);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
+				damageEnemy.push_back(true);
 				cSoundController->StopSoundByID(7);
 				cSoundController->PlaySoundByID(7);
 
@@ -1641,6 +1666,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
+				damageEnemy.push_back(true);
 			}
 
 			if (bullet->type == GameObject::GO_FLAMINGARROW)
@@ -1660,6 +1686,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
+				damageEnemy.push_back(true);
 			}
 
 			// Asteroid HP reaches 0
@@ -1714,7 +1741,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 					{
 						target->prevNode->type = GameObject::GO_WORMTAIL;
 						target->prevNode->nextNode = nullptr;
-						target->prevNode->enemyDamage = 5;
+						target->prevNode->enemyDamage = 20;
 						//target->prevNode = nullptr;
 						//delete target->prevNode->nextNode;
 						//delete target->prevNode;
@@ -1726,7 +1753,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 					{
 						target->prevNode->type = GameObject::GO_WORMTAIL;
 						target->prevNode->nextNode = nullptr;
-						target->prevNode->enemyDamage = 5;
+						target->prevNode->enemyDamage = 20;
 					}
 
 					//delete target;
@@ -2792,8 +2819,18 @@ void Assignment1::Render()
 		{
 			ss.str("");
 			ss << displayDamage.at(it);
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 3, damageTextX.at(it) + 0.2, damageTextY.at(it) - 0.2);
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 0), 3, damageTextX.at(it), damageTextY.at(it));
+
+			if (damageEnemy.at(it) == true) // Display enemy damage taken
+			{
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 2, damageTextX.at(it) + 0.2, damageTextY.at(it) - 0.2);
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 0), 2, damageTextX.at(it), damageTextY.at(it));
+			}
+			else // Display player damage taken
+			{
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 3, damageTextX.at(it) + 0.2, damageTextY.at(it) - 0.2);
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 3, damageTextX.at(it), damageTextY.at(it));
+			}
+
 
 			damageTextY.at(it) += 0.08;
 			double diff = elapsedTime - damageTimer.at(it);
@@ -2805,6 +2842,7 @@ void Assignment1::Render()
 				damageTextY.erase(damageTextY.begin() + it);
 				translateTextY.erase(translateTextY.begin() + it);
 				damageTimer.erase(damageTimer.begin() + it);
+				damageEnemy.erase(damageEnemy.begin() + it);
 
 				if (it >= damageTimer.size())
 				{
