@@ -136,33 +136,70 @@ void SceneBase::Init()
 	SpriteAnimation* saLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERO_LEFT]);
 	saLeft->AddAnimation("IDLE", 0, 4);
 
+	meshList[GEO_HEROATTACK] = MeshBuilder::GenerateSpriteAnimation("Hero", 1, 6);
+	meshList[GEO_HEROATTACK]->textureID = LoadTexture("Image//HeroAttack.png", true);
+	meshList[GEO_HEROATTACK]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* saAttack = dynamic_cast<SpriteAnimation*>(meshList[GEO_HEROATTACK]);
+	saAttack->AddAnimation("Attack", 0, 6);
+
+	meshList[GEO_HEROATTACK_LEFT] = MeshBuilder::GenerateSpriteAnimation("Hero Left", 1, 6);
+	meshList[GEO_HEROATTACK_LEFT]->textureID = LoadTexture("Image//HeroAttack.png", false);
+	meshList[GEO_HEROATTACK_LEFT]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* saAttackLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_HEROATTACK_LEFT]);
+	saAttackLeft->AddAnimation("Attack", 0, 6);
+
+
 	// Enemy types
 	meshList[GEO_FDEMON] = MeshBuilder::GenerateSpriteAnimation("Fdemon", 1, 6);
-	meshList[GEO_FDEMON]->textureID = LoadTexture("Image//FlameDemon.png", true);
+	meshList[GEO_FDEMON]->textureID = LoadTexture("Image//FlameDemon.png", false);
 	meshList[GEO_FDEMON]->material.kAmbient.Set(1, 1, 1);
 	SpriteAnimation* Fdemonsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FDEMON]);
 	Fdemonsprite->AddAnimation("IDLE", 0, 6);
 
+	meshList[GEO_FDEMON_LEFT] = MeshBuilder::GenerateSpriteAnimation("Fdemon Left", 1, 6);
+	meshList[GEO_FDEMON_LEFT]->textureID = LoadTexture("Image//FlameDemon.png", true);
+	meshList[GEO_FDEMON_LEFT]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* FdemonspriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_FDEMON_LEFT]);
+	FdemonspriteLeft->AddAnimation("IDLE", 0, 6);
+
 	meshList[GEO_BDEMON] = MeshBuilder::GenerateSpriteAnimation("Bdemon", 1, 6);
-	meshList[GEO_BDEMON]->textureID = LoadTexture("Image//Bdemon.png", true);
+	meshList[GEO_BDEMON]->textureID = LoadTexture("Image//Bdemon.png", false);
 	meshList[GEO_BDEMON]->material.kAmbient.Set(1, 1, 1);
 	SpriteAnimation* Bdemonsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_BDEMON]);
 	Bdemonsprite->AddAnimation("IDLE", 0, 6);
 
+	meshList[GEO_BDEMON_LEFT] = MeshBuilder::GenerateSpriteAnimation("Bdemon Left", 1, 6);
+	meshList[GEO_BDEMON_LEFT]->textureID = LoadTexture("Image//Bdemon.png", true);
+	meshList[GEO_BDEMON_LEFT]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* BdemonspriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_BDEMON_LEFT]);
+	BdemonspriteLeft->AddAnimation("IDLE", 0, 6);
+
 	meshList[GEO_NIGHTMARE] = MeshBuilder::GenerateSpriteAnimation("Nightmare", 1, 4);
-	meshList[GEO_NIGHTMARE]->textureID = LoadTexture("Image//Nightmare.png", true);
+	meshList[GEO_NIGHTMARE]->textureID = LoadTexture("Image//Nightmare.png", false);
 	meshList[GEO_NIGHTMARE]->material.kAmbient.Set(1, 1, 1);
 	SpriteAnimation* Nightmaresprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_NIGHTMARE]);
 	Nightmaresprite->AddAnimation("IDLE", 0, 4);
 
+	meshList[GEO_NIGHTMARE_LEFT] = MeshBuilder::GenerateSpriteAnimation("Nightmare Left", 1, 4);
+	meshList[GEO_NIGHTMARE_LEFT]->textureID = LoadTexture("Image//Nightmare.png", true);
+	meshList[GEO_NIGHTMARE_LEFT]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* NightmarespriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_NIGHTMARE_LEFT]);
+	NightmarespriteLeft->AddAnimation("IDLE", 0, 4);
+
 	meshList[GEO_GHOST] = MeshBuilder::GenerateSpriteAnimation("Ghost", 1, 7);
-	meshList[GEO_GHOST]->textureID = LoadTexture("Image//ghost-idle.png", true);
+	meshList[GEO_GHOST]->textureID = LoadTexture("Image//ghost-idle.png", false);
 	meshList[GEO_GHOST]->material.kAmbient.Set(1, 1, 1);
 	SpriteAnimation* Ghostsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_GHOST]);
 	Ghostsprite->AddAnimation("IDLE", 0, 7);
 
+	meshList[GEO_GHOST_LEFT] = MeshBuilder::GenerateSpriteAnimation("Ghost Left", 1, 7);
+	meshList[GEO_GHOST_LEFT]->textureID = LoadTexture("Image//ghost-idle.png", true);
+	meshList[GEO_GHOST_LEFT]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* GhostspriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_GHOST_LEFT]);
+	GhostspriteLeft->AddAnimation("IDLE", 0, 7);
 
-	// Boss 2?
+
+	// Worm enemy (Boss 2?)
 
 	meshList[GEO_WORMHEAD] = MeshBuilder::GenerateQuad("Worm Head", Color(1, 0, 0), 1.f);
 	meshList[GEO_WORMHEAD]->textureID = LoadTGA("Image//worm_head.tga");

@@ -185,6 +185,8 @@ void Assignment1::Update(double dt)
 	//Calculating aspect ratio
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
+
+	// Hero
 	HeroSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERO]);
 	HeroSprite->PlayAnimation("IDLE", -1, 0.5f);
 	HeroSprite->Update(dt);
@@ -193,35 +195,58 @@ void Assignment1::Update(double dt)
 	HeroSprite->PlayAnimation("IDLE", -1, 0.5f);
 	HeroSprite->Update(dt);
 
-
+	// Ghost
 	GhostSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_GHOST]);
 	GhostSprite->PlayAnimation("IDLE", -1, 0.5f);
 	GhostSprite->Update(dt);
 
+	GhostSpriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_GHOST_LEFT]);
+	GhostSpriteLeft->PlayAnimation("IDLE", -1, 0.5f);
+	GhostSpriteLeft->Update(dt);
+
+	// Nightmare
 	NightmareSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_NIGHTMARE]);
 	NightmareSprite->PlayAnimation("IDLE", -1, 0.5f);
 	NightmareSprite->Update(dt);
 
+	NightmareSpriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_NIGHTMARE_LEFT]);
+	NightmareSpriteLeft->PlayAnimation("IDLE", -1, 0.5f);
+	NightmareSpriteLeft->Update(dt);
+
+	// Flame Demon
 	FdemonSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FDEMON]);
 	FdemonSprite->PlayAnimation("IDLE", -1, 0.8f);
 	FdemonSprite->Update(dt);
 
+	FdemonSpriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_FDEMON_LEFT]);
+	FdemonSpriteLeft->PlayAnimation("IDLE", -1, 0.8f);
+	FdemonSpriteLeft->Update(dt);
+
+	// B Demon (dunno what b stands for)
 	BdemonSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_BDEMON]);
 	BdemonSprite->PlayAnimation("IDLE", -1, 1.0f);
 	BdemonSprite->Update(dt);
 
+	BdemonSpriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_BDEMON_LEFT]);
+	BdemonSpriteLeft->PlayAnimation("IDLE", -1, 1.0f);
+	BdemonSpriteLeft->Update(dt);
+
+	// Fire
 	FireSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FIRE]);
 	FireSprite->PlayAnimation("Fire", -1, 1.0f);
 	FireSprite->Update(dt);
 
+	// Explosion
 	ExplosionSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_EXPLOSION]);
 	ExplosionSprite->PlayAnimation("Explode", -1, 1.0f);
 	ExplosionSprite->Update(dt);
 
+	// Barrier
 	BarrierSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_RINGAURA]);
 	BarrierSprite->PlayAnimation("Aura", -1, 2.0f);
 	BarrierSprite->Update(dt);
 
+	// Purple Shot
 	PurpleShot = dynamic_cast<SpriteAnimation*>(meshList[GEO_LASER]);
 	PurpleShot->PlayAnimation("Purple Projectile", -1, 2.0f);
 	PurpleShot->Update(dt);
@@ -815,6 +840,23 @@ void Assignment1::Update(double dt)
 		//Exercise 14: use a key to spawn a bullet
 		if (Application::IsMousePressed(0))
 		{
+
+			// Attack Animations
+			if (worldPosX < m_ship->pos.x)
+			{
+				HeroSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_HEROATTACK_LEFT]);
+				HeroSprite->PlayAnimation("Attack", -1, 1 / fireRate);
+				HeroSprite->Update(dt);
+				heroFacingLeft = true;
+			}
+			else
+			{
+				HeroSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_HEROATTACK]);
+				HeroSprite->PlayAnimation("Attack", -1, 1 / fireRate);
+				HeroSprite->Update(dt);
+				heroFacingLeft = false;
+			}
+
 			//Exercise 15: limit the spawn rate of bullets
 			float diff = elapsedTime - prevElapsedBullet;
 			if (diff > 1 / fireRate)
@@ -1874,17 +1916,42 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 9);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 
-		if (heroFacingLeft == true)
+
+		if (Application::IsMousePressed(0))
 		{
-			modelStack.PushMatrix();
-			modelStack.Rotate(180, 0, 0, 1);
-			RenderMesh(meshList[GEO_HERO_LEFT], false);
-			modelStack.PopMatrix();
+			// Attack Animations
+			if (worldPosX < m_ship->pos.x)
+			{
+				modelStack.PushMatrix();
+				modelStack.Rotate(180, 0, 0, 1);
+				modelStack.Scale(2, 1, 1);
+				RenderMesh(meshList[GEO_HEROATTACK_LEFT], false);
+				modelStack.PopMatrix();
+			}
+			else
+			{
+				modelStack.PushMatrix();
+				modelStack.Scale(2, 1, 1);
+				RenderMesh(meshList[GEO_HEROATTACK], false);
+				modelStack.PopMatrix();
+			}
 		}
 		else
 		{
-			RenderMesh(meshList[GEO_HERO], false);
+			// Idle Animations
+			if (heroFacingLeft == true)
+			{
+				modelStack.PushMatrix();
+				modelStack.Rotate(180, 0, 0, 1);
+				RenderMesh(meshList[GEO_HERO_LEFT], false);
+				modelStack.PopMatrix();
+			}
+			else
+			{
+				RenderMesh(meshList[GEO_HERO], false);
+			}
 		}
+
 
 
 		// Display health bar if asteroid is damaged
@@ -1919,7 +1986,18 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_GHOST], false);
+
+		if (go->facingLeft == true)
+		{
+			RenderMesh(meshList[GEO_GHOST_LEFT], false);
+		}
+		else
+		{
+			modelStack.PushMatrix();
+			modelStack.Rotate(180, 0, 0, 1);
+			RenderMesh(meshList[GEO_GHOST], false);
+			modelStack.PopMatrix();
+		}
 
 		// Display health bar if asteroid is damaged
 		if (go->hp < go->maxHP)
@@ -1959,7 +2037,17 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.Rotate(go->angle, 0, 0, 1);
 
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_BDEMON], false);
+		if (go->facingLeft == true)
+		{
+			RenderMesh(meshList[GEO_BDEMON_LEFT], false);
+		}
+		else
+		{
+			modelStack.PushMatrix();
+			modelStack.Rotate(180, 0, 0, 1);
+			RenderMesh(meshList[GEO_BDEMON], false);
+			modelStack.PopMatrix();
+		}
 		modelStack.PopMatrix();
 
 
@@ -2023,7 +2111,18 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PushMatrix();
 
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_FDEMON], false);
+		if (go->facingLeft == true)
+		{
+			RenderMesh(meshList[GEO_FDEMON_LEFT], false);
+		}
+		else
+		{
+			modelStack.PushMatrix();
+			modelStack.Rotate(180, 0, 0, 1);
+			RenderMesh(meshList[GEO_FDEMON], false);
+			modelStack.PopMatrix();
+		}
+
 		modelStack.PopMatrix();
 
 		// Display health bar if asteroid is damaged
@@ -2033,13 +2132,13 @@ void Assignment1::RenderGO(GameObject* go)
 			float redHealthPercent = 100 - greenHealthPercent;
 
 			modelStack.PushMatrix();
-			modelStack.Translate(0, 1.3, 1);
+			modelStack.Translate(0, 8, 1);
 			modelStack.Scale(go->scale.x * 0.6, go->scale.y * 0.13, go->scale.z + 100);
 			RenderMesh(meshList[GEO_REDHEALTH], false);
 			modelStack.PopMatrix();
 
 			modelStack.PushMatrix();
-			modelStack.Translate(0, 1.3, 1.1);
+			modelStack.Translate(0, 8, 1.1);
 			modelStack.Scale(go->scale.x * 0.006 * greenHealthPercent, go->scale.y * 0.13, go->scale.z + 100);
 			RenderMesh(meshList[GEO_GREENHEALTH], false);
 			modelStack.PopMatrix();
@@ -2057,7 +2156,17 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_NIGHTMARE], false);
+		if (go->facingLeft == true)
+		{
+			RenderMesh(meshList[GEO_BDEMON_LEFT], false);
+		}
+		else
+		{
+			modelStack.PushMatrix();
+			modelStack.Rotate(180, 0, 0, 1);
+			RenderMesh(meshList[GEO_BDEMON], false);
+			modelStack.PopMatrix();
+		}
 
 		// Display health bar if asteroid is damaged
 		if (go->hp < go->maxHP)
@@ -2098,7 +2207,7 @@ void Assignment1::RenderGO(GameObject* go)
 				go->direction = go->direction.Normalized();
 				go->vel = (go->direction * 15);
 			}
-			else if (go->timer < 4 && go->timer > 3.7)
+			else if (go->timer < 4 && go->timer > 3.8)
 			{
 				cSoundController->StopSoundByID(12);
 				cSoundController->PlaySoundByID(12);

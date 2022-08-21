@@ -50,13 +50,17 @@ protected:
 	GameObject *m_ship;
 	SpriteAnimation* HeroSprite;
 	SpriteAnimation* GhostSprite;
+	SpriteAnimation* GhostSpriteLeft;
 	SpriteAnimation* FdemonSprite;
+	SpriteAnimation* FdemonSpriteLeft;
 	SpriteAnimation* FdemonATKSprite;
 	SpriteAnimation* BdemonSprite;
+	SpriteAnimation* BdemonSpriteLeft;
 	SpriteAnimation* NightborneSprite;
 	SpriteAnimation* NightborneSpriteLeft;
 	SpriteAnimation* FireSprite;
 	SpriteAnimation* NightmareSprite;
+	SpriteAnimation* NightmareSpriteLeft;
 	SpriteAnimation* ExplosionSprite;
 	SpriteAnimation* BarrierSprite;
 	SpriteAnimation* PurpleShot;
