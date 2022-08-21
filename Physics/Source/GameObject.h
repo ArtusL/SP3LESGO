@@ -62,6 +62,7 @@ struct GameObject
 	float angle;
 	float hp;
 	float maxHP;
+	int moneyDrop;
 	float enemyDamage;
 	float speedFactor;
 	float prevEnemyBullet;

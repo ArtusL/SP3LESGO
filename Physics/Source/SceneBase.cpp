@@ -148,6 +148,18 @@ void SceneBase::Init()
 	SpriteAnimation* saAttackLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_HEROATTACK_LEFT]);
 	saAttackLeft->AddAnimation("Attack", 0, 6);
 
+	meshList[GEO_HERORUN] = MeshBuilder::GenerateSpriteAnimation("Hero", 1, 12);
+	meshList[GEO_HERORUN]->textureID = LoadTexture("Image//HeroRun.png", true);
+	meshList[GEO_HERORUN]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* saRun = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERORUN]);
+	saRun->AddAnimation("Run", 0, 12);
+
+	meshList[GEO_HERORUN_LEFT] = MeshBuilder::GenerateSpriteAnimation("Hero Left", 1, 12);
+	meshList[GEO_HERORUN_LEFT]->textureID = LoadTexture("Image//HeroRun.png", false);
+	meshList[GEO_HERORUN_LEFT]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* saRunLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERORUN_LEFT]);
+	saRunLeft->AddAnimation("Run", 0, 12);
+
 
 	// Enemy types
 	meshList[GEO_FDEMON] = MeshBuilder::GenerateSpriteAnimation("Fdemon", 1, 6);
