@@ -1640,8 +1640,8 @@ void Assignment1::Collision(GameObject* go)
 			iFrames = 1;
 
 			displayDamage.push_back(go->enemyDamage);
-			damageTextX.push_back((m_ship->pos.x - camera.position.x) * 79 / 192);
-			damageTextY.push_back((m_ship->pos.y - camera.position.y) * 59 / 100);
+			damageTextX.push_back((go->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
+			damageTextY.push_back((go->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
 			translateTextY.push_back(0);
 			damageTimer.push_back(elapsedTime);
 			damageEnemy.push_back(false);
@@ -1694,7 +1694,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 
 			if (bullet->type == GameObject::GO_MISSLE)
 			{
-				target->hp -= basicBulletDamage * 2;
+				int damageDealt = round(basicBulletDamage * 2 * Math::RandFloatMinMax(0.7, 1.5));
+				target->hp -= damageDealt;
 				GameObject* explosion = FetchGO();
 				explosion->type = GameObject::GO_EXPLOSION;
 				explosion->pos = target->pos;
@@ -1706,9 +1707,9 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				ExplosionSprite->PlayAnimation("Explode", 1, 1.0f);
 				bullet->active = false;
 
-				displayDamage.push_back(basicBulletDamage * 2);
-				damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
-				damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
+				displayDamage.push_back(damageDealt);
+				damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
+				damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
 				damageEnemy.push_back(true);
@@ -1717,7 +1718,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 
 			if (bullet->type == GameObject::GO_BOMB)
 			{
-				target->hp -= basicBulletDamage * 2;
+				int damageDealt = round(basicBulletDamage * 2 * Math::RandFloatMinMax(0.7, 1.5));
+				target->hp -= damageDealt;
 				GameObject* explosion = FetchGO();
 				explosion->type = GameObject::GO_EXPLOSION;
 				explosion->pos = target->pos;
@@ -1729,9 +1731,9 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				ExplosionSprite->PlayAnimation("Explode", 1, 1.0f);
 				bullet->active = false;
 
-				displayDamage.push_back(basicBulletDamage * 2);
-				damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
-				damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
+				displayDamage.push_back(damageDealt);
+				damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
+				damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
 				damageEnemy.push_back(true);
@@ -1758,10 +1760,11 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				{
 					if (target->type == GameObject::GO_WORMBODY1 || target->type == GameObject::GO_WORMBODY2 || target->type == GameObject::GO_WORMHEAD || target->type == GameObject::GO_WORMTAIL)
 					{
-						target->hp -= basicBulletDamage;
-						displayDamage.push_back(basicBulletDamage);
-						damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
-						damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
+						int damageDealt = round(basicBulletDamage * Math::RandFloatMinMax(0.7, 1.5));
+						target->hp -= damageDealt;
+						displayDamage.push_back(damageDealt);
+						damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
+						damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
 						translateTextY.push_back(0);
 						damageTimer.push_back(elapsedTime);
 						damageEnemy.push_back(true);
@@ -1771,10 +1774,11 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 
 					else
 					{
-						target->hp -= basicBulletDamage * 3;
-						displayDamage.push_back(basicBulletDamage * 3);
-						damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
-						damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
+						int damageDealt = round(basicBulletDamage * 3 * Math::RandFloatMinMax(0.7, 1.5));
+						target->hp -= damageDealt;
+						displayDamage.push_back(damageDealt);
+						damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
+						damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
 						translateTextY.push_back(0);
 						damageTimer.push_back(elapsedTime);
 						damageEnemy.push_back(true);
@@ -1790,10 +1794,11 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				{
 					if (target->type == GameObject::GO_BOSS)
 					{
-						target->hp -= basicBulletDamage * 2;
-						displayDamage.push_back(basicBulletDamage * 2);
-						damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
-						damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
+						int damageDealt = round(basicBulletDamage * 2 * Math::RandFloatMinMax(0.7, 1.5));
+						target->hp -= damageDealt;
+						displayDamage.push_back(damageDealt);
+						damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
+						damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
 						translateTextY.push_back(0);
 						damageTimer.push_back(elapsedTime);
 						damageEnemy.push_back(true);
@@ -1801,11 +1806,11 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 					}
 					else
 					{
-						target->hp -= basicBulletDamage;
-
-						displayDamage.push_back(basicBulletDamage * 10);
-						damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
-						damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
+						int damageDealt = round(basicBulletDamage * Math::RandFloatMinMax(0.7, 1.5));
+						target->hp -= damageDealt;
+						displayDamage.push_back(damageDealt);
+						damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
+						damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
 						translateTextY.push_back(0);
 						damageTimer.push_back(elapsedTime);
 						damageEnemy.push_back(true);
@@ -1822,8 +1827,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				bullet->active = false;
 
 				displayDamage.push_back(damageDealt);
-				damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
-				damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
+				damageTextX.push_back((target->pos.x - camera.position.x + Math::RandFloatMinMax(-5, 5)) * 85 / (192 * (m_worldHeight / (4 * 100))));
+				damageTextY.push_back((target->pos.y - camera.position.y + Math::RandFloatMinMax(-5, 5)) * 65 / (100 * (m_worldHeight / (4 * 100))));
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
 				damageEnemy.push_back(true);
@@ -1834,12 +1839,13 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 
 			if (bullet->type == GameObject::GO_ARROW)
 			{
-				target->hp -= basicBulletDamage;
+				int damageDealt = round(basicBulletDamage * Math::RandFloatMinMax(0.7, 1.5));
+				target->hp -= damageDealt;
 				bullet->active = false;
 
-				displayDamage.push_back(basicBulletDamage);
-				damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
-				damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
+				displayDamage.push_back(damageDealt);
+				damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
+				damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
 				damageEnemy.push_back(true);
@@ -1847,7 +1853,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 
 			if (bullet->type == GameObject::GO_FLAMINGARROW)
 			{
-				target->hp -= basicBulletDamage;
+				int damageDealt = round(basicBulletDamage * Math::RandFloatMinMax(0.7, 1.5));
+				target->hp -= damageDealt;
 				GameObject* fire = FetchGO();
 				fire->type = GameObject::GO_FIRE;
 				fire->pos = target->pos;
@@ -1859,9 +1866,9 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				FireSprite->PlayAnimation("Fire", 1, 1.0f);
 				bullet->active = false;
 
-				displayDamage.push_back(basicBulletDamage);
-				damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
-				damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
+				displayDamage.push_back(damageDealt);
+				damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
+				damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
 				damageEnemy.push_back(true);
@@ -2931,52 +2938,52 @@ void Assignment1::Render()
 
 		ss.str("");
 		ss << "UPGRADE MENU";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 30, 50);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 30, 50, false);
 
 		ss.str("");
 		ss << "-------------------------------";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 47);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 47, false);
 
 		if (fireRateCost < 60)
 		{
 			ss.str("");
 			ss << "[I]  Fire Rate Up:$" << fireRateCost;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 45);
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 45, false);
 
 		}
 		else
 		{
 			ss.str("");
 			ss << "[I]  Fire Rate Up:SOLD";
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 45);
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 45, false);
 
 		}
 		ss.str("");
 		ss << "[O]  Damage Up:$" << damageUpCost;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 40);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 40, false);
 
 		ss.str("");
 		ss << "[P]  Health Regen:$" << healthRegenCost;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 35);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 35, false);
 
 		if (missleCost < 25)
 		{
 			ss.str("");
 			ss << "[J]  Homing Missle:$" << missleCost << " LVL" << misslelvl;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 30);
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 30, false);
 		}
 		else
 		{
 			ss.str("");
 			ss << "[J]  Missle Fire Rate:$" << missleCost << " LVL" << misslelvl;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 30);
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 30, false);
 		}
 
 		if (ringCost < 275)
 		{
 			ss.str("");
 			ss << "[K]  Protection:$" << ringCost << " LVL" << ringlvl;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 25);
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 25, false);
 		}
 		else
 		{
@@ -2984,13 +2991,13 @@ void Assignment1::Render()
 			{
 				ss.str("");
 				ss << "[K]  Protection Range:SOLD " << "LVL" << ringlvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 25);
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 25, false);
 			}
 			else
 			{
 				ss.str("");
 				ss << "[K]  Protection Range:$" << ringCost << " LVL" << ringlvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 25);
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 25, false);
 			}
 		}
 
@@ -2998,7 +3005,7 @@ void Assignment1::Render()
 		{
 			ss.str("");
 			ss << "[L]  Lobing Bomb:$" << bombCost << " LVL" << bomblvl;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 20);
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 20, false);
 		}
 		else
 		{
@@ -3006,14 +3013,14 @@ void Assignment1::Render()
 			{
 				ss.str("");
 				ss << "[L]  Bomb Fire Rate:SOLD" << " LVL" << bomblvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 20);
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 20, false);
 			}
 
 			else
 			{
 				ss.str("");
 				ss << "[L]  Bomb Fire Rate:$" << bombCost << " LVL" << bomblvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 20);
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 20, false);
 			}
 
 		}
@@ -3022,7 +3029,7 @@ void Assignment1::Render()
 		{
 			ss.str("");
 			ss << "[B]  Molotov cocktail:$" << molotovCost << " LVL" << molotovlvl;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 15);
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 15, false);
 		}
 		else
 		{
@@ -3031,14 +3038,14 @@ void Assignment1::Render()
 			{
 				ss.str("");
 				ss << "[B]  Add Molotov:$" << molotovCost << " LVL" << molotovlvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 15);
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 15, false);
 			}
 
 			else if (molotovlvl <= 8 && molotovlvl >= 4)
 			{
 				ss.str("");
 				ss << "[B]  Molotov Fire Rate:$" << molotovCost << " LVL" << molotovlvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 15);
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 15, false);
 			}
 
 
@@ -3047,7 +3054,7 @@ void Assignment1::Render()
 
 				ss.str("");
 				ss << "[B]  Molotov Fire Rate:SOLD" << " LVL" << molotovlvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 15);
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 15, false);
 			}
 
 		}
@@ -3056,7 +3063,7 @@ void Assignment1::Render()
 		{
 			ss.str("");
 			ss << "[N]  Arrow shot:$" << arrowCost << " LVL" << arrowlvl;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10);
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10, false);
 		}
 		else
 		{
@@ -3065,28 +3072,28 @@ void Assignment1::Render()
 			{
 				ss.str("");
 				ss << "[N]  Add Arrows:$" << arrowCost << " LVL" << arrowlvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10);
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10, false);
 			}
 
 			else if (arrowlvl <= 8 && arrowlvl >= 4)
 			{
 				ss.str("");
 				ss << "[N]  Arrow Fire Rate:$" << arrowCost << " LVL" << arrowlvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10);
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10, false);
 			}
 
 			else if (arrowlvl == 9 && molotovlvl == 9 && flamingarrowlvl == 0)
 			{
 				ss.str("");
 				ss << "[M]  Flaming Arrows:$" << flamingarrowCost << " LVL" << flamingarrowlvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10);
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10, false);
 			}
 
 			else if (arrowlvl == 9 && molotovlvl == 9 && flamingarrowlvl == 1)
 			{
 				ss.str("");
 				ss << "[M]  Flaming Arrows:SOLD" << " LVL" << flamingarrowlvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10);
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10, false);
 			}
 
 			else
@@ -3094,7 +3101,7 @@ void Assignment1::Render()
 
 				ss.str("");
 				ss << "[N]  arrow Fire Rate:SOLD" << " LVL" << arrowlvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10);
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10, false);
 			}
 
 		}
@@ -3104,11 +3111,11 @@ void Assignment1::Render()
 	{
 		ss.str("");
 		ss << "Asteroid Shooter";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 45);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 45, false);
 
 		ss.str("");
 		ss << "Press [SPACEBAR] to start";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 20);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 20, false);
 	}
 
 	if (isAlive && !upgradeScreen && gameStart)
@@ -3121,13 +3128,13 @@ void Assignment1::Render()
 
 			if (damageEnemy.at(it) == true) // Display enemy damage taken
 			{
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 2, damageTextX.at(it) + 0.2, damageTextY.at(it) - 0.2);
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 0), 2, damageTextX.at(it), damageTextY.at(it));
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 2, damageTextX.at(it) + 0.2, damageTextY.at(it) - 0.2,true);
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 0), 2, damageTextX.at(it), damageTextY.at(it), true);
 			}
 			else // Display player damage taken
 			{
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 3, damageTextX.at(it) + 0.2, damageTextY.at(it) - 0.2);
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 3, damageTextX.at(it), damageTextY.at(it));
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 3, damageTextX.at(it) + 0.2, damageTextY.at(it) - 0.2,true);
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 3, damageTextX.at(it), damageTextY.at(it), true);
 			}
 
 
@@ -3155,11 +3162,11 @@ void Assignment1::Render()
 
 		ss.str("");
 		ss << "Health: " << m_ship->hp;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 3, 55);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 3, 55, false);
 
 		ss.str("");
 		ss << "$: " << m_money;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 50, 0);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 50, 0, false);
 
 		//Exercise 5b: Render position, velocity & mass of ship
 		//ss.str("");
@@ -3178,7 +3185,7 @@ void Assignment1::Render()
 		// Wave Count Display
 		ss.str("");
 		ss << "Wave: " << waveCount;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 55, 55);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 55, 55, false);
 
 
 

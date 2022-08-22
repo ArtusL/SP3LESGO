@@ -323,24 +323,24 @@ void SceneKinematics::Render()
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3, false);
 	
 	//Exercise 6: print simulation speed
 	ss.str("");
 	ss << "Speed: " << m_speed;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 50, 3);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 50, 3, false);
 
 	//Exercise 10: print m_ghost position and velocity information
 	ss.str("");
 	ss << "Velo: " << m_ghost->vel;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2.5, 0, 6);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2.5, 0, 6, false);
 
 	ss.str("");
 	ss << "Pos: " << m_ghost->pos;
 
 	//Exercise 11: print kinematics information
 
-	RenderTextOnScreen(meshList[GEO_TEXT], "Kinematics", Color(0, 1, 0), 3, 0, 0);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Kinematics", Color(0, 1, 0), 3, 0, 0, false);
 }
 
 void SceneKinematics::Exit()

@@ -405,7 +405,7 @@ void SceneBase::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneBase::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+void SceneBase::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y, bool smallerSpacing)
 {
 	if(!mesh || mesh->textureID <= 0)
 		return;
@@ -431,7 +431,21 @@ void SceneBase::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, fl
 	for(unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(i * 1.0f + 0.5f, 0.5f, 0); //1.0f is the spacing of each character, you may change this value
+		if (smallerSpacing == true)
+		{
+			if (stoi(text) >= 10)
+			{
+				characterSpacing.SetToTranslation(i * 0.7f + 0.5f, 0.5f, 0);
+			}
+			else
+			{
+				characterSpacing.SetToTranslation(i * 1.0f + 0.5f, 0.5f, 0);
+			}
+		}
+		else
+		{
+			characterSpacing.SetToTranslation(i * 1.0f + 0.5f, 0.5f, 0); //1.0f is the spacing of each character, you may change this value
+		}
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 
@@ -527,8 +541,8 @@ void SceneBase::RenderMainMenu()
 		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 25, 45, 45);
 		break;
 	}
-	RenderTextOnScreen(meshList[GEO_TEXT], "GerryManDering's", Color(1, 1, 1), 7, 1, 45);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Dungeon", Color(1, 1, 1), 7, 23, 35);
+	RenderTextOnScreen(meshList[GEO_TEXT], "GerryManDering's", Color(1, 1, 1), 7, 1, 45,false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Dungeon", Color(1, 1, 1), 7, 23, 35, false);
 	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
 
 }
@@ -547,7 +561,7 @@ void SceneBase::RenderPauseMenu()
 		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 10, 45, 45);
 		break;
 	}
-	RenderTextOnScreen(meshList[GEO_TEXT], "PAUSE", Color(1, 1, 1), 7, 29, 35);
+	RenderTextOnScreen(meshList[GEO_TEXT], "PAUSE", Color(1, 1, 1), 7, 29, 35, false);
 	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
 }
 
