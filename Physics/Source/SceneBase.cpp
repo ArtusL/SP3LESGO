@@ -8,7 +8,9 @@
 #include "LoadTGA.h"
 #include "LoadTexture.h"
 #include <sstream>
-
+bool SceneBase::restartGame = false;
+bool SceneBase::resetGame = false;
+MENU_TYPE SceneBase::menuType = M_MAIN;
 SceneBase::SceneBase()
 {
 }
@@ -283,6 +285,15 @@ void SceneBase::Init()
 	meshList[GEO_TRIPLESHOT] = MeshBuilder::GenerateQuad("triple shot", Color(1, 1, 1), 1.f);
 	meshList[GEO_TRIPLESHOT]->textureID = LoadTGA("Image//tripleshot.tga");
 
+	//ui menus
+	meshList[GEO_MAIN_MENU] = MeshBuilder::GenerateQuad("main menu", Color(1, 1, 1), 1.f);
+	meshList[GEO_MAIN_MENU]->textureID = LoadTGA("Image//UI//menuButtons.tga");
+
+	meshList[GEO_SELECTOR] = MeshBuilder::GenerateQuad("main menu", Color(1, 1, 1), 1.f);
+	meshList[GEO_SELECTOR]->textureID = LoadTGA("Image//UI//selector.tga");
+
+	meshList[GEO_PAUSE] = MeshBuilder::GenerateQuad("main menu", Color(1, 1, 1), 1.f);
+	meshList[GEO_PAUSE]->textureID = LoadTGA("Image//UI//resumeButtons.tga");
 
 	// Boss Animation
 	meshList[GEO_BOSSATTACK] = MeshBuilder::GenerateSpriteAnimation("Boss Attack", 1, 12);
@@ -473,10 +484,98 @@ void SceneBase::RenderMesh(Mesh *mesh, bool enableLight)
 	}
 }
 
+void SceneBase::RenderMeshOnScreen(Mesh* mesh, float x, float y, float sizex, float sizey)
+{
+	glDisable(GL_DEPTH_TEST);
+	Mtx44 ortho;
+	ortho.SetToOrtho(0, Application::GetWindowWidth() / 10, 0, Application::GetWindowHeight() / 10, -10, 10); //size of screen UI
+	projectionStack.PushMatrix();
+	projectionStack.LoadMatrix(ortho);
+	viewStack.PushMatrix();
+	viewStack.LoadIdentity(); //No need camera for ortho mode
+	modelStack.PushMatrix();
+	modelStack.LoadIdentity();
+
+	modelStack.Translate((float)x, (float)y, 0);
+	modelStack.Scale((float)sizex, (float)sizey, 1);
+
+	RenderMesh(mesh, false); //UI should not have light
+	projectionStack.PopMatrix();
+	viewStack.PopMatrix();
+	modelStack.PopMatrix();
+	glEnable(GL_DEPTH_TEST);
+}
 void SceneBase::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
+
+void SceneBase::RenderMainMenu()
+{
+	RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);
+
+	switch (selectorIndex)
+	{
+	case 0:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 40, 45, 45);
+		break;
+	case 1:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 25, 45, 45);
+		break;
+	}
+
+	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
+
+}
+
+void SceneBase::RenderPauseMenu()
+{
+	RenderMeshOnScreen(meshList[GEO_PAUSE], 96, 25, 45, 45);
+
+	switch (selectorIndex)
+	{
+	case 0:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 26, 45, 45);
+		break;
+	case 1:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 10, 45, 45);
+		break;
+	}
+
+	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
+}
+
+void SceneBase::UpdateMainMenu(float& m_speed)
+{
+	switch (selectorIndex)
+	{
+	case 0:
+		menuType = M_NONE;
+		m_speed = 1;
+		break;
+	case 1:
+		Application::gameExit = true;
+		break;
+	}
+}
+
+
+void SceneBase::UpdatePauseMenu(float& m_speed)
+{
+	switch (selectorIndex)
+	{
+	case 0:
+		menuType = M_NONE;
+		m_speed = 1;
+		break;
+	case 1:
+		selectorIndex = 0;
+		resetGame = true;
+		menuType = M_MAIN;
+		break;
+	}
+}
+
 
 void SceneBase::Exit()
 {

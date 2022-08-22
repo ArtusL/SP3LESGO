@@ -32,6 +32,8 @@ public:
 	float Assignment1::CalculateAdditionalForce(GameObject* go1, GameObject* go2);
 	void Collision(GameObject* go1);
 	void HitEnemy(GameObject* bullet, GameObject* target);
+	void UpdateMenu();
+	void RestartGame();
 	GameObject* FetchGO();
 protected:
 

@@ -10,6 +10,14 @@
 #include "GameObject.h"
 #include <vector>
 
+
+enum MENU_TYPE
+{
+	M_NONE = 0,
+	M_MAIN,
+	M_PAUSE,
+	M_TOTAL
+};
 class SceneBase : public Scene
 {
 	enum UNIFORM_TYPE
@@ -47,6 +55,9 @@ public:
 		GEO_TEXT,
 		GEO_BACKGROUND,
 		GEO_UPGRADESCREEN,
+		GEO_MAIN_MENU,
+		GEO_PAUSE,
+		GEO_SELECTOR,
 
 		GEO_BALL,
 		GEO_CUBE,
@@ -116,6 +127,10 @@ public:
 		NUM_GEOMETRY,
 	};
 public:
+	static MENU_TYPE menuType;
+	static bool restartGame;
+	static bool resetGame;
+
 	SceneBase();
 	~SceneBase();
 
@@ -126,8 +141,13 @@ public:
 
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
+	void RenderMeshOnScreen(Mesh* mesh, float x, float y, float sizex, float sizey);
 	void RenderMesh(Mesh *mesh, bool enableLight);
 	void RenderGO(GameObject *go);
+	void RenderMainMenu();
+	void RenderPauseMenu();
+	void UpdateMainMenu(float& m_speed);
+	void UpdatePauseMenu(float& m_speed);
 
 	GameObject* FetchGO();
 protected:
@@ -147,6 +167,10 @@ protected:
 	bool bLightEnabled;
 
 	float fps;
+
+
+	int selectorIndex;
+	int colourIndex;
 };
 
 #endif

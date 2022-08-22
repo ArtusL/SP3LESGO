@@ -1,6 +1,7 @@
 #include "Assignment1.h"
 #include "GL\glew.h"
 #include "Application.h"
+#include "SceneManager.h"
 #include <sstream>
 #include <cmath>
 
@@ -151,7 +152,7 @@ void Assignment1::Init()
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\SwordSlash.wav"), 11, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\WormRoar.wav"), 12, true);
 
-
+	SceneBase::menuType = M_MAIN;
 }
 
 GameObject* Assignment1::FetchGO()
@@ -176,8 +177,82 @@ GameObject* Assignment1::FetchGO()
 	return m_goList.at(prevSize);
 }
 
+void Assignment1::RestartGame()
+{
+	for (GameObject* go : m_goList)
+	{
+		if (go->active)
+			go->active = false;
+	}
+
+	m_ship->hp = 100;
+	//spawn and reset enemy station and turrets
+}
+
+void Assignment1::UpdateMenu()
+{
+	if (menuType == M_NONE)
+		m_speed = 1;
+	else
+		m_speed = 0;
+
+	if (Application::IsKeyReleased(VK_ESCAPE))
+	{
+		SceneBase::menuType = M_PAUSE;
+	}
+
+	if (SceneBase::restartGame)
+	{
+		RestartGame();
+		SceneBase::menuType = M_NONE;
+		SceneBase::restartGame = false;
+		SceneManager::activeScene = S_ASSIGNMENT1;
+	}
+
+	if (SceneBase::resetGame)
+	{
+		RestartGame();
+		SceneBase::resetGame = false;
+		SceneBase::menuType = M_MAIN;
+		SceneManager::activeScene = S_ASSIGNMENT1;
+	}
+	if (Application::IsKeyReleased(VK_ESCAPE))
+		SceneBase::menuType = M_PAUSE;
+
+	if (Application::IsKeyReleased(VK_DOWN))
+		selectorIndex++;
+	else if (Application::IsKeyReleased(VK_UP))
+		selectorIndex--;
+
+	if (Application::IsKeyReleased(VK_RIGHT))
+		colourIndex++;
+	else if (Application::IsKeyReleased(VK_LEFT))
+		colourIndex--;
+
+	if (Application::IsKeyReleased(VK_RETURN))
+	{
+		switch (menuType)
+		{
+		case M_MAIN:
+			UpdateMainMenu(m_speed);
+			break;
+		case M_PAUSE:
+			UpdatePauseMenu(m_speed);
+			break;
+		}
+	}
+}
+
 void Assignment1::Update(double dt)
 {
+
+	SceneBase::Update(dt);
+	UpdateMenu();
+
+	//dont update anything if in menu
+	if (menuType != M_NONE)
+		return;
+
 
 	SceneBase::Update(dt);
 	elapsedTime += dt;
@@ -1460,6 +1535,20 @@ void Assignment1::Update(double dt)
 
 	}
 
+	if (SceneBase::restartGame)
+	{
+		RestartGame();
+		SceneBase::restartGame = false;
+		SceneBase::menuType = M_NONE;
+	}
+
+	if (SceneBase::resetGame)
+	{
+		RestartGame();
+		SceneBase::resetGame = false;
+		SceneBase::menuType = M_MAIN;
+	}
+
 }
 
 void Assignment1::Collision(GameObject* go)
@@ -2629,7 +2718,18 @@ void Assignment1::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	switch (menuType)
+	{
+	case M_MAIN:
+		RenderMainMenu();
+		break;
+	case M_PAUSE:
+		RenderPauseMenu();
+		break;
+	}
 
+	if (menuType != M_NONE)
+		return;
 
 	// Projection matrix : Orthographic Projection
 	Mtx44 projection;

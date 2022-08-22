@@ -22,6 +22,7 @@ GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
 const unsigned int frameTime = 1000 / FPS; // time for each frame
 int m_width, m_height;
+bool Application::gameExit = false;
 
 //Define an error callback
 static void error_callback(int error, const char* description)
@@ -48,6 +49,10 @@ void resize_callback(GLFWwindow* window, int w, int h)
 bool Application::IsKeyPressed(unsigned short key)
 {
     return ((GetAsyncKeyState(key) & 0x8001) != 0);
+}
+bool Application::IsKeyReleased(unsigned short key)
+{
+	return ((GetAsyncKeyState(key) & 0x0001) != 0);
 }
 bool Application::IsMousePressed(unsigned short key) //0 - Left, 1 - Right, 2 - Middle
 {

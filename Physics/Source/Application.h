@@ -16,11 +16,14 @@ public:
 	void Run();
 	void Exit();
 	static bool IsKeyPressed(unsigned short key);
+	static bool IsKeyReleased(unsigned short key);
 	static bool IsMousePressed(unsigned short key);
 	static void GetCursorPos(double *xpos, double *ypos);
 	static int GetWindowWidth();
 	static int GetWindowHeight();
 
+
+	static bool gameExit;
 private:
 	Application();
 	~Application();
