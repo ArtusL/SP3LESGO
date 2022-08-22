@@ -56,7 +56,7 @@ void Assignment1::Init()
 	}
 
 	//Exercise 2b: Initialize m_hp and m_score
-	m_hp = 100000;
+	m_hp = 100;
 	m_money = 10000;
 	m_objectCount = 0;
 	waveCount = 5;
@@ -1959,8 +1959,14 @@ void Assignment1::RenderGO(GameObject* go)
 			modelStack.PushMatrix();
 			modelStack.Translate(0, 1., 0.2);
 			modelStack.Scale(go->scale.x * 0.002 * greenHealthPercent, go->scale.y * 0.03, go->scale.z);
-			RenderMesh(meshList[GEO_PLAYERHEALTH], false);
+			RenderMesh(meshList[GEO_GREENHEALTH], false);
 			modelStack.PopMatrix();
+
+			//modelStack.PushMatrix();
+			//modelStack.Translate(0, 1., 0.2);
+			//modelStack.Scale(go->scale.x * 0.002 * greenHealthPercent, go->scale.y * 0.03, go->scale.z);
+			//RenderMesh(meshList[GEO_PLAYERHEALTH], false);
+			//modelStack.PopMatrix();
 		}
 		modelStack.PopMatrix();
 		break;
@@ -2937,27 +2943,23 @@ void Assignment1::Render()
 				}
 			}
 		}
-		//ss.str("");
-		//ss << "Fire Power: " << basicBulletDamage << " /s";
-		//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 9);
 
-		//ss.str("");
-		//ss << "Fire Rate: " << fireRate << " /s";
-		//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 6);
+	
+
 
 		ss.str("");
 		ss << "Health: " << m_ship->hp;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 3, 55);
 
 		ss.str("");
 		ss << "$: " << m_money;
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 50, 0);
 
 		//Exercise 5b: Render position, velocity & mass of ship
-		ss.str("");
-		ss.precision(5);
-		ss << "FPS: " << fps;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 55);
+		//ss.str("");
+		//ss.precision(5);
+		//ss << "FPS: " << fps;
+		//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 55);
 
 		//RenderTextOnScreen(meshList[GEO_TEXT], "Asteroid", Color(0, 1, 0), 20, 0, 0);
 

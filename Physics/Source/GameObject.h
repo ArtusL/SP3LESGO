@@ -16,6 +16,7 @@ struct GameObject
 		GO_BIGASTEROID,
 		GO_ENEMYSHIP,
 		GO_BOSS,
+		GO_BOSSHEALTH,
 
 		GO_WORMHEAD,
 		GO_WORMBODY1,
@@ -34,6 +35,8 @@ struct GameObject
 
 		GO_HERO,
 		GO_HEAL,
+		GO_CHEST,
+		GO_HEROHEALTH,
 
 		GO_BULLET,
 		GO_SPLITBULLET,

@@ -160,6 +160,20 @@ void SceneBase::Init()
 	SpriteAnimation* saRunLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERORUN_LEFT]);
 	saRunLeft->AddAnimation("Run", 0, 12);
 
+	//Special Health
+	meshList[GEO_PLAYERHEALTH] = MeshBuilder::GenerateQuad("health", Color(1, 1, 1), 1.f);
+	meshList[GEO_PLAYERHEALTH]->textureID = LoadTGA("Image//HpBar.tga");
+
+	meshList[GEO_BOSSHEALTH] = MeshBuilder::GenerateQuad("health", Color(1, 1, 1), 1.f);
+	meshList[GEO_BOSSHEALTH]->textureID = LoadTGA("Image//HpBar.tga");
+
+	meshList[GEO_HEALTHBACK] = MeshBuilder::GenerateQuad("hpback", Color(1, 1, 1), 1.f);
+	meshList[GEO_HEALTHBACK]->textureID = LoadTGA("Image//HpBack.tga");
+
+	meshList[GEO_HEALTHBORDER] = MeshBuilder::GenerateQuad("hpborder", Color(1, 1, 1), 1.f);
+	meshList[GEO_HEALTHBORDER]->textureID = LoadTGA("Image//HpBorder.tga");
+
+
 
 	// Enemy types
 	meshList[GEO_FDEMON] = MeshBuilder::GenerateSpriteAnimation("Fdemon", 1, 6);
@@ -320,6 +334,17 @@ void SceneBase::Init()
 	meshList[GEO_RINGAURA]->material.kAmbient.Set(1, 1, 1);
 	SpriteAnimation* Barriersprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_RINGAURA]);
 	Barriersprite->AddAnimation("Aura", 0, 10);
+
+
+	//Extras
+	meshList[GEO_CHEST] = MeshBuilder::GenerateSpriteAnimation("Chest", 8, 5);
+	meshList[GEO_CHEST]->textureID = LoadTexture("Image//Chests.png", false);
+	meshList[GEO_CHEST]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* Chestsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_CHEST]);
+	Chestsprite->AddAnimation("IDLE", 0, 4);
+	Chestsprite->AddAnimation("OPEN", 5, 10);
+
+
 
 	bLightEnabled = false;
 }
