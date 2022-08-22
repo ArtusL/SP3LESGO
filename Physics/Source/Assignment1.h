@@ -132,6 +132,7 @@ protected:
 	double tripleShotTimer;
 	double fireTimer;
 	double explosionTimer;
+	double ringauraTimer;
 	double iFrames;
 
 	bool missleUse;
