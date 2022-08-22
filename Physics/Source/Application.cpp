@@ -99,8 +99,8 @@ void Application::Init()
 
 
 	//Create a window and create its OpenGL context
-	m_width = 1000;
-	m_height = 750;
+	m_width = 1920;
+	m_height = 1080;
 	m_window = glfwCreateWindow(m_width, m_height, "Physics", NULL, NULL);
 
 	//If the window couldn't be created
@@ -140,8 +140,11 @@ void Application::Run()
 	scene->Init();
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
-	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
+	while (!glfwWindowShouldClose(m_window) && !gameExit)
 	{
+
+		/*scene = sManager.getScene();*/
+
 		scene->Update(m_timer.getElapsedTime());
 		scene->Render();
 		//Swap buffers

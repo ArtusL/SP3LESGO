@@ -293,7 +293,7 @@ void SceneBase::Init()
 	meshList[GEO_SELECTOR]->textureID = LoadTGA("Image//UI//selector.tga");
 
 	meshList[GEO_PAUSE] = MeshBuilder::GenerateQuad("main menu", Color(1, 1, 1), 1.f);
-	meshList[GEO_PAUSE]->textureID = LoadTGA("Image//UI//resumeButtons.tga");
+	meshList[GEO_PAUSE]->textureID = LoadTGA("Image//UI//resumeButton.tga");
 
 	// Boss Animation
 	meshList[GEO_BOSSATTACK] = MeshBuilder::GenerateSpriteAnimation("Boss Attack", 1, 12);
@@ -513,6 +513,12 @@ void SceneBase::Render()
 void SceneBase::RenderMainMenu()
 {
 	RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);
+
+	modelStack.PushMatrix();
+	modelStack.Scale(2, 1, 1);
+	RenderMesh(meshList[GEO_HERORUN], false);
+	modelStack.PopMatrix();
+
 
 	switch (selectorIndex)
 	{
