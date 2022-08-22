@@ -40,7 +40,7 @@ void Assignment1::Init()
 	SceneBase::Init();
 	cSoundController = CSoundController::GetInstance();
 	//Calculating aspect ratio
-	m_worldHeight = 100.f;
+	m_worldHeight = 600.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
 	//Physics code here
@@ -609,29 +609,30 @@ void Assignment1::Update(double dt)
 			// eg. m_worldHeight is 100
 			//     then set below values to 1
 			//
-			worldPosX *= 1;
-			worldPosY *= 1;
+			worldPosX *= 1.5;
+			worldPosY *= 1.5;
 
 			worldPosX += camera.position.x;
 			worldPosY -= camera.position.y;
 
 
-			worldPosY = m_worldHeight - (worldPosY);
+			worldPosY = m_worldHeight - (worldPosY)  - 450;
 
 			m_ship->angle = atan2(m_ship->pos.y - worldPosY, m_ship->pos.x - worldPosX);
 			m_ship->angle = (m_ship->angle / Math::PI) * 180.0;
 
 
-			camera.position.x = m_ship->pos.x - m_worldWidth * 0.5;
-			camera.position.y = m_ship->pos.y - m_worldHeight * 0.5;
-			camera.target.x = m_ship->pos.x - m_worldWidth * 0.5;
-			camera.target.y = m_ship->pos.y - m_worldHeight * 0.5;
+			camera.position.x = m_ship->pos.x - m_worldWidth * 0.125;
+			camera.position.y = m_ship->pos.y - m_worldHeight * 0.125;
+			cout << camera.position.y << endl;
+			camera.target.x = m_ship->pos.x - m_worldWidth * 0.125;
+			camera.target.y = m_ship->pos.y - m_worldHeight * 0.125;
 
 
-			camera.position.x = Math::Clamp(camera.position.x, 0.f, m_worldWidth / 2);
-			camera.position.y = Math::Clamp(camera.position.y, 0.f, m_worldHeight / 2);
-			camera.target.x = Math::Clamp(camera.target.x, 0.f, m_worldWidth / 2);
-			camera.target.y = Math::Clamp(camera.target.y, 0.f, m_worldHeight / 2);
+			//camera.position.x = Math::Clamp(camera.position.x, 0.f, m_worldWidth / 2);
+			//camera.position.y = Math::Clamp(camera.position.y, 0.f, m_worldHeight / 2);
+			//camera.target.x = Math::Clamp(camera.target.x, 0.f, m_worldWidth / 2);
+			//camera.target.y = Math::Clamp(camera.target.y, 0.f, m_worldHeight / 2);
 		}
 		// **************************************************************************
 
@@ -2838,7 +2839,7 @@ void Assignment1::Render()
 
 	// Projection matrix : Orthographic Projection
 	Mtx44 projection;
-	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
+	projection.SetToOrtho(0, m_worldWidth/4, 0, m_worldHeight/4, -10, 10);
 	projectionStack.LoadMatrix(projection);
 
 	// Camera matrix

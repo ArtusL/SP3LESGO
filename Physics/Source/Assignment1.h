@@ -105,6 +105,7 @@ protected:
 	int healthRegenAmount;
 	float ringAOE;
 	float gravity;
+	float zoomInFactor;
 
 	double worldPosX;
 	double worldPosY;
