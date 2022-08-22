@@ -3189,13 +3189,14 @@ void Assignment1::Render()
 	}
 	else if (!isAlive && gameStart)
 	{
-		ss.str("");
+		SceneBase::menuType = M_PAUSE;
+		/*ss.str("");
 		ss << "GAME OVER";
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 5, 20, 40);
 
 		ss.str("");
 		ss << "Died at wave " << waveCount;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 20, 30);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 20, 30);*/
 	}
 }
 

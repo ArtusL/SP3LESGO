@@ -16,6 +16,7 @@ enum MENU_TYPE
 	M_NONE = 0,
 	M_MAIN,
 	M_PAUSE,
+	M_GAMEOVER,
 	M_TOTAL
 };
 class SceneBase : public Scene
@@ -58,6 +59,8 @@ public:
 		GEO_MAIN_MENU,
 		GEO_PAUSE,
 		GEO_SELECTOR,
+		GEO_UIBG,
+
 
 		GEO_BALL,
 		GEO_CUBE,
@@ -148,7 +151,7 @@ public:
 	void RenderPauseMenu();
 	void UpdateMainMenu(float& m_speed);
 	void UpdatePauseMenu(float& m_speed);
-
+	void UpdateGameOver(float& m_speed);
 	GameObject* FetchGO();
 protected:
 	unsigned m_vertexArrayID;
