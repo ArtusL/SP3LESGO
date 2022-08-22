@@ -125,6 +125,8 @@ protected:
 	double elapsedTime;
 	double waveTimer;
 	double tripleShotTimer;
+	double fireTimer;
+	double explosionTimer;
 	double iFrames;
 
 	bool missleUse;

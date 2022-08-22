@@ -56,8 +56,8 @@ void Assignment1::Init()
 	}
 
 	//Exercise 2b: Initialize m_hp and m_score
-	m_hp = 100000;
-	m_money = 10000;
+	m_hp = 100;
+	m_money = 500;
 	m_objectCount = 0;
 	waveCount = 5;
 	gravity = -4;
@@ -65,6 +65,8 @@ void Assignment1::Init()
 	hpFactor = moneyFactor = 1;
 	bonusMoney = 1;
 	iFrames = 0;
+	fireTimer = 0;
+	explosionTimer = 0;
 
 	fireRate = 5;
 	fireRateCost = 10;
@@ -1176,7 +1178,11 @@ void Assignment1::Update(double dt)
 								go2->type == GameObject::GO_BDEMON ||
 								go2->type == GameObject::GO_NIGHTMARE ||
 								go2->type == GameObject::GO_ENEMYBULLET ||
-								go2->type == GameObject::GO_BOSS)
+								go2->type == GameObject::GO_BOSS ||
+								go2->type == GameObject::GO_WORMHEAD ||
+								go2->type == GameObject::GO_WORMBODY1 ||
+								go2->type == GameObject::GO_WORMBODY2 ||
+								go2->type == GameObject::GO_WORMTAIL)
 							{
 
 								HitEnemy(go, go2);
@@ -1388,7 +1394,11 @@ void Assignment1::Update(double dt)
 						go2->type == GameObject::GO_FLAMEDEMON ||
 						go2->type == GameObject::GO_BDEMON ||
 						go2->type == GameObject::GO_NIGHTMARE ||
-						go2->type == GameObject::GO_BOSS
+						go2->type == GameObject::GO_BOSS ||
+						go2->type == GameObject::GO_WORMHEAD ||
+						go2->type == GameObject::GO_WORMBODY1 ||
+						go2->type == GameObject::GO_WORMBODY2 ||
+						go2->type == GameObject::GO_WORMTAIL
 						)
 					{
 						if (go2->active && it != it2)
@@ -1416,6 +1426,16 @@ void Assignment1::Update(double dt)
 						}
 					}
 
+				}
+			}
+
+			if (go->type == GameObject::GO_FIRE && go->active == true)
+			{
+				std::cout << go->timer << std::endl;
+				go->timer -= 1 * dt;
+				if (go->timer < 0)
+				{
+					go->active = false;
 				}
 			}
 		}
@@ -1450,6 +1470,16 @@ void Assignment1::Update(double dt)
 		if (iFrames > 0)
 		{
 			iFrames -= 1 * dt;
+		}
+
+		if (fireTimer > 0)
+		{
+			fireTimer -= 1 * dt;
+		}
+
+		if (explosionTimer > 0)
+		{
+			explosionTimer -= 1 * dt;
 		}
 
 		// If health reaches zero
@@ -1547,8 +1577,10 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 	{
 		float dis = bullet->pos.DistanceSquared(target->pos);
 		float rad = (bullet->scale.x + target->scale.x / 4) * (bullet->scale.x + target->scale.x / 4);
-		if (dis < rad)
+
+		if (dis < rad && target->type != GameObject::GO_ENEMYBULLET)
 		{
+
 			if (bullet->type == GameObject::GO_MISSLE)
 			{
 				target->hp -= basicBulletDamage * 2;
@@ -1559,6 +1591,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				explosion->vel = 0;
 				explosion->explosionScale = 0;
 				explosion->scaleDown = false;
+				explosionTimer = 1;
 				ExplosionSprite->PlayAnimation("Explode", 1, 1.0f);
 				bullet->active = false;
 
@@ -1581,6 +1614,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				explosion->vel = 0;
 				explosion->explosionScale = 0;
 				explosion->scaleDown = false;
+				explosionTimer = 1;
 				ExplosionSprite->PlayAnimation("Explode", 1, 1.0f);
 				bullet->active = false;
 
@@ -1600,6 +1634,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				fire->scale.Set(14, 14, 14);
 				fire->direction = Vector3(0, 1, 0);
 				fire->vel = 0;
+				fire->timer = 5;
 				FireSprite->PlayAnimation("Fire", 1, 1.0f);
 				bullet->active = false;
 
@@ -1614,17 +1649,34 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 
 			if (bullet->type == GameObject::GO_EXPLOSION)
 			{
+				if (explosionTimer == 1)
+				{
+					if (target->type == GameObject::GO_WORMBODY1 || target->type == GameObject::GO_WORMBODY2 || target->type == GameObject::GO_WORMHEAD || target->type == GameObject::GO_WORMTAIL)
+					{
+						target->hp -= basicBulletDamage;
+						displayDamage.push_back(basicBulletDamage);
+						damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
+						damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
+						translateTextY.push_back(0);
+						damageTimer.push_back(elapsedTime);
+						damageEnemy.push_back(true);
+						/*	cSoundController->StopSoundByID(5);*/
+						cSoundController->PlaySoundByID(5);
+					}
 
-				target->hp -= basicBulletDamage * 3;
-
-				displayDamage.push_back(basicBulletDamage * 3);
-				damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
-				damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
-				translateTextY.push_back(0);
-				damageTimer.push_back(elapsedTime);
-				damageEnemy.push_back(true);
-				/*	cSoundController->StopSoundByID(5);*/
-				cSoundController->PlaySoundByID(5);
+					else
+					{
+						target->hp -= basicBulletDamage * 3;
+						displayDamage.push_back(basicBulletDamage * 3);
+						damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
+						damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
+						translateTextY.push_back(0);
+						damageTimer.push_back(elapsedTime);
+						damageEnemy.push_back(true);
+						/*	cSoundController->StopSoundByID(5);*/
+						cSoundController->PlaySoundByID(5);
+					}
+				}
 			}
 
 			if (bullet->type == GameObject::GO_FIRE)
@@ -1680,6 +1732,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				fire->scale.Set(14, 14, 14);
 				fire->direction = Vector3(0, 1, 0);
 				fire->vel = 0;
+				fire->timer = 8;
 				FireSprite->PlayAnimation("Fire", 1, 1.0f);
 				bullet->active = false;
 
@@ -2532,23 +2585,6 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_FIRE], false);
 		modelStack.PopMatrix();
-		if (go->scaleDown == false)
-		{
-			go->explosionScale += 0.2;
-			if (go->explosionScale > 4)
-			{
-				go->scaleDown = true;
-			}
-		}
-
-		if (go->scaleDown == true)
-		{
-			go->explosionScale -= 0.2;
-			if (go->explosionScale <= 0)
-			{
-				go->active = false;
-			}
-		}
 		break;
 
 
