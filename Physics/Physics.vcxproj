@@ -166,6 +166,7 @@
     <ClCompile Include="Source\SceneAsteroid.cpp" />
     <ClCompile Include="Source\SceneBase.cpp" />
     <ClCompile Include="Source\SceneKinematics.cpp" />
+    <ClCompile Include="Source\SceneManager.cpp" />
     <ClCompile Include="Source\SceneVector.cpp" />
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\SoundController\SoundController.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="Source\SceneAsteroid.h" />
     <ClInclude Include="Source\SceneBase.h" />
     <ClInclude Include="Source\SceneKinematics.h" />
+    <ClInclude Include="Source\SceneManager.h" />
     <ClInclude Include="Source\SceneVector.h" />
     <ClInclude Include="Source\shader.hpp" />
     <ClInclude Include="Source\SoundController\SoundController.h" />

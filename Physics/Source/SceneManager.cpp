@@ -7,6 +7,7 @@ SceneManager::SceneManager()
 {
 	Scene* scene1 = new Assignment1;
 	SceneList.push_back(scene1);
+
 }
 
 SceneManager::~SceneManager()

@@ -1,12 +1,11 @@
 #pragma once
 #include "Assignment1.h"
-#include "Application.h"
-
 #include <vector>
 
 enum SCENES
 {
 	S_ASSIGNMENT1,
+
 	S_COUNT
 };
 
@@ -32,4 +31,4 @@ public:
 	Scene* getScene();
 };
 
-
+#pragma once

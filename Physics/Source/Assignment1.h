@@ -150,7 +150,7 @@ protected:
 	bool heroFacingLeft;
 
 	//enemy
-
+	bool bossspawned;
 	// FOR DEBUG ONLY
 	int tempSpawnCount;
 	int shootCount;

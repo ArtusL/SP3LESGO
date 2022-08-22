@@ -113,6 +113,7 @@ void Assignment1::Init()
 	upgradeScreen = false;
 	isAlive = true;
 	gameStart = false;
+	bossspawned = false;
 
 	movementLastPressed = ' ';
 
@@ -150,10 +151,15 @@ void Assignment1::Init()
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Slash.ogg"), 7, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Grunt.wav"), 8, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Gameover.ogg"), 9, true);
+
 	//shop purchase
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\PurchaseRing.ogg"), 10, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\SwordSlash.wav"), 11, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\WormRoar.wav"), 12, true);
+
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\ABossTheme.ogg"), 13, true,true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\FwooshFire.ogg"), 14, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\Punch.ogg"), 15, true);
 
 	SceneBase::menuType = M_MAIN;
 }
@@ -343,10 +349,15 @@ void Assignment1::Update(double dt)
 	// Player ship ugrade screen
 	if (upgradeScreen == true && gameStart)
 	{
+		
 		cSoundController->StopSoundByID(1);
 		cSoundController->StopSoundByID(3);
 		cSoundController->StopSoundByID(4);
+		cSoundController->StopSoundByID(13);
 		cSoundController->PlaySoundByID(2);
+		
+
+
 		if (keyDelay > 0)
 		{
 			keyDelay -= 1.0 * dt;
@@ -533,6 +544,8 @@ void Assignment1::Update(double dt)
 						m_money -= arrowCost;
 						arrowCost += 25;
 					}
+					cSoundController->StopSoundByID(10);
+					cSoundController->PlaySoundByID(10);
 				}
 			}
 
@@ -547,6 +560,8 @@ void Assignment1::Update(double dt)
 					m_money -= flamingarrowCost;
 					flamingarrowCost += 1000;
 
+					cSoundController->StopSoundByID(10);
+					cSoundController->PlaySoundByID(10);
 				}
 			}
 		}
@@ -559,10 +574,27 @@ void Assignment1::Update(double dt)
 	}
 	else if (gameStart)
 	{
+		
+		if (bossspawned == false)
+		{
+			cSoundController->StopSoundByID(1);
+			cSoundController->StopSoundByID(2);
+			cSoundController->StopSoundByID(3);
+			cSoundController->StopSoundByID(13);
 
-		cSoundController->StopSoundByID(1);
-		cSoundController->StopSoundByID(2);
-		cSoundController->PlaySoundByID(4);
+			cSoundController->PlaySoundByID(4);
+		}
+		else if (bossspawned == true)
+		{
+			cSoundController->StopSoundByID(1);
+			cSoundController->StopSoundByID(2);
+			cSoundController->StopSoundByID(3);
+			cSoundController->StopSoundByID(4);
+
+			cSoundController->PlaySoundByID(13);
+		}
+
+
 		// ************************* CURSOR CODE ****************************************
 		{
 
@@ -767,7 +799,7 @@ void Assignment1::Update(double dt)
 
 
 		// BOSS
-		if (Application::IsKeyPressed('V') && tempSpawnCount < 1)
+		if (Application::IsKeyPressed('V') && tempSpawnCount < 1 && bossspawned==false)
 		{
 			GameObject* go = FetchGO();
 			go->type = GameObject::GO_BOSS;
@@ -782,6 +814,10 @@ void Assignment1::Update(double dt)
 			go->enemyDamage = 20;
 			go->facingLeft = true;
 			tempSpawnCount++;
+
+			bossspawned = true;
+
+
 		}
 		
 
@@ -1760,7 +1796,6 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 						translateTextY.push_back(0);
 						damageTimer.push_back(elapsedTime);
 						damageEnemy.push_back(true);
-						/*	cSoundController->StopSoundByID(5);*/
 						cSoundController->PlaySoundByID(5);
 					}
 					else
@@ -1774,6 +1809,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 						damageTimer.push_back(elapsedTime);
 						damageEnemy.push_back(true);
 					}
+					cSoundController->PlaySoundByID(14);
 				}
 			}
 
@@ -1835,6 +1871,10 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 			{
 				target->active = false;
 				m_objectCount--;
+				if (target->type == GameObject::GO_BOSS)
+				{
+					bossspawned = false;
+				}
 				// Money gained
 				m_money += 1 + bonusMoney;
 
