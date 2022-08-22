@@ -295,6 +295,9 @@ void SceneBase::Init()
 	meshList[GEO_PAUSE] = MeshBuilder::GenerateQuad("main menu", Color(1, 1, 1), 1.f);
 	meshList[GEO_PAUSE]->textureID = LoadTGA("Image//UI//resumeButton.tga");
 
+	meshList[GEO_UIBG] = MeshBuilder::GenerateQuad("main menu", Color(1, 1, 1), 1.f);
+	meshList[GEO_UIBG]->textureID = LoadTGA("Image//background.tga");
+
 	// Boss Animation
 	meshList[GEO_BOSSATTACK] = MeshBuilder::GenerateSpriteAnimation("Boss Attack", 1, 12);
 	meshList[GEO_BOSSATTACK]->textureID = LoadTexture("Image//Nightborne_Attack.png", true);
@@ -512,14 +515,9 @@ void SceneBase::Render()
 
 void SceneBase::RenderMainMenu()
 {
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
+	
 	RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);
-
-	modelStack.PushMatrix();
-	modelStack.Scale(2, 1, 1);
-	RenderMesh(meshList[GEO_HERORUN], false);
-	modelStack.PopMatrix();
-
-
 	switch (selectorIndex)
 	{
 	case 0:
@@ -529,13 +527,15 @@ void SceneBase::RenderMainMenu()
 		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 25, 45, 45);
 		break;
 	}
-
+	RenderTextOnScreen(meshList[GEO_TEXT], "GerryManDering's", Color(1, 1, 1), 7, 1, 45);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Dungeon", Color(1, 1, 1), 7, 23, 35);
 	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
 
 }
 
 void SceneBase::RenderPauseMenu()
 {
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
 	RenderMeshOnScreen(meshList[GEO_PAUSE], 96, 25, 45, 45);
 
 	switch (selectorIndex)
@@ -547,7 +547,7 @@ void SceneBase::RenderPauseMenu()
 		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 10, 45, 45);
 		break;
 	}
-
+	RenderTextOnScreen(meshList[GEO_TEXT], "PAUSE", Color(1, 1, 1), 7, 29, 35);
 	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
 }
 
@@ -565,6 +565,19 @@ void SceneBase::UpdateMainMenu(float& m_speed)
 	}
 }
 
+void SceneBase::UpdateGameOver(float& m_speed)
+{
+	switch (selectorIndex)
+	{
+	case 0:
+		menuType = M_NONE;
+		m_speed = 1;
+		break;
+	case 1:
+		Application::gameExit = true;
+		break;
+	}
+}
 
 void SceneBase::UpdatePauseMenu(float& m_speed)
 {
