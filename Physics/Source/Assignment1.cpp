@@ -215,6 +215,7 @@ void Assignment1::RestartGame()
 	ringauraTimer = 0;
 	explosionTimer = 0;
 
+	shopactive = false;
 	fireRate = 5;
 	fireRateCost = 10;
 	damageUpCost = 10;
@@ -255,6 +256,11 @@ void Assignment1::RestartGame()
 	doubleBullet = false;
 	tripleShot = false;
 	flamingarrowUse = false;
+	bombUse = false;
+	arrowUse = false;
+	molotovUse = false;
+	missleUse = false;
+	ringUse = false;
 	upgradeScreen = false;
 	isAlive = true;
 	gameStart = false;
