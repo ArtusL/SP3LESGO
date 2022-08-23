@@ -174,6 +174,13 @@ void SceneBase::Init()
 
 	meshList[GEO_HEALTHBORDER] = MeshBuilder::GenerateQuad("hpborder", Color(1, 1, 1), 1.f);
 	meshList[GEO_HEALTHBORDER]->textureID = LoadTGA("Image//HpBorder.tga");
+
+	meshList[GEO_HEROICON] = MeshBuilder::GenerateQuad("Icon", Color(1, 1, 1), 1.f);
+	meshList[GEO_HEROICON]->textureID = LoadTGA("Image//HeroIcon.tga");
+
+	meshList[GEO_INFOBORDER] = MeshBuilder::GenerateQuad("Border", Color(1, 1, 1), 1.f);
+	meshList[GEO_INFOBORDER]->textureID = LoadTGA("Image//UiBorder.tga");
+
 	// Shopkeeper 
 	//meshList[GEO_SHREK] = MeshBuilder::GenerateSpriteAnimation("Shrek", 1, 16);
 	//meshList[GEO_SHREK]->textureID = LoadTexture("Image//shopkeepershrek.png", false);

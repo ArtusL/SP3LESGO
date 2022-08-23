@@ -65,7 +65,7 @@ public:
 		GEO_BALL,
 		GEO_CUBE,
 
-		// Health bar
+		// Health bar / UI
 		GEO_GREENHEALTH,
 		GEO_REDHEALTH,
 		GEO_HEAL,
@@ -74,6 +74,8 @@ public:
 		GEO_BOSSHEALTH,
 		GEO_HEALTHBACK,
 		GEO_HEALTHBORDER,
+		GEO_HEROICON,
+		GEO_INFOBORDER,
 
 		// Enemy types
 		GEO_ASTEROID,

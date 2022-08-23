@@ -161,6 +161,14 @@ void Assignment1::Init()
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\FwooshFire.ogg"), 14, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Punch.ogg"), 15, true);
 
+	//cSoundController->MasterVolumeDecrease();
+	//cSoundController->MasterVolumeDecrease();
+	//cSoundController->MasterVolumeDecrease();
+	//cSoundController->MasterVolumeDecrease();
+	//cSoundController->MasterVolumeDecrease();
+	//cSoundController->MasterVolumeDecrease();
+	//cSoundController->MasterVolumeDecrease();
+
 	SceneBase::menuType = M_MAIN;
 }
 
@@ -3175,21 +3183,27 @@ void Assignment1::Render()
 		}
 
 	
+		RenderMeshOnScreen(meshList[GEO_INFOBORDER], 38, 10, 80, 30);
+		RenderMeshOnScreen(meshList[GEO_HEALTHBORDER], 44, 14, 60, 7);
+		RenderMeshOnScreen(meshList[GEO_HEALTHBACK], 44, 14, 60, 7);
+		RenderMeshOnScreen(meshList[GEO_PLAYERHEALTH], 44, 14, 60 *(m_ship->hp / 100), 7);
 
+		RenderMeshOnScreen(meshList[GEO_HEROICON], 7, 12, 11, 11);
+
+
+		ss.str("");
+		ss << "$: " << m_money;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 6, 3.6, false);
 
 		ss.str("");
 		ss << "Health: " << m_ship->hp;
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 3, 55, false);
 
-		ss.str("");
-		ss << "$: " << m_money;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 50, 0, false);
-
 		//Exercise 5b: Render position, velocity & mass of ship
-		ss.str("");
-		ss.precision(5);
-		ss << "FPS: " << fps;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 0, false);
+		//ss.str("");
+		//ss.precision(5);
+		//ss << "FPS: " << fps;
+		//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 0, false);
 
 		//RenderTextOnScreen(meshList[GEO_TEXT], "Asteroid", Color(0, 1, 0), 20, 0, 0);
 
