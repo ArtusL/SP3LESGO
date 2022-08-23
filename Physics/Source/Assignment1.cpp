@@ -201,8 +201,90 @@ void Assignment1::RestartGame()
 		if (go->active)
 			go->active = false;
 	}
+	//Exercise 2b: Initialize m_hp and m_score
+	m_hp = 100;
+	m_money = 10000;
+	m_objectCount = 0;
+	waveCount = 5;
+	gravity = -4;
 
-	m_ship->hp = 100;
+	hpFactor = moneyFactor = 1;
+	bonusMoney = 1;
+	iFrames = 0;
+	fireTimer = 0;
+	ringauraTimer = 0;
+	explosionTimer = 0;
+
+	fireRate = 5;
+	fireRateCost = 10;
+	damageUpCost = 10;
+	missleCost = 20;
+	ringCost = 250;
+	bombCost = 50;
+	molotovCost = 50;
+	arrowCost = 20;
+	flamingarrowCost = 1000;
+	healthRegenCost = 20;
+
+	tempSpawnCount = 0;
+
+	shootCount = 0;
+	bossState = 0;
+	laserAngle = 0;
+
+
+
+	basicBulletDamage = 1;
+	healthRegen = 0;
+	healthRegenAmount = 0;
+	missleRate = 1;
+	misslelvl = 0;
+	ringlvl = 0;
+	ringAOE = 6.0f;
+	bomblvl = 0;
+	bombRate = 0.75;
+	molotovlvl = 0;
+	molotovRate = 0.3;
+	molotovAmount = 1;
+	arrowlvl = 0;
+	arrowRate = 0.5;
+	arrowAmount = 3;
+	flamingarrowlvl = 0;
+	flamingarrowCost = 1000;
+
+	doubleBullet = false;
+	tripleShot = false;
+	flamingarrowUse = false;
+	upgradeScreen = false;
+	isAlive = true;
+	gameStart = false;
+	bossspawned = false;
+
+	movementLastPressed = ' ';
+
+	asteroidCount = 0;
+	maxEnemyCount = 10;
+
+
+	//Exercise 2c: Construct m_ship, set active, type, scale and pos
+	m_ship = new GameObject(GameObject::GO_HERO);
+	m_ship->active = true;
+	m_ship->scale.Set(7, 7, 1);
+	m_ship->pos.Set(m_worldWidth / 2, m_worldHeight / 2);
+	m_ship->vel.Set(1, 0, 0);
+	m_ship->direction.Set(1, 0, 0);
+	m_ship->hp = m_hp;
+	m_ship->maxHP = m_hp;
+	m_ship->mass = 0.1f;
+
+	// Attract powerups
+	GameObject* hole = FetchGO();
+	hole->type = GameObject::GO_BLACKHOLE;
+	hole->scale.Set(5, 5, 1);
+	hole->mass = 1000;
+	hole->pos = m_ship->pos;
+	hole->vel.SetZero();
+	
 	//spawn and reset enemy station and turrets
 }
 
@@ -256,6 +338,9 @@ void Assignment1::UpdateMenu()
 		case M_PAUSE:
 			UpdatePauseMenu(m_speed);
 			break;
+		case M_GAMEOVER:
+			UpdateGameOver(m_speed);
+				break;
 		}
 	}
 }
@@ -980,6 +1065,8 @@ void Assignment1::Update(double dt)
 					go->direction = go->direction.Normalized();
 					go->vel = -(go->direction * BULLET_SPEED * 0.8);
 					go->angle = m_ship->angle;
+
+					m_objectCount++;
 				}
 				prevElapsedBullet = elapsedTime;
 			}
@@ -1259,7 +1346,6 @@ void Assignment1::Update(double dt)
 				{
 					Collision(go);
 				}
-
 				else if (go->type == GameObject::GO_RINGAURA || go->type == GameObject::GO_FIRE || go->type == GameObject::GO_EXPLOSION)
 				{
 					//Exercise 18: collision check between GO_BULLET and GO_ASTEROID
@@ -1327,6 +1413,26 @@ void Assignment1::Update(double dt)
 					}
 				}
 
+				// Player projectles despawn outside the camera view
+				if (go->type == GameObject::GO_BULLET ||
+					go->type == GameObject::GO_BOMB ||
+					go->type == GameObject::GO_MISSLE ||
+					go->type == GameObject::GO_FIRE ||
+					go->type == GameObject::GO_MOLOTOV ||
+					go->type == GameObject::GO_FLAMINGARROW ||
+					go->type == GameObject::GO_ARROW)
+				{
+
+					if (go->pos.x > m_ship->pos.x + (m_ship->pos.x - camera.position.x)
+						|| go->pos.x < camera.position.x
+						|| go->pos.y > m_ship->pos.y + (m_ship->pos.y - camera.position.y)
+						|| go->pos.y < camera.position.y)
+					{
+						go->active = false;
+						m_objectCount--;
+					}
+				}
+
 				// Magnet effect for powerups
 				if (go->type == GameObject::GO_BLACKHOLE)
 				{
@@ -1376,6 +1482,7 @@ void Assignment1::Update(double dt)
 				go->scale.Set(6.0f, 4.0f, 4.0f);
 				go->angle = m_ship->angle;
 				go->hitboxSizeDivider = 3;
+				m_objectCount++;
 
 				prevElapsedMissle = elapsedTime;
 			}
@@ -1394,6 +1501,7 @@ void Assignment1::Update(double dt)
 				go->angle = m_ship->angle;
 				go->hitboxSizeDivider = 3;
 				prevElapsedBomb = elapsedTime;
+				m_objectCount++;
 			}
 		}
 
@@ -1425,6 +1533,7 @@ void Assignment1::Update(double dt)
 						go->scale.Set(6.0f, 6.0f, 6.0f);
 						go->angle = m_ship->angle + 45;
 						prevElapsedArrow = elapsedTime;
+						m_objectCount++;
 					}
 				}
 			}
@@ -1446,6 +1555,7 @@ void Assignment1::Update(double dt)
 					go->scale.Set(6.0f, 6.0f, 6.0f);
 					go->angle = m_ship->angle + 45;
 					prevElapsedArrow = elapsedTime;
+					m_objectCount++;
 				}
 			}
 		}
@@ -1467,6 +1577,7 @@ void Assignment1::Update(double dt)
 						go->angle = m_ship->angle;
 						go->hitboxSizeDivider = 3;
 						prevElapsedMolotov = elapsedTime;
+						m_objectCount++;
 					}
 				}
 			}
@@ -1595,12 +1706,16 @@ void Assignment1::Update(double dt)
 		{
 			isAlive = false;
 		}
-
+		/*if (m_ship->hp <= 0)
+		{
+			SceneBase::menuType = M_GAMEOVER;
+		}*/
 		if (SceneBase::restartGame)
 		{
 			RestartGame();
 			SceneBase::restartGame = false;
 			SceneBase::menuType = M_NONE;
+			SceneManager::activeScene = S_ASSIGNMENT1;
 		}
 
 		if (SceneBase::resetGame)
@@ -1608,6 +1723,7 @@ void Assignment1::Update(double dt)
 			RestartGame();
 			SceneBase::resetGame = false;
 			SceneBase::menuType = M_MAIN;
+			SceneManager::activeScene = S_ASSIGNMENT1;
 		}
 	}
 }
@@ -1670,17 +1786,13 @@ void Assignment1::Collision(GameObject* go)
 	//Wrap(go->pos.x, m_worldWidth);
 	//Wrap(go->pos.y, m_worldHeight);
 
-	// unspawn offscreen
+	//// unspawn offscreen
 	if (go->type == GameObject::GO_ENEMYBULLET ||
-		go->type == GameObject::GO_BULLET ||
-		go->type == GameObject::GO_BOMB ||
-		go->type == GameObject::GO_HEAL ||
-		go->type == GameObject::GO_LASER ||
-		go->type == GameObject::GO_TRIPLESHOT)
+		go->type == GameObject::GO_LASER)
 	{
 
 		if (go->pos.x > m_worldWidth
-			|| go->pos.x <0
+			|| go->pos.x < 0
 			|| go->pos.y > m_worldHeight
 			|| go->pos.y < 0)
 		{
@@ -1759,7 +1871,6 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				fire->direction = Vector3(0, 1, 0);
 				fire->vel = 0;
 				fire->timer = 5;
-				fireTimer = 0.75;
 				FireSprite->PlayAnimation("Fire", 1, 1.0f);
 				bullet->active = false;
 			}
@@ -1803,7 +1914,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 
 			if (bullet->type == GameObject::GO_FIRE)
 			{
-				if (fireTimer == 0.75)
+				if (fireTimer <= 0)
 				{
 					if (target->type == GameObject::GO_BOSS)
 					{
@@ -2854,6 +2965,9 @@ void Assignment1::Render()
 	case M_PAUSE:
 		RenderPauseMenu();
 		break;
+	case M_GAMEOVER:
+		RenderGameOver();
+		break;
 	}
 
 	if (menuType != M_NONE)
@@ -3199,11 +3313,13 @@ void Assignment1::Render()
 		ss << "Health: " << m_ship->hp;
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 3, 55, false);
 
+
+
 		//Exercise 5b: Render position, velocity & mass of ship
-		//ss.str("");
-		//ss.precision(5);
-		//ss << "FPS: " << fps;
-		//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 0, false);
+		ss.str("");
+		ss.precision(5);
+		ss << "FPS: " << fps;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 0, false);
 
 		//RenderTextOnScreen(meshList[GEO_TEXT], "Asteroid", Color(0, 1, 0), 20, 0, 0);
 
@@ -3221,13 +3337,25 @@ void Assignment1::Render()
 
 
 		// For Debugging
+		//************************************************************************************************************************************
+
+		//ss.str("");
+		//ss.precision(5);
+		//ss << "FPS: " << fps;
+		//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 0, false);
+
+		//ss.str("");
+		//ss.precision(5);
+		//ss << "Object: " << m_objectCount;
+		//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 0, false);
+
 		/*ss.str("");
 		ss << "Gain: " << trunc(4 * moneyFactor);
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 55, 40);*/
 	}
 	else if (!isAlive && gameStart)
 	{
-		SceneBase::menuType = M_PAUSE;
+		SceneBase::menuType = M_GAMEOVER;
 		/*ss.str("");
 		ss << "GAME OVER";
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 5, 20, 40);
