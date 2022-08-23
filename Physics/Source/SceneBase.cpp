@@ -174,6 +174,13 @@ void SceneBase::Init()
 
 	meshList[GEO_HEALTHBORDER] = MeshBuilder::GenerateQuad("hpborder", Color(1, 1, 1), 1.f);
 	meshList[GEO_HEALTHBORDER]->textureID = LoadTGA("Image//HpBorder.tga");
+
+	meshList[GEO_HEROICON] = MeshBuilder::GenerateQuad("Icon", Color(1, 1, 1), 1.f);
+	meshList[GEO_HEROICON]->textureID = LoadTGA("Image//HeroIcon.tga");
+
+	meshList[GEO_INFOBORDER] = MeshBuilder::GenerateQuad("Border", Color(1, 1, 1), 1.f);
+	meshList[GEO_INFOBORDER]->textureID = LoadTGA("Image//UiBorder.tga");
+
 	// Shopkeeper 
 	meshList[GEO_SHREK] = MeshBuilder::GenerateSpriteAnimation("Shrek", 1, 16);
 	meshList[GEO_SHREK]->textureID = LoadTexture("Image//shopkeepershrek.png", false);
@@ -298,6 +305,9 @@ void SceneBase::Init()
 	//ui menus
 	meshList[GEO_MAIN_MENU] = MeshBuilder::GenerateQuad("main menu", Color(1, 1, 1), 1.f);
 	meshList[GEO_MAIN_MENU]->textureID = LoadTGA("Image//UI//menuButtons.tga");
+
+	meshList[GEO_GAMEOVER] = MeshBuilder::GenerateQuad("main menu", Color(1, 1, 1), 1.f);
+	meshList[GEO_GAMEOVER]->textureID = LoadTGA("Image//UI//gameoverButton.tga");
 
 	meshList[GEO_SELECTOR] = MeshBuilder::GenerateQuad("main menu", Color(1, 1, 1), 1.f);
 	meshList[GEO_SELECTOR]->textureID = LoadTGA("Image//UI//selector.tga");
@@ -557,6 +567,27 @@ void SceneBase::RenderMainMenu()
 
 }
 
+void SceneBase::RenderGameOver()
+{
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
+
+	RenderMeshOnScreen(meshList[GEO_GAMEOVER], 96, 25, 45, 45);
+	switch (selectorIndex)
+	{
+	case 0:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 41, 45, 45);
+		break;
+	case 1:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 26, 45, 45);
+		break;
+	case 2:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 12, 45, 45);
+		break;
+	}
+	RenderTextOnScreen(meshList[GEO_TEXT], "Gameover", Color(1, 1, 1), 7, 23, 35, false);
+	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
+
+}
 void SceneBase::RenderPauseMenu()
 {
 	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
@@ -598,6 +629,11 @@ void SceneBase::UpdateGameOver(float& m_speed)
 		m_speed = 1;
 		break;
 	case 1:
+		selectorIndex = 0;
+		menuType = M_MAIN;
+		resetGame = true;
+		break;
+	case 2:
 		Application::gameExit = true;
 		break;
 	}

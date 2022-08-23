@@ -60,12 +60,13 @@ public:
 		GEO_PAUSE,
 		GEO_SELECTOR,
 		GEO_UIBG,
+		GEO_GAMEOVER,
 
 
 		GEO_BALL,
 		GEO_CUBE,
 
-		// Health bar
+		// Health bar / UI
 		GEO_GREENHEALTH,
 		GEO_REDHEALTH,
 		GEO_HEAL,
@@ -74,6 +75,8 @@ public:
 		GEO_BOSSHEALTH,
 		GEO_HEALTHBACK,
 		GEO_HEALTHBORDER,
+		GEO_HEROICON,
+		GEO_INFOBORDER,
 
 		// Enemy types
 		GEO_ASTEROID,
@@ -152,6 +155,7 @@ public:
 	void RenderGO(GameObject *go);
 	void RenderMainMenu();
 	void RenderPauseMenu();
+	void RenderGameOver();
 	void UpdateMainMenu(float& m_speed);
 	void UpdatePauseMenu(float& m_speed);
 	void UpdateGameOver(float& m_speed);
