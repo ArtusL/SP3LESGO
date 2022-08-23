@@ -1642,6 +1642,7 @@ void Assignment1::Collision(GameObject* go)
 			displayDamage.push_back(go->enemyDamage);
 			damageTextX.push_back((go->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
 			damageTextY.push_back((go->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
+			scaleText.push_back(1);
 			translateTextY.push_back(0);
 			damageTimer.push_back(elapsedTime);
 			damageEnemy.push_back(false);
@@ -1710,6 +1711,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				displayDamage.push_back(damageDealt);
 				damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
 				damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
+				scaleText.push_back(0);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
 				damageEnemy.push_back(true);
@@ -1734,6 +1736,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				displayDamage.push_back(damageDealt);
 				damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
 				damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
+				scaleText.push_back(0);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
 				damageEnemy.push_back(true);
@@ -1765,6 +1768,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 						displayDamage.push_back(damageDealt);
 						damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
 						damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
+						scaleText.push_back(0);
 						translateTextY.push_back(0);
 						damageTimer.push_back(elapsedTime);
 						damageEnemy.push_back(true);
@@ -1779,6 +1783,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 						displayDamage.push_back(damageDealt);
 						damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
 						damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
+						scaleText.push_back(0);
 						translateTextY.push_back(0);
 						damageTimer.push_back(elapsedTime);
 						damageEnemy.push_back(true);
@@ -1799,6 +1804,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 						displayDamage.push_back(damageDealt);
 						damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
 						damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
+						scaleText.push_back(0);
 						translateTextY.push_back(0);
 						damageTimer.push_back(elapsedTime);
 						damageEnemy.push_back(true);
@@ -1811,6 +1817,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 						displayDamage.push_back(damageDealt);
 						damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
 						damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
+						scaleText.push_back(0);
 						translateTextY.push_back(0);
 						damageTimer.push_back(elapsedTime);
 						damageEnemy.push_back(true);
@@ -1829,6 +1836,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				displayDamage.push_back(damageDealt);
 				damageTextX.push_back((target->pos.x - camera.position.x + Math::RandFloatMinMax(-5, 5)) * 85 / (192 * (m_worldHeight / (4 * 100))));
 				damageTextY.push_back((target->pos.y - camera.position.y + Math::RandFloatMinMax(-5, 5)) * 65 / (100 * (m_worldHeight / (4 * 100))));
+				scaleText.push_back(0);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
 				damageEnemy.push_back(true);
@@ -1846,6 +1854,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				displayDamage.push_back(damageDealt);
 				damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
 				damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
+				scaleText.push_back(0);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
 				damageEnemy.push_back(true);
@@ -1869,6 +1878,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				displayDamage.push_back(damageDealt);
 				damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
 				damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
+				scaleText.push_back(0);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
 				damageEnemy.push_back(true);
@@ -3128,18 +3138,27 @@ void Assignment1::Render()
 
 			if (damageEnemy.at(it) == true) // Display enemy damage taken
 			{
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 2, damageTextX.at(it) + 0.2, damageTextY.at(it) - 0.2,true);
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 0), 2, damageTextX.at(it), damageTextY.at(it), true);
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 2 * scaleText.at(it), damageTextX.at(it) + 0.2, damageTextY.at(it) + 0.2,true);
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 0), 2 * scaleText.at(it), damageTextX.at(it), damageTextY.at(it), true);
 			}
 			else // Display player damage taken
 			{
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 3, damageTextX.at(it) + 0.2, damageTextY.at(it) - 0.2,true);
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 3, damageTextX.at(it), damageTextY.at(it), true);
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 3, damageTextX.at(it) + 0.2, damageTextY.at(it) + 0.2, false);
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 3, damageTextX.at(it), damageTextY.at(it), false);
 			}
 
 
 			damageTextY.at(it) += 0.08;
 			double diff = elapsedTime - damageTimer.at(it);
+
+			if (scaleText.at(it) < 1)
+			{
+				scaleText.at(it) += 0.05;
+				if (scaleText.at(it) > 1)
+				{
+					scaleText.at(it) = 1;
+				}
+			}
 
 			if (diff > 0.4)
 			{
@@ -3147,6 +3166,7 @@ void Assignment1::Render()
 				damageTextX.erase(damageTextX.begin() + it);
 				damageTextY.erase(damageTextY.begin() + it);
 				translateTextY.erase(translateTextY.begin() + it);
+				scaleText.erase(scaleText.begin() + it);
 				damageTimer.erase(damageTimer.begin() + it);
 				damageEnemy.erase(damageEnemy.begin() + it);
 
@@ -3169,10 +3189,10 @@ void Assignment1::Render()
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 50, 0, false);
 
 		//Exercise 5b: Render position, velocity & mass of ship
-		//ss.str("");
-		//ss.precision(5);
-		//ss << "FPS: " << fps;
-		//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 55);
+		ss.str("");
+		ss.precision(5);
+		ss << "FPS: " << fps;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 0, false);
 
 		//RenderTextOnScreen(meshList[GEO_TEXT], "Asteroid", Color(0, 1, 0), 20, 0, 0);
 

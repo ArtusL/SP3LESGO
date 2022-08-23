@@ -43,6 +43,7 @@ protected:
 	std::vector<float>damageTextX;
 	std::vector<float> damageTextY;
 	std::vector<float> translateTextY;
+	std::vector<float> scaleText;
 	std::vector<double> damageTimer;
 	std::vector<bool> damageEnemy;
 	CSoundController* cSoundController;
