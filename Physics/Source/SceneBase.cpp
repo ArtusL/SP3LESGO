@@ -622,6 +622,7 @@ void SceneBase::UpdateMainMenu(float& m_speed)
 
 void SceneBase::UpdateGameOver(float& m_speed)
 {
+	restartGame = true;
 	switch (selectorIndex)
 	{
 	case 0:
