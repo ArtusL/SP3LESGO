@@ -972,6 +972,8 @@ void Assignment1::Update(double dt)
 					go->direction = go->direction.Normalized();
 					go->vel = -(go->direction * BULLET_SPEED * 0.8);
 					go->angle = m_ship->angle;
+
+					m_objectCount++;
 				}
 				prevElapsedBullet = elapsedTime;
 			}
@@ -1251,7 +1253,6 @@ void Assignment1::Update(double dt)
 				{
 					Collision(go);
 				}
-
 				else if (go->type == GameObject::GO_RINGAURA || go->type == GameObject::GO_FIRE || go->type == GameObject::GO_EXPLOSION)
 				{
 					//Exercise 18: collision check between GO_BULLET and GO_ASTEROID
@@ -1319,6 +1320,26 @@ void Assignment1::Update(double dt)
 					}
 				}
 
+				// Player projectles despawn outside the camera view
+				if (go->type == GameObject::GO_BULLET ||
+					go->type == GameObject::GO_BOMB ||
+					go->type == GameObject::GO_MISSLE ||
+					go->type == GameObject::GO_FIRE ||
+					go->type == GameObject::GO_MOLOTOV ||
+					go->type == GameObject::GO_FLAMINGARROW ||
+					go->type == GameObject::GO_ARROW)
+				{
+
+					if (go->pos.x > m_ship->pos.x + (m_ship->pos.x - camera.position.x)
+						|| go->pos.x < camera.position.x
+						|| go->pos.y > m_ship->pos.y + (m_ship->pos.y - camera.position.y)
+						|| go->pos.y < camera.position.y)
+					{
+						go->active = false;
+						m_objectCount--;
+					}
+				}
+
 				// Magnet effect for powerups
 				if (go->type == GameObject::GO_BLACKHOLE)
 				{
@@ -1368,6 +1389,7 @@ void Assignment1::Update(double dt)
 				go->scale.Set(6.0f, 4.0f, 4.0f);
 				go->angle = m_ship->angle;
 				go->hitboxSizeDivider = 3;
+				m_objectCount++;
 
 				prevElapsedMissle = elapsedTime;
 			}
@@ -1386,6 +1408,7 @@ void Assignment1::Update(double dt)
 				go->angle = m_ship->angle;
 				go->hitboxSizeDivider = 3;
 				prevElapsedBomb = elapsedTime;
+				m_objectCount++;
 			}
 		}
 
@@ -1417,6 +1440,7 @@ void Assignment1::Update(double dt)
 						go->scale.Set(6.0f, 6.0f, 6.0f);
 						go->angle = m_ship->angle + 45;
 						prevElapsedArrow = elapsedTime;
+						m_objectCount++;
 					}
 				}
 			}
@@ -1438,6 +1462,7 @@ void Assignment1::Update(double dt)
 					go->scale.Set(6.0f, 6.0f, 6.0f);
 					go->angle = m_ship->angle + 45;
 					prevElapsedArrow = elapsedTime;
+					m_objectCount++;
 				}
 			}
 		}
@@ -1459,6 +1484,7 @@ void Assignment1::Update(double dt)
 						go->angle = m_ship->angle;
 						go->hitboxSizeDivider = 3;
 						prevElapsedMolotov = elapsedTime;
+						m_objectCount++;
 					}
 				}
 			}
@@ -1662,17 +1688,13 @@ void Assignment1::Collision(GameObject* go)
 	//Wrap(go->pos.x, m_worldWidth);
 	//Wrap(go->pos.y, m_worldHeight);
 
-	// unspawn offscreen
+	//// unspawn offscreen
 	if (go->type == GameObject::GO_ENEMYBULLET ||
-		go->type == GameObject::GO_BULLET ||
-		go->type == GameObject::GO_BOMB ||
-		go->type == GameObject::GO_HEAL ||
-		go->type == GameObject::GO_LASER ||
-		go->type == GameObject::GO_TRIPLESHOT)
+		go->type == GameObject::GO_LASER)
 	{
 
 		if (go->pos.x > m_worldWidth
-			|| go->pos.x <0
+			|| go->pos.x < 0
 			|| go->pos.y > m_worldHeight
 			|| go->pos.y < 0)
 		{
@@ -1751,7 +1773,6 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				fire->direction = Vector3(0, 1, 0);
 				fire->vel = 0;
 				fire->timer = 5;
-				fireTimer = 0.75;
 				FireSprite->PlayAnimation("Fire", 1, 1.0f);
 				bullet->active = false;
 			}
@@ -1795,7 +1816,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 
 			if (bullet->type == GameObject::GO_FIRE)
 			{
-				if (fireTimer == 0.75)
+				if (fireTimer <= 0)
 				{
 					if (target->type == GameObject::GO_BOSS)
 					{
@@ -3185,11 +3206,6 @@ void Assignment1::Render()
 		ss << "$: " << m_money;
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 50, 0, false);
 
-		//Exercise 5b: Render position, velocity & mass of ship
-		ss.str("");
-		ss.precision(5);
-		ss << "FPS: " << fps;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 0, false);
 
 		//RenderTextOnScreen(meshList[GEO_TEXT], "Asteroid", Color(0, 1, 0), 20, 0, 0);
 
@@ -3207,6 +3223,18 @@ void Assignment1::Render()
 
 
 		// For Debugging
+		//************************************************************************************************************************************
+
+		//ss.str("");
+		//ss.precision(5);
+		//ss << "FPS: " << fps;
+		//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 0, false);
+
+		//ss.str("");
+		//ss.precision(5);
+		//ss << "Object: " << m_objectCount;
+		//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 0, false);
+
 		/*ss.str("");
 		ss << "Gain: " << trunc(4 * moneyFactor);
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 55, 40);*/
