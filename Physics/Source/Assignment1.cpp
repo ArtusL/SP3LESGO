@@ -2006,9 +2006,6 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 					displayDamage.push_back(basicBulletDamage);
 					damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
 					damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
-					translateTextY.push_back(0);
-					damageTimer.push_back(elapsedTime);
-					damageEnemy.push_back(true);
 				}
 			}
 
