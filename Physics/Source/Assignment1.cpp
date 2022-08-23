@@ -3323,6 +3323,9 @@ void Assignment1::Render()
 		ss.str("");
 		ss << "Press [SPACEBAR] to start";
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 20, false);
+
+
+		RenderMeshOnScreen(meshList[GEO_EVIL], 100, 65, 100, 60);
 	}
 
 	if (isAlive && !upgradeScreen && gameStart)
