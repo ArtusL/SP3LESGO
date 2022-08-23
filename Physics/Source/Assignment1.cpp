@@ -3074,11 +3074,11 @@ void Assignment1::Render()
 
 	if (upgradeScreen)
 	{
-		modelStack.PushMatrix();
+		/*modelStack.PushMatrix();
 		modelStack.Translate(70 + camera.position.x, 50 + camera.position.y, 10);
 		modelStack.Scale(120, 100, 1);
 		RenderMesh(meshList[GEO_UPGRADESCREEN], false);
-		modelStack.PopMatrix();
+		modelStack.PopMatrix();*/
 
 		modelStack.PushMatrix();
 		modelStack.Translate(40 + camera.position.x, 51 + camera.position.y, 11);
@@ -3142,7 +3142,7 @@ void Assignment1::Render()
 	{
 		// Upgrade information
 
-
+		RenderMeshOnScreen(meshList[GEO_UPGRADESCREEN], 95.5, 40, 200, 100);
 		ss.str("");
 		ss << "UPGRADE MENU";
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 30, 50, false);
