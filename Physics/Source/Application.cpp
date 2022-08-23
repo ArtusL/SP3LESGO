@@ -14,8 +14,8 @@
 #include "SoundController/SoundController.h"
 
 //#include "SceneVector.h"
-#include "SceneKinematics.h"
-#include "SceneAsteroid.h"
+//#include "SceneKinematics.h"
+//#include "SceneAsteroid.h"
 #include "Assignment1.h"
 
 GLFWwindow* m_window;
