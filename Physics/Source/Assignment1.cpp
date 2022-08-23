@@ -307,6 +307,7 @@ void Assignment1::UpdateMenu()
 		SceneBase::menuType = M_NONE;
 		SceneBase::restartGame = false;
 		SceneManager::activeScene = S_ASSIGNMENT1;
+		shopactive = false;
 	}
 
 	if (SceneBase::resetGame)
@@ -315,19 +316,21 @@ void Assignment1::UpdateMenu()
 		SceneBase::resetGame = false;
 		SceneBase::menuType = M_MAIN;
 		SceneManager::activeScene = S_ASSIGNMENT1;
+		shopactive = false;
 	}
 	if (Application::IsKeyReleased(VK_ESCAPE))
 		SceneBase::menuType = M_PAUSE;
 
 	if (Application::IsKeyReleased(VK_DOWN))
+		
 		selectorIndex++;
 	else if (Application::IsKeyReleased(VK_UP))
 		selectorIndex--;
 
-	if (Application::IsKeyReleased(VK_RIGHT))
-		colourIndex++;
-	else if (Application::IsKeyReleased(VK_LEFT))
-		colourIndex--;
+	//if (Application::IsKeyReleased(VK_RIGHT))
+	//	colourIndex++;
+	//else if (Application::IsKeyReleased(VK_LEFT))
+	//	colourIndex--;
 
 	if (Application::IsKeyReleased(VK_RETURN))
 	{
@@ -832,9 +835,9 @@ void Assignment1::Update(double dt)
 				if (randomEnemy < 100 && waveCount >= 4 && shopactive == false)
 				{
 					go->type = GameObject::GO_SHOP;
-					go->scale.Set(15, 15, 10);
+					go->scale.Set(10, 10, 10);
 					go->prevEnemyBullet = elapsedTime;
-					go->hitboxSizeDivider = 1;
+					go->hitboxSizeDivider = 0.75;
 					shopactive = true;
 				}
 				// Spawn shooting demon
@@ -1730,6 +1733,7 @@ void Assignment1::Update(double dt)
 			SceneBase::restartGame = false;
 			SceneBase::menuType = M_NONE;
 			SceneManager::activeScene = S_ASSIGNMENT1;
+			shopactive = false;
 		}
 
 		if (SceneBase::resetGame)
@@ -1738,6 +1742,7 @@ void Assignment1::Update(double dt)
 			SceneBase::resetGame = false;
 			SceneBase::menuType = M_MAIN;
 			SceneManager::activeScene = S_ASSIGNMENT1;
+			shopactive = false;
 		}
 	}
 }
