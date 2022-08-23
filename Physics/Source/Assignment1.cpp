@@ -193,8 +193,90 @@ void Assignment1::RestartGame()
 		if (go->active)
 			go->active = false;
 	}
+	//Exercise 2b: Initialize m_hp and m_score
+	m_hp = 100;
+	m_money = 10000;
+	m_objectCount = 0;
+	waveCount = 5;
+	gravity = -4;
 
-	m_ship->hp = 100;
+	hpFactor = moneyFactor = 1;
+	bonusMoney = 1;
+	iFrames = 0;
+	fireTimer = 0;
+	ringauraTimer = 0;
+	explosionTimer = 0;
+
+	fireRate = 5;
+	fireRateCost = 10;
+	damageUpCost = 10;
+	missleCost = 20;
+	ringCost = 250;
+	bombCost = 50;
+	molotovCost = 50;
+	arrowCost = 20;
+	flamingarrowCost = 1000;
+	healthRegenCost = 20;
+
+	tempSpawnCount = 0;
+
+	shootCount = 0;
+	bossState = 0;
+	laserAngle = 0;
+
+
+
+	basicBulletDamage = 1;
+	healthRegen = 0;
+	healthRegenAmount = 0;
+	missleRate = 1;
+	misslelvl = 0;
+	ringlvl = 0;
+	ringAOE = 6.0f;
+	bomblvl = 0;
+	bombRate = 0.75;
+	molotovlvl = 0;
+	molotovRate = 0.3;
+	molotovAmount = 1;
+	arrowlvl = 0;
+	arrowRate = 0.5;
+	arrowAmount = 3;
+	flamingarrowlvl = 0;
+	flamingarrowCost = 1000;
+
+	doubleBullet = false;
+	tripleShot = false;
+	flamingarrowUse = false;
+	upgradeScreen = false;
+	isAlive = true;
+	gameStart = false;
+	bossspawned = false;
+
+	movementLastPressed = ' ';
+
+	asteroidCount = 0;
+	maxEnemyCount = 10;
+
+
+	//Exercise 2c: Construct m_ship, set active, type, scale and pos
+	m_ship = new GameObject(GameObject::GO_HERO);
+	m_ship->active = true;
+	m_ship->scale.Set(7, 7, 1);
+	m_ship->pos.Set(m_worldWidth / 2, m_worldHeight / 2);
+	m_ship->vel.Set(1, 0, 0);
+	m_ship->direction.Set(1, 0, 0);
+	m_ship->hp = m_hp;
+	m_ship->maxHP = m_hp;
+	m_ship->mass = 0.1f;
+
+	// Attract powerups
+	GameObject* hole = FetchGO();
+	hole->type = GameObject::GO_BLACKHOLE;
+	hole->scale.Set(5, 5, 1);
+	hole->mass = 1000;
+	hole->pos = m_ship->pos;
+	hole->vel.SetZero();
+	
 	//spawn and reset enemy station and turrets
 }
 
@@ -248,6 +330,9 @@ void Assignment1::UpdateMenu()
 		case M_PAUSE:
 			UpdatePauseMenu(m_speed);
 			break;
+		case M_GAMEOVER:
+			UpdateGameOver(m_speed);
+				break;
 		}
 	}
 }
@@ -1613,12 +1698,16 @@ void Assignment1::Update(double dt)
 		{
 			isAlive = false;
 		}
-
+		/*if (m_ship->hp <= 0)
+		{
+			SceneBase::menuType = M_GAMEOVER;
+		}*/
 		if (SceneBase::restartGame)
 		{
 			RestartGame();
 			SceneBase::restartGame = false;
 			SceneBase::menuType = M_NONE;
+			SceneManager::activeScene = S_ASSIGNMENT1;
 		}
 
 		if (SceneBase::resetGame)
@@ -1626,6 +1715,7 @@ void Assignment1::Update(double dt)
 			RestartGame();
 			SceneBase::resetGame = false;
 			SceneBase::menuType = M_MAIN;
+			SceneManager::activeScene = S_ASSIGNMENT1;
 		}
 	}
 }
@@ -2867,6 +2957,9 @@ void Assignment1::Render()
 	case M_PAUSE:
 		RenderPauseMenu();
 		break;
+	case M_GAMEOVER:
+		RenderGameOver();
+		break;
 	}
 
 	if (menuType != M_NONE)
@@ -3241,7 +3334,7 @@ void Assignment1::Render()
 	}
 	else if (!isAlive && gameStart)
 	{
-		SceneBase::menuType = M_PAUSE;
+		SceneBase::menuType = M_GAMEOVER;
 		/*ss.str("");
 		ss << "GAME OVER";
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 5, 20, 40);

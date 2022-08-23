@@ -60,6 +60,7 @@ public:
 		GEO_PAUSE,
 		GEO_SELECTOR,
 		GEO_UIBG,
+		GEO_GAMEOVER,
 
 
 		GEO_BALL,
@@ -152,6 +153,7 @@ public:
 	void RenderGO(GameObject *go);
 	void RenderMainMenu();
 	void RenderPauseMenu();
+	void RenderGameOver();
 	void UpdateMainMenu(float& m_speed);
 	void UpdatePauseMenu(float& m_speed);
 	void UpdateGameOver(float& m_speed);
