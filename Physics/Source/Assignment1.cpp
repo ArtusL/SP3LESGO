@@ -139,7 +139,6 @@ void Assignment1::Init()
 	hole->scale.Set(5, 5, 1);
 	hole->mass = 1000;
 	hole->pos = m_ship->pos;
-	hole->vel.SetZero();
 
 	m_ship->momentOfInertia = m_ship->mass * m_ship->scale.x * m_ship->scale.x;
 
@@ -307,6 +306,7 @@ void Assignment1::UpdateMenu()
 		SceneBase::menuType = M_NONE;
 		SceneBase::restartGame = false;
 		SceneManager::activeScene = S_ASSIGNMENT1;
+		shopactive = false;
 	}
 
 	if (SceneBase::resetGame)
@@ -315,19 +315,21 @@ void Assignment1::UpdateMenu()
 		SceneBase::resetGame = false;
 		SceneBase::menuType = M_MAIN;
 		SceneManager::activeScene = S_ASSIGNMENT1;
+		shopactive = false;
 	}
 	if (Application::IsKeyReleased(VK_ESCAPE))
 		SceneBase::menuType = M_PAUSE;
 
 	if (Application::IsKeyReleased(VK_DOWN))
+		
 		selectorIndex++;
 	else if (Application::IsKeyReleased(VK_UP))
 		selectorIndex--;
 
-	if (Application::IsKeyReleased(VK_RIGHT))
-		colourIndex++;
-	else if (Application::IsKeyReleased(VK_LEFT))
-		colourIndex--;
+	//if (Application::IsKeyReleased(VK_RIGHT))
+	//	colourIndex++;
+	//else if (Application::IsKeyReleased(VK_LEFT))
+	//	colourIndex--;
 
 	if (Application::IsKeyReleased(VK_RETURN))
 	{
@@ -832,9 +834,9 @@ void Assignment1::Update(double dt)
 				if (randomEnemy < 100 && waveCount >= 4 && shopactive == false)
 				{
 					go->type = GameObject::GO_SHOP;
-					go->scale.Set(15, 15, 10);
+					go->scale.Set(10, 10, 10);
 					go->prevEnemyBullet = elapsedTime;
-					go->hitboxSizeDivider = 1;
+					go->hitboxSizeDivider = 0.75;
 					shopactive = true;
 				}
 				// Spawn shooting demon
@@ -897,6 +899,8 @@ void Assignment1::Update(double dt)
 					go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), 0 - 1, go->pos.z);
 					break;
 				}
+				go->direction.Set(0.1, 0.1, 0.1);
+				go->vel = go->direction;
 				prevElapsedAsteroid = elapsedTime;
 				//m_objectCount++;
 			}
@@ -931,7 +935,7 @@ void Assignment1::Update(double dt)
 		// WORM ENEMY
 		if (Application::IsKeyPressed('C') && tempSpawnCount < 1)
 		{
-			for (int i = 0; i < 1; ++i)
+			for (int i = 0; i < 5; ++i)
 			{
 
 
@@ -1162,162 +1166,7 @@ void Assignment1::Update(double dt)
 
 
 
-		//************************************ ENEMY ATTACKS ****************************************************
-		for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-		{
-			GameObject* enemy = (GameObject*)*it;
-			// Flame Demon: Periodially dashes to player
-			if (enemy->type == GameObject::GO_FLAMEDEMON)
-			{
-				float diff = elapsedTime - enemy->prevEnemyBullet;
-				if (diff > 3)
-				{
-					enemy->speedFactor = 10;
-					enemy->prevEnemyBullet = elapsedTime;
-				}
-				else
-				{
-					if (enemy->speedFactor > 1)
-					{
-						enemy->speedFactor -= 5 * dt;
-						if (enemy->speedFactor < 1)
-						{
-							enemy->speedFactor = 1;
-						}
-					}
-				}
-			}
-
-			// BOSS ENEMY
-			else if (enemy->type == GameObject::GO_BOSS)
-			{
-				NightborneSpriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_BOSS_LEFT]);
-				NightborneSpriteLeft->PlayAnimation("Move Left", -1, 0.8f);
-				NightborneSpriteLeft->Update(dt);
-
-
-				NightborneSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_BOSS]);
-				NightborneSprite->PlayAnimation("Move Right", -1, 0.8f);
-				NightborneSprite->Update(dt);
-
-				NightborneSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_BOSSATTACK]);
-				NightborneSprite->PlayAnimation("Attack Right", 3, 0.65f);
-				NightborneSprite->Update(dt);
-
-				NightborneSpriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_BOSSATTACK_LEFT]);
-				NightborneSpriteLeft->PlayAnimation("Attack Left", 3, 0.65f);
-				NightborneSpriteLeft->Update(dt);
-				float diff = elapsedTime - enemy->prevEnemyBullet;
-				switch (bossState)
-				{
-				case 0:
-					if (diff > 1)
-					{
-						float bulletCount = 8;
-						float angle = 360 / bulletCount;;
-						for (int i = 0; i < 8; ++i)
-						{
-							GameObject* go2 = FetchGO();
-							go2->type = GameObject::GO_ENEMYBULLET;
-							go2->scale.Set(4.0f, 4.0f, 4.0f);
-							go2->pos = enemy->pos;
-							go2->angle = angle * i + Math::RandFloatMinMax(0, 50);
-							go2->enemyDamage = 13;
-							go2->hitboxSizeDivider = 2;
-
-
-							go2->direction = RotateVector(go2->pos, go2->angle * dt * shipSpeed);
-							go2->direction = go2->direction.Normalized();
-
-
-							go2->vel = go2->direction * BULLET_SPEED * 0.8;
-
-						}
-						shootCount++;
-						enemy->prevEnemyBullet = elapsedTime;
-
-						if (shootCount == 3)
-						{
-							bossState = 1;
-							shootCount = 0;
-							enemy->hitboxSizeDivider = 3;
-							NightborneSprite->Reset();
-							NightborneSpriteLeft->Reset();
-						}
-					}
-					break;
-				case 1:
-
-					enemy->enemyDamage = 35;
-					if (diff > 0.6)
-					{
-						enemy->speedFactor = 10;
-						enemy->prevEnemyBullet = elapsedTime;
-						enemy->direction += Vector3(Math::RandFloatMinMax(-0.5, 0.5), Math::RandFloatMinMax(-0.5, 0.5), 0);
-						cSoundController->StopSoundByID(11);
-						cSoundController->PlaySoundByID(11);
-
-						shootCount++;
-					}
-					else
-					{
-						if (enemy->speedFactor > 1)
-						{
-							enemy->speedFactor -= 20 * dt;
-							if (enemy->speedFactor < 1)
-							{
-								enemy->speedFactor = 1;
-								if (shootCount == 3)
-								{
-									bossState = 2;
-									shootCount = 0;
-									enemy->hitboxSizeDivider = 8;
-									NightborneSprite->Reset();
-									NightborneSpriteLeft->Reset();
-								}
-							}
-						}
-					}
-
-
-					break;
-				case 2:
-					enemy->enemyDamage = 20;
-					if (diff > 1)
-					{
-						enemy->prevEnemyBullet = elapsedTime - 0.96;
-						enemy->vel = 0;
-						GameObject* go2 = FetchGO();
-						go2->type = GameObject::GO_LASER;
-						go2->scale.Set(2.0f, 2.0f, 4.0f);
-						go2->pos = enemy->pos;
-						go2->angle = laserAngle;
-						go2->enemyDamage = 13;
-						go2->hitboxSizeDivider = 6;
-
-						laserAngle += 6;
-
-						go2->direction = RotateVector(go2->pos, go2->angle * dt * shipSpeed);
-						go2->direction = go2->direction.Normalized();
-
-						go2->angle = atan2(go2->direction.y, go2->direction.x) - 90;
-						go2->angle = (go2->angle / Math::PI) * 180.0 - 90.0f;
-
-
-						go2->vel = go2->direction * BULLET_SPEED * 0.8;
-
-						if (laserAngle >= 350)
-						{
-							laserAngle = 0;
-							bossState = 0;
-						}
-
-					}
-					break;
-				}
-				break;
-			}
-		}
+	
 
 
 
@@ -1664,6 +1513,348 @@ void Assignment1::Update(double dt)
 		}
 		//*****************************************************************************************************************
 
+
+		//************************************ ENEMY ATTACKS *****************************************************************************
+		for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+		{
+			GameObject* enemy = (GameObject*)*it;
+			if (enemy->active)
+			{
+				// Flame Demon: Periodially dashes to player
+				if (enemy->type == GameObject::GO_FLAMEDEMON)
+				{
+					float diff = elapsedTime - enemy->prevEnemyBullet;
+					if (diff > 3)
+					{
+						enemy->speedFactor = 10;
+						enemy->prevEnemyBullet = elapsedTime;
+					}
+					else
+					{
+						if (enemy->speedFactor > 1)
+						{
+							enemy->speedFactor -= 5 * dt;
+							if (enemy->speedFactor < 1)
+							{
+								enemy->speedFactor = 1;
+							}
+						}
+					}
+
+					// Move towards player
+					if (enemy->speedFactor <= 1)
+					{
+						enemy->direction = m_ship->pos - Vector3(enemy->pos.x, enemy->pos.y, enemy->pos.z);
+						enemy->direction = enemy->direction.Normalized();
+					}
+					enemy->vel = (enemy->direction * 6 * enemy->speedFactor);
+				}
+
+				// BOSS ENEMY
+				else if (enemy->type == GameObject::GO_BOSS)
+				{
+					NightborneSpriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_BOSS_LEFT]);
+					NightborneSpriteLeft->PlayAnimation("Move Left", -1, 0.8f);
+					NightborneSpriteLeft->Update(dt);
+
+
+					NightborneSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_BOSS]);
+					NightborneSprite->PlayAnimation("Move Right", -1, 0.8f);
+					NightborneSprite->Update(dt);
+
+					NightborneSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_BOSSATTACK]);
+					NightborneSprite->PlayAnimation("Attack Right", 3, 0.65f);
+					NightborneSprite->Update(dt);
+
+					NightborneSpriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_BOSSATTACK_LEFT]);
+					NightborneSpriteLeft->PlayAnimation("Attack Left", 3, 0.65f);
+					NightborneSpriteLeft->Update(dt);
+
+
+					// Move towards player
+					if (enemy->speedFactor <= 1)
+					{
+						enemy->direction = m_ship->pos - Vector3(enemy->pos.x, enemy->pos.y, enemy->pos.z);
+						enemy->direction = enemy->direction.Normalized();
+					}
+					enemy->vel = (enemy->direction * 6 * enemy->speedFactor);
+
+					float diff = elapsedTime - enemy->prevEnemyBullet;
+					switch (bossState)
+					{
+					case 0:
+						if (diff > 1)
+						{
+							float bulletCount = 8;
+							float angle = 360 / bulletCount;;
+							for (int i = 0; i < 8; ++i)
+							{
+								GameObject* go2 = FetchGO();
+								go2->type = GameObject::GO_ENEMYBULLET;
+								go2->scale.Set(4.0f, 4.0f, 4.0f);
+								go2->pos = enemy->pos;
+								go2->angle = angle * i + Math::RandFloatMinMax(0, 50);
+								go2->enemyDamage = 13;
+								go2->hitboxSizeDivider = 2;
+
+
+								go2->direction = RotateVector(go2->pos, go2->angle * dt * shipSpeed);
+								go2->direction = go2->direction.Normalized();
+
+
+								go2->vel = go2->direction * BULLET_SPEED * 0.8;
+
+							}
+							shootCount++;
+							enemy->prevEnemyBullet = elapsedTime;
+
+							if (shootCount == 3)
+							{
+								bossState = 1;
+								shootCount = 0;
+								enemy->hitboxSizeDivider = 3;
+								NightborneSprite->Reset();
+								NightborneSpriteLeft->Reset();
+							}
+						}
+						break;
+					case 1:
+
+						enemy->enemyDamage = 35;
+						if (diff > 0.6)
+						{
+							enemy->speedFactor = 10;
+							enemy->prevEnemyBullet = elapsedTime;
+							enemy->direction += Vector3(Math::RandFloatMinMax(-0.5, 0.5), Math::RandFloatMinMax(-0.5, 0.5), 0);
+							cSoundController->StopSoundByID(11);
+							cSoundController->PlaySoundByID(11);
+
+							shootCount++;
+						}
+						else
+						{
+							if (enemy->speedFactor > 1)
+							{
+								enemy->speedFactor -= 20 * dt;
+								if (enemy->speedFactor < 1)
+								{
+									enemy->speedFactor = 1;
+									if (shootCount == 3)
+									{
+										bossState = 2;
+										shootCount = 0;
+										enemy->hitboxSizeDivider = 8;
+										NightborneSprite->Reset();
+										NightborneSpriteLeft->Reset();
+									}
+								}
+							}
+						}
+
+
+						break;
+					case 2:
+						enemy->enemyDamage = 20;
+						if (diff > 1)
+						{
+							enemy->prevEnemyBullet = elapsedTime - 0.96;
+							enemy->vel = 0;
+							GameObject* go2 = FetchGO();
+							go2->type = GameObject::GO_LASER;
+							go2->scale.Set(2.0f, 2.0f, 4.0f);
+							go2->pos = enemy->pos;
+							go2->angle = laserAngle;
+							go2->enemyDamage = 13;
+							go2->hitboxSizeDivider = 6;
+
+							laserAngle += 6;
+
+							go2->direction = RotateVector(go2->pos, go2->angle * dt * shipSpeed);
+							go2->direction = go2->direction.Normalized();
+
+							go2->angle = atan2(go2->direction.y, go2->direction.x) - 90;
+							go2->angle = (go2->angle / Math::PI) * 180.0 - 90.0f;
+
+
+							go2->vel = go2->direction * BULLET_SPEED * 0.8;
+
+							if (laserAngle >= 350)
+							{
+								laserAngle = 0;
+								bossState = 0;
+							}
+
+						}
+						break;
+					}
+					break;
+				}
+
+
+				// WORM ENEMY
+				// ********************************************
+				// Worm Head will always towards player
+				else if (enemy->type == GameObject::GO_WORMHEAD)
+				{
+					if (enemy->type != GameObject::GO_WORMBODY1 &&
+						enemy->type != GameObject::GO_WORMBODY2 &&
+						enemy->type != GameObject::GO_WORMTAIL)
+					{
+
+						if (enemy->timer > 4)
+						{
+							enemy->direction = m_ship->pos - Vector3(enemy->pos.x, enemy->pos.y, enemy->pos.z);
+							enemy->direction = enemy->direction.Normalized();
+							enemy->vel = (enemy->direction * 15);
+						}
+						else if (enemy->timer < 4 && enemy->timer > 3.8)
+						{
+							cSoundController->StopSoundByID(12);
+							cSoundController->PlaySoundByID(12);
+						}
+						else if (enemy->timer < 3)
+						{
+
+							enemy->vel = (enemy->direction * 80);
+						}
+						enemy->timer -= 0.04;
+						if (enemy->timer < 0)
+						{
+							enemy->timer = 10;
+						}
+						std::cout << enemy->pos.x << std::endl;
+					}
+
+					// Worm moving code
+					for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
+					{
+						GameObject* go2 = (GameObject*)*it2;
+						if (go2->active)
+						{
+
+							if (go2->type == GameObject::GO_WORMHEAD)
+							{
+								GameObject* current = go2;
+								GameObject* nextObj;
+								GameObject* prevObj;
+
+								GameObject* head;
+								head = go2;
+
+								// Worm moving code using linked list
+								while (true)
+								{
+									nextObj = current->nextNode;
+									if (current->prevNode != nullptr)
+									{
+										prevObj = current->prevNode;
+										prevObj->timer = head->timer;
+										float dis = current->pos.DistanceSquared(prevObj->pos);
+
+										//*******************************************************************************************************************
+										//	How the Worm movement works
+										// ********************************************************************************************************************
+										//	All the worm segments will spawn in the same position at first.
+										//	A body segment will not start moving until its previous segment moves far enough from current segment.
+										// 
+										//	From there a body segment will set its target location based on the previous segment's location.
+										//	It will only head to that target location and upon reaching it, it will reupdate its new target.
+										// 
+										//  This makes body segments only follow the segment that is connected instead of the head.
+										if (dis > 70 && current->reachTarget == true)
+										{
+											current->targetPos = prevObj->pos;
+											current->direction = prevObj->pos - Vector3(current->pos.x, current->pos.y, current->pos.z);
+											current->vel = prevObj->vel;
+											current->reachTarget = false;
+
+
+										}
+										// Move current body towards its target position
+										if (current->reachTarget == false)
+										{
+											current->direction = current->targetPos - Vector3(current->pos.x, current->pos.y, current->pos.z);
+											current->direction = current->direction.Normalized();
+											if (head->timer > 3)
+											{
+												current->vel = current->direction * 15;
+											}
+											else
+											{
+												current->vel = current->direction * 80;
+												if (head->timer <= 0)
+												{
+													current->vel = current->direction * 15;
+													current->direction = current->direction.Normalized();
+												}
+											}
+
+											current->angle = atan2(prevObj->pos.y - current->pos.y, prevObj->pos.x - current->pos.x);
+											current->angle = (current->angle / Math::PI) * 180.0 - 90.f;
+
+											float dis2 = current->pos.DistanceSquared(current->targetPos);
+											if (dis2 < 100)
+											{
+												current->reachTarget = true;
+											}
+										}
+									}
+									if (current->nextNode != nullptr)
+									{
+										current = current->nextNode;
+									}
+									else
+									{
+										break;
+									}
+								}
+							}
+
+						}
+
+					}
+				}
+				else if (enemy->type == GameObject::GO_SHOP)
+				{
+					// Move towards player
+					enemy->direction = m_ship->pos - Vector3(enemy->pos.x, enemy->pos.y, enemy->pos.z);
+					enemy->direction = enemy->direction.Normalized();
+					enemy->vel = (enemy->direction * 40);
+				}
+				else if (enemy->type == GameObject::GO_BDEMON)
+				{
+					// Enemy ship shooting at player
+					if (diff > 1)
+					{
+						GameObject* go2 = FetchGO();
+						go2->type = GameObject::GO_ENEMYBULLET;
+						go2->scale.Set(4.0f, 4.0f, 4.0f);
+						go2->pos = enemy->pos;
+						go2->angle = enemy->angle;
+						go2->enemyDamage = 4;
+						go2->hitboxSizeDivider = 2;
+
+						go2->direction = go2->pos - m_ship->pos;
+						go2->direction = -go2->direction.Normalized();
+						go2->vel = go2->direction * BULLET_SPEED * 0.8;
+						enemy->prevEnemyBullet = elapsedTime;
+
+
+					}
+				}
+				else if(enemy->type == GameObject::GO_GHOST)
+				{
+					enemy->direction = m_ship->pos - Vector3(enemy->pos.x, enemy->pos.y, enemy->pos.z);
+					enemy->direction = enemy->direction.Normalized();
+					enemy->vel = (enemy->direction * 6);
+				}
+
+			}
+
+		}
+
+		//********************************************************************************************************************************************
+
 		// Health regen
 		if (healthRegen == true)
 		{
@@ -1730,6 +1921,7 @@ void Assignment1::Update(double dt)
 			SceneBase::restartGame = false;
 			SceneBase::menuType = M_NONE;
 			SceneManager::activeScene = S_ASSIGNMENT1;
+			shopactive = false;
 		}
 
 		if (SceneBase::resetGame)
@@ -1738,6 +1930,7 @@ void Assignment1::Update(double dt)
 			SceneBase::resetGame = false;
 			SceneBase::menuType = M_MAIN;
 			SceneManager::activeScene = S_ASSIGNMENT1;
+			shopactive = false;
 		}
 	}
 }
@@ -2318,10 +2511,6 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_GHOST:
-		// Move towards player
-		go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
-		go->direction = go->direction.Normalized();
-		go->vel = (go->direction * 6);
 
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
@@ -2361,10 +2550,6 @@ void Assignment1::RenderGO(GameObject* go)
 		break;
 
 	case GameObject::GO_BDEMON:
-		go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
-		go->direction = go->direction.Normalized();
-		go->vel = (go->direction * 6);
-
 
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
@@ -2390,27 +2575,6 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PopMatrix();
 
 
-		// Enemy ship shooting at player
-		if (diff > 1)
-		{
-			modelStack.PushMatrix();
-			GameObject* go2 = FetchGO();
-			go2->type = GameObject::GO_ENEMYBULLET;
-			go2->scale.Set(4.0f, 4.0f, 4.0f);
-			go2->pos = go->pos;
-			go2->angle = go->angle;
-			go2->enemyDamage = 4;
-			go2->hitboxSizeDivider = 2;
-
-			go2->direction = go2->pos - m_ship->pos;
-			go2->direction = -go2->direction.Normalized();
-			go2->vel = go2->direction * BULLET_SPEED * 0.8;
-			go->prevEnemyBullet = elapsedTime;
-
-
-			modelStack.PopMatrix();
-		}
-
 		// Display health bar if asteroid is damaged
 		if (go->hp < go->maxHP)
 		{
@@ -2433,14 +2597,6 @@ void Assignment1::RenderGO(GameObject* go)
 		break;
 
 	case GameObject::GO_FLAMEDEMON:
-		// Move towards player
-		if (go->speedFactor <= 1)
-		{
-			go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
-			go->direction = go->direction.Normalized();
-		}
-		go->vel = (go->direction * 6 * go->speedFactor);
-
 
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
@@ -2486,12 +2642,6 @@ void Assignment1::RenderGO(GameObject* go)
 
 	case GameObject::GO_NIGHTMARE:
 
-		// Move towards player
-		go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
-		go->direction = go->direction.Normalized();
-		go->vel = (go->direction * 10);
-
-
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
@@ -2532,125 +2682,6 @@ void Assignment1::RenderGO(GameObject* go)
 	case GameObject::GO_WORMBODY1:
 	case GameObject::GO_WORMBODY2:
 	case GameObject::GO_WORMTAIL:
-
-		// Worm Head will always towards player
-		if (go->type != GameObject::GO_WORMBODY1 &&
-			go->type != GameObject::GO_WORMBODY2 &&
-			go->type != GameObject::GO_WORMTAIL)
-		{
-
-			if (go->timer > 4)
-			{
-				go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
-				go->direction = go->direction.Normalized();
-				go->vel = (go->direction * 15);
-			}
-			else if (go->timer < 4 && go->timer > 3.8)
-			{
-				cSoundController->StopSoundByID(12);
-				cSoundController->PlaySoundByID(12);
-			}
-			else if (go->timer < 3)
-			{
-
-				go->vel = (go->direction * 80);
-			}
-			go->timer -= 0.04;
-			if (go->timer < 0)
-			{
-				go->timer = 10;
-			}
-			std::cout << go->pos.x << std::endl;
-		}
-
-		// Worm moving code
-		for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
-		{
-			GameObject* go2 = (GameObject*)*it2;
-			if (go2->active)
-			{
-
-				if (go2->type == GameObject::GO_WORMHEAD)
-				{
-					GameObject* current = go2;
-					GameObject* nextObj;
-					GameObject* prevObj;
-
-					GameObject* head;
-					head = go2;
-
-					// Worm moving code using linked list
-					while (true)
-					{
-						nextObj = current->nextNode;
-						if (current->prevNode != nullptr)
-						{
-							prevObj = current->prevNode;
-							prevObj->timer = head->timer;
-							float dis = current->pos.DistanceSquared(prevObj->pos);
-
-							//*******************************************************************************************************************
-							//	How the Worm movement works
-							// ********************************************************************************************************************
-							//	All the worm segments will spawn in the same position at first.
-							//	A body segment will not start moving until its previous segment moves far enough from current segment.
-							// 
-							//	From there a body segment will set its target location based on the previous segment's location.
-							//	It will only head to that target location and upon reaching it, it will reupdate its new target.
-							// 
-							//  This makes body segments only follow the segment that is connected instead of the head.
-							if (dis > 70 && current->reachTarget == true)
-							{
-								current->targetPos = prevObj->pos;
-								current->direction = prevObj->pos - Vector3(current->pos.x, current->pos.y, current->pos.z);
-								current->vel = prevObj->vel;
-								current->reachTarget = false;
-
-
-							}
-							// Move current body towards its target position
-							if (current->reachTarget == false)
-							{
-								current->direction = current->targetPos - Vector3(current->pos.x, current->pos.y, current->pos.z);
-								current->direction = current->direction.Normalized();
-								if (head->timer > 3)
-								{
-									current->vel = current->direction * 15;
-								}
-								else
-								{
-									current->vel = current->direction * 80;
-									if (head->timer <= 0)
-									{
-										current->vel = current->direction * 15;
-										current->direction = current->direction.Normalized();
-									}
-								}
-
-								current->angle = atan2(prevObj->pos.y - current->pos.y, prevObj->pos.x - current->pos.x);
-								current->angle = (current->angle / Math::PI) * 180.0 - 90.f;
-
-								float dis2 = current->pos.DistanceSquared(current->targetPos);
-								if (dis2 < 100)
-								{
-									current->reachTarget = true;
-								}
-							}
-						}
-						if (current->nextNode != nullptr)
-						{
-							current = current->nextNode;
-						}
-						else
-						{
-							break;
-						}
-					}
-				}
-
-			}
-
-		}
 
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
@@ -2720,11 +2751,6 @@ void Assignment1::RenderGO(GameObject* go)
 
 
 		case GameObject::GO_SHOP:
-			// Move towards player
-			go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
-			go->direction = go->direction.Normalized();
-			go->vel = (go->direction * 40);
-
 			modelStack.PushMatrix();
 			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
@@ -2746,13 +2772,6 @@ void Assignment1::RenderGO(GameObject* go)
 
 
 	case GameObject::GO_BOSS:
-		// Move towards player
-		if (go->speedFactor <= 1)
-		{
-			go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
-			go->direction = go->direction.Normalized();
-		}
-		go->vel = (go->direction * 6 * go->speedFactor);
 
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
@@ -3083,7 +3102,13 @@ void Assignment1::Render()
 			GameObject* go = (GameObject*)*it;
 			if (go->active)
 			{
-				RenderGO(go);
+				if (go->pos.x < m_ship->pos.x + (m_ship->pos.x - camera.position.x)
+					&& go->pos.x > camera.position.x
+					&& go->pos.y < m_ship->pos.y + (m_ship->pos.y - camera.position.y)
+					&& go->pos.y > camera.position.y)
+				{
+					RenderGO(go);
+				}
 			}
 		}
 
