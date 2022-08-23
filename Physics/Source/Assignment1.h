@@ -52,6 +52,8 @@ protected:
 	float m_worldHeight;
 	GameObject *m_ship;
 	SpriteAnimation* HeroSprite;
+	SpriteAnimation* ShrekSprite;
+	SpriteAnimation* ShrekSpriteLeft;
 	SpriteAnimation* GhostSprite;
 	SpriteAnimation* GhostSpriteLeft;
 	SpriteAnimation* FdemonSprite;
@@ -137,6 +139,7 @@ protected:
 	double ringauraTimer;
 	double iFrames;
 
+	bool shopactive;
 	bool missleUse;
 	bool ringUse;
 	bool bombUse;

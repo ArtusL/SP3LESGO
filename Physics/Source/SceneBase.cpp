@@ -175,43 +175,30 @@ void SceneBase::Init()
 	meshList[GEO_HEALTHBORDER] = MeshBuilder::GenerateQuad("hpborder", Color(1, 1, 1), 1.f);
 	meshList[GEO_HEALTHBORDER]->textureID = LoadTGA("Image//HpBorder.tga");
 	// Shopkeeper 
-	//meshList[GEO_SHREK] = MeshBuilder::GenerateSpriteAnimation("Shrek", 1, 16);
-	//meshList[GEO_SHREK]->textureID = LoadTexture("Image//shopkeepershrek.png", false);
-	//meshList[GEO_SHREK]->material.kAmbient.Set(1, 1, 1);
-	//SpriteAnimation* Fdemonsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_SHREK]);
-	//Fdemonsprite->AddAnimation("IDLE", 0, 16);
+	meshList[GEO_SHREK] = MeshBuilder::GenerateSpriteAnimation("Shrek", 1, 16);
+	meshList[GEO_SHREK]->textureID = LoadTexture("Image//shopkeepershrek.png", false);
+	meshList[GEO_SHREK]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* ShrekSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_SHREK]);
+	ShrekSprite->AddAnimation("IDLE", 0, 16);
 
-	//meshList[GEO_SHREK_LEFT] = MeshBuilder::GenerateSpriteAnimation("Shrek Left", 1, 16);
-	//meshList[GEO_SHREK_LEFT]->textureID = LoadTexture("Image//shopkeepershrek.png", true);
-	//meshList[GEO_SHREK_LEFT]->material.kAmbient.Set(1, 1, 1);
-	//SpriteAnimation* FdemonspriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_SHREK_LEFT]);
-	//FdemonspriteLeft->AddAnimation("IDLE", 0, 16);
-
-	// Shopkeeper 
-	meshList[GEO_FDEMON] = MeshBuilder::GenerateSpriteAnimation("Shrek", 1, 16);
-	meshList[GEO_FDEMON]->textureID = LoadTexture("Image//shopkeepershrek.png", false);
-	meshList[GEO_FDEMON]->material.kAmbient.Set(1, 1, 1);
-	SpriteAnimation* Fdemonsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FDEMON]);
-	Fdemonsprite->AddAnimation("IDLE", 0, 16);
-
-	meshList[GEO_FDEMON_LEFT] = MeshBuilder::GenerateSpriteAnimation("Shrek Left", 1, 16);
-	meshList[GEO_FDEMON_LEFT]->textureID = LoadTexture("Image//shopkeepershrek.png", true);
-	meshList[GEO_FDEMON_LEFT]->material.kAmbient.Set(1, 1, 1);
-	SpriteAnimation* FdemonspriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_FDEMON_LEFT]);
-	FdemonspriteLeft->AddAnimation("IDLE", 0, 16);
+	meshList[GEO_SHREK_LEFT] = MeshBuilder::GenerateSpriteAnimation("Shrek Left", 1, 16);
+	meshList[GEO_SHREK_LEFT]->textureID = LoadTexture("Image//shopkeepershrek.png", true);
+	meshList[GEO_SHREK_LEFT]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* ShrekSpriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_SHREK_LEFT]);
+	ShrekSpriteLeft->AddAnimation("IDLE", 0, 16);
 
 	// Enemy types
-	//meshList[GEO_FDEMON] = MeshBuilder::GenerateSpriteAnimation("Fdemon", 1, 6);
-	//meshList[GEO_FDEMON]->textureID = LoadTexture("Image//FlameDemon.png", false);
-	//meshList[GEO_FDEMON]->material.kAmbient.Set(1, 1, 1);
-	//SpriteAnimation* Fdemonsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FDEMON]);
-	//Fdemonsprite->AddAnimation("IDLE", 0, 6);
+	meshList[GEO_FDEMON] = MeshBuilder::GenerateSpriteAnimation("Fdemon", 1, 6);
+	meshList[GEO_FDEMON]->textureID = LoadTexture("Image//FlameDemon.png", false);
+	meshList[GEO_FDEMON]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* Fdemonsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FDEMON]);
+	Fdemonsprite->AddAnimation("IDLE", 0, 6);
 
-	//meshList[GEO_FDEMON_LEFT] = MeshBuilder::GenerateSpriteAnimation("Fdemon Left", 1, 6);
-	//meshList[GEO_FDEMON_LEFT]->textureID = LoadTexture("Image//FlameDemon.png", true);
-	//meshList[GEO_FDEMON_LEFT]->material.kAmbient.Set(1, 1, 1);
-	//SpriteAnimation* FdemonspriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_FDEMON_LEFT]);
-	//FdemonspriteLeft->AddAnimation("IDLE", 0, 6);
+	meshList[GEO_FDEMON_LEFT] = MeshBuilder::GenerateSpriteAnimation("Fdemon Left", 1, 6);
+	meshList[GEO_FDEMON_LEFT]->textureID = LoadTexture("Image//FlameDemon.png", true);
+	meshList[GEO_FDEMON_LEFT]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* FdemonspriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_FDEMON_LEFT]);
+	FdemonspriteLeft->AddAnimation("IDLE", 0, 6);
 
 	meshList[GEO_BDEMON] = MeshBuilder::GenerateSpriteAnimation("Bdemon", 1, 6);
 	meshList[GEO_BDEMON]->textureID = LoadTexture("Image//Bdemon.png", false);

@@ -34,6 +34,7 @@ struct GameObject
 		GO_SHIP,
 
 		GO_HERO,
+		GO_SHOP,
 		GO_HEAL,
 		GO_CHEST,
 		GO_HEROHEALTH,

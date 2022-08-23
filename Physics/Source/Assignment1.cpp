@@ -70,6 +70,7 @@ void Assignment1::Init()
 	ringauraTimer = 0;
 	explosionTimer = 0;
 
+	shopactive = false;
 	fireRate = 5;
 	fireRateCost = 10;
 	damageUpCost = 10;
@@ -278,6 +279,15 @@ void Assignment1::Update(double dt)
 	HeroSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERO_LEFT]);
 	HeroSprite->PlayAnimation("IDLE", -1, 0.5f);
 	HeroSprite->Update(dt);
+
+	// Shrek shopkeeper
+	ShrekSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_SHREK]);
+	ShrekSprite->PlayAnimation("IDLE", -1, 0.8f);
+	ShrekSprite->Update(dt);
+
+	ShrekSpriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_SHREK_LEFT]);
+	ShrekSpriteLeft->PlayAnimation("IDLE", -1, 0.8f);
+	ShrekSpriteLeft->Update(dt);
 
 	// Ghost
 	GhostSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_GHOST]);
@@ -617,6 +627,7 @@ void Assignment1::Update(double dt)
 
 
 			worldPosY = m_worldHeight - (worldPosY)  - 450;
+			//worldPosX += 5;
 
 			m_ship->angle = atan2(m_ship->pos.y - worldPosY, m_ship->pos.x - worldPosX);
 			m_ship->angle = (m_ship->angle / Math::PI) * 180.0;
@@ -703,12 +714,6 @@ void Assignment1::Update(double dt)
 			}
 		}
 
-		// Access upgrade screen
-		if (Application::IsKeyPressed('E'))
-		{
-			upgradeScreen = true;
-		}
-
 		// Wave count increases after a certain period
 		float diff = elapsedTime - waveTimer;
 		if (diff > 15)
@@ -724,15 +729,23 @@ void Assignment1::Update(double dt)
 
 		// Randomised enemy spawns
 		diff = elapsedTime - prevElapsedAsteroid;
-		if (diff > 1 && m_objectCount < maxEnemyCount && tempSpawnCount < 1)
+		if (diff > 1 && tempSpawnCount < 1)
 		{
 			for (int i = 0; i < 1; ++i)
 			{
 				GameObject* go = FetchGO();
 				int randomEnemy = rand() % 100;
 
+				if (randomEnemy < 100 && waveCount >= 4 && shopactive == false)
+				{
+					go->type = GameObject::GO_SHOP;
+					go->scale.Set(15, 15, 10);
+					go->prevEnemyBullet = elapsedTime;
+					go->hitboxSizeDivider = 1;
+					shopactive = true;
+				}
 				// Spawn shooting demon
-				if (randomEnemy < 10 && waveCount >= 4)
+				else if (randomEnemy < 10 && waveCount >= 4)
 				{
 					go->type = GameObject::GO_BDEMON;
 					go->hp = round(7 * hpFactor);
@@ -774,7 +787,7 @@ void Assignment1::Update(double dt)
 				go->angle = 0;
 				go->maxHP = go->hp;
 
-				// This spawn asteroids from the 4 sides
+				// This spawn enemies from the 4 sides
 				int random = rand() % 4;
 				switch (random)
 				{
@@ -792,7 +805,7 @@ void Assignment1::Update(double dt)
 					break;
 				}
 				prevElapsedAsteroid = elapsedTime;
-				m_objectCount++;
+				//m_objectCount++;
 			}
 		}
 
@@ -1248,7 +1261,8 @@ void Assignment1::Update(double dt)
 					go->type == GameObject::GO_WORMHEAD ||
 					go->type == GameObject::GO_WORMBODY1 ||
 					go->type == GameObject::GO_WORMBODY2 ||
-					go->type == GameObject::GO_WORMTAIL
+					go->type == GameObject::GO_WORMTAIL ||
+					go->type == GameObject::GO_SHOP
 					)
 				{
 					Collision(go);
@@ -1645,6 +1659,12 @@ void Assignment1::Collision(GameObject* go)
 				tripleShot = true;
 				tripleShotTimer = 6;
 			}
+		}
+
+		// Access upgrade screen
+		if (Application::IsKeyPressed('E') && go->type == GameObject::GO_SHOP)
+		{
+			upgradeScreen = true;
 		}
 
 		if (go->type == GameObject::GO_TRIPLESHOT ||
@@ -2599,6 +2619,33 @@ void Assignment1::RenderGO(GameObject* go)
 		}
 		modelStack.PopMatrix();
 		break;
+
+
+		case GameObject::GO_SHOP:
+			// Move towards player
+			go->direction = m_ship->pos - Vector3(go->pos.x, go->pos.y, go->pos.z);
+			go->direction = go->direction.Normalized();
+			go->vel = (go->direction * 40);
+
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+
+			if (go->facingLeft == true)
+			{
+				RenderMesh(meshList[GEO_SHREK_LEFT], false);
+			}
+			else
+			{
+				modelStack.PushMatrix();
+				modelStack.Rotate(180, 0, 0, 1);
+				RenderMesh(meshList[GEO_SHREK], false);
+				modelStack.PopMatrix();
+			}
+			modelStack.PopMatrix();
+			break;
+
+
 
 	case GameObject::GO_BOSS:
 		// Move towards player
