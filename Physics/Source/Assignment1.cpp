@@ -4060,10 +4060,17 @@ void Assignment1::Render()
 		}
 
 
-		RenderMeshOnScreen(meshList[GEO_INFOBORDER], 38, 10, 80, 30);
+		if (m_ship->hp => 50)
+		{
+			RenderMeshOnScreen(meshList[GEO_INFOBORDER], 38, 10, 80, 30);
+		}
+		else
+		{
+			RenderMeshOnScreen(meshList[GEO_INFOBORDERRED], 38, 10, 80, 30);
+		}
 		RenderMeshOnScreen(meshList[GEO_HEALTHBORDER], 44, 14, 60, 7);
 		RenderMeshOnScreen(meshList[GEO_HEALTHBACK], 44, 14, 60, 7);
-		RenderMeshOnScreen(meshList[GEO_PLAYERHEALTH], 44, 14, 60 * (m_ship->hp / 100), 7);
+		RenderMeshOnScreen(meshList[GEO_PLAYERHEALTH], 44 - ((100 - m_ship->hp) * 0.29), 14, 60 * (m_ship->hp / 100), 7);
 
 		RenderMeshOnScreen(meshList[GEO_HEROICON], 7, 12, 11, 11);
 
@@ -4073,16 +4080,17 @@ void Assignment1::Render()
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 6, 3.6, false);
 
 		ss.str("");
-		ss << "Health: " << m_ship->hp;
+		ss << m_ship->hp;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 27, 7.4, false);
 
-		if (m_ship->hp > 50)
-		{
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0.5), 1.3, 12, 7.8, false);
-		}
-		else if (m_ship->hp <= 50)
-		{
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.3, 0.7), 1.6, 12, 7.6, false);
-		}
+		//if (m_ship->hp > 50)
+		//{
+		//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 27, 7.4, false);
+		//}
+		//else if (m_ship->hp <= 50)
+		//{
+		//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 27, 7.4, false);
+		//}
 
 		//Exercise 5b: Render position, velocity & mass of ship
 		ss.str("");
