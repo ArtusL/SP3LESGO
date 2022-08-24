@@ -165,7 +165,7 @@ void Assignment1::Init()
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\SwordSlash.wav"), 11, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\WormRoar.wav"), 12, true);
 
-	cSoundController->LoadSound(FileSystem::getPath("Sound\\ABossTheme.ogg"), 13, true,true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\ABossTheme.ogg"), 13, true, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\FwooshFire.ogg"), 14, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Punch.ogg"), 15, true);
 
@@ -344,7 +344,7 @@ void Assignment1::RestartGame()
 	hole->mass = 1000;
 	hole->pos = m_ship->pos;
 	hole->vel.SetZero();
-	
+
 	//spawn and reset enemy station and turrets
 }
 
@@ -379,7 +379,7 @@ void Assignment1::UpdateMenu()
 		SceneBase::menuType = M_PAUSE;
 
 	if (Application::IsKeyReleased(VK_DOWN))
-		
+
 		selectorIndex++;
 	else if (Application::IsKeyReleased(VK_UP))
 		selectorIndex--;
@@ -401,14 +401,47 @@ void Assignment1::UpdateMenu()
 			break;
 		case M_GAMEOVER:
 			UpdateGameOver(m_speed);
-				break;
+			break;
+		case M_CHOOSE:
+			UpdateChoose(m_speed);
+			break;
+		case M_ARROW:
+			UpdateCArrow(m_speed);
+			break;
+		case M_DAGGER:
+			UpdateCDagger(m_speed);
+			break;
+		case M_CARD:
+			UpdateCCard(m_speed);
+			break;
 		}
 	}
 }
 
 void Assignment1::Update(double dt)
 {
+	if (daggerChoose == true)
+	{
+		bombUse = true;
+		bomblvl++;
+		bombCost += 30;
+		daggerChoose = false;
 
+	}
+	else if (cardChoose == true)
+	{
+		missleUse = true;
+		misslelvl++;
+		missleCost += 15;
+		cardChoose = false;
+	}
+	else if (arrowChoose == true)
+	{
+		arrowUse = true;
+		arrowlvl++;
+		arrowCost += 15;
+		arrowChoose = true;
+	}
 	SceneBase::Update(dt);
 	UpdateMenu();
 	deltaTime = dt;
@@ -461,20 +494,20 @@ void Assignment1::Update(double dt)
 				keyDelay = 1.5;
 				storystate += 1;
 			}
-			
+
 		}
 	}
 
 	// Player ship ugrade screen
 	if (upgradeScreen == true && gameStart)
 	{
-		
+
 		cSoundController->StopSoundByID(1);
 		cSoundController->StopSoundByID(3);
 		cSoundController->StopSoundByID(4);
 		cSoundController->StopSoundByID(13);
 		//cSoundController->PlaySoundByID(2);
-		
+
 
 
 		if (keyDelay > 0)
@@ -523,15 +556,15 @@ void Assignment1::Update(double dt)
 					cSoundController->PlaySoundByID(10);
 				}
 			}
-			if (Application::IsKeyPressed('J'))
+			if (missleUse == true && Application::IsKeyPressed('J') || missleUse == false && Application::IsKeyPressed('J'))
 			{
 				keyDelay = 0.3;
 				if (m_money >= missleCost)
 				{
 					if (missleCost < 30)
 					{
-						missleUse = true;
 						misslelvl++;
+						missleUse = true;
 					}
 					else
 					{
@@ -574,15 +607,17 @@ void Assignment1::Update(double dt)
 				}
 			}
 
-			if (Application::IsKeyPressed('L'))
+			if (bombUse == true && Application::IsKeyPressed('L') || bombUse == false && Application::IsKeyPressed('L'))
 			{
 				keyDelay = 0.3;
 				if (m_money >= bombCost)
 				{
 					if (bombCost < 60)
 					{
-						bombUse = true;
 						bomblvl++;
+						bombUse = true;
+						cSoundController->StopSoundByID(10);
+						cSoundController->PlaySoundByID(10);
 					}
 					else
 					{
@@ -590,15 +625,18 @@ void Assignment1::Update(double dt)
 						{
 							bombRate += 0.35;
 							bomblvl++;
+							cSoundController->StopSoundByID(10);
+							cSoundController->PlaySoundByID(10);
 						}
 					}
 					if (bomblvl <= 8)
 					{
 						m_money -= bombCost;
 						bombCost += 30;
+						cSoundController->StopSoundByID(10);
+						cSoundController->PlaySoundByID(10);
 					}
-					cSoundController->StopSoundByID(10);
-					cSoundController->PlaySoundByID(10);
+
 				}
 			}
 
@@ -635,15 +673,16 @@ void Assignment1::Update(double dt)
 					cSoundController->PlaySoundByID(10);
 				}
 			}
-
-			if (Application::IsKeyPressed('N') && arrowCost <= 220)
+			
+			if (arrowUse = true && Application::IsKeyPressed('N') && arrowCost <= 220)
 			{
+
 				keyDelay = 0.3;
 				if (m_money >= arrowCost)
 				{
 					if (arrowCost < 30)
 					{
-						arrowUse = true;
+					
 						arrowlvl++;
 					}
 					else
@@ -694,7 +733,7 @@ void Assignment1::Update(double dt)
 	}
 	else if (gameStart && !upgradeScreen)
 	{
-		
+
 		// Hero
 		HeroSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERO]);
 		HeroSprite->PlayAnimation("IDLE", -1, 0.5f);
@@ -800,7 +839,7 @@ void Assignment1::Update(double dt)
 			worldPosY -= camera.position.y;
 
 
-			worldPosY = m_worldHeight - (worldPosY)  - 450;
+			worldPosY = m_worldHeight - (worldPosY)-450;
 			//worldPosX += 5;
 
 			m_ship->angle = atan2(m_ship->pos.y - worldPosY, m_ship->pos.x - worldPosX);
@@ -895,7 +934,7 @@ void Assignment1::Update(double dt)
 			hpFactor += 0.4;
 			moneyFactor += 0.25;
 			bonusMoney++;
-			maxEnemyCount += 5 ;
+			maxEnemyCount += 5;
 			waveTimer = elapsedTime;
 		}
 
@@ -964,7 +1003,7 @@ void Assignment1::Update(double dt)
 						go->hitboxSizeDivider = 3;
 						go->enemyDamage = 5;
 					}
-					else if (5 < randomEnemy && randomEnemy<= 15)
+					else if (5 < randomEnemy && randomEnemy <= 15)
 					{
 						go->type = GameObject::GO_NIGHTMARE;
 						go->hp = round(10 * hpFactor);
@@ -1048,8 +1087,8 @@ void Assignment1::Update(double dt)
 				//special wave 10
 				else if (waveCount == 10)
 				{
-				    if (randomEnemy <= 35)
-				    {
+					if (randomEnemy <= 35)
+					{
 
 						go->type = GameObject::GO_EXPLODER;
 						go->hp = round(1 * hpFactor);
@@ -1078,7 +1117,7 @@ void Assignment1::Update(double dt)
 						go->hitboxSizeDivider = 3.5;
 						go->enemyDamage = 2;
 					}
-				
+
 				}
 
 
@@ -1092,6 +1131,7 @@ void Assignment1::Update(double dt)
 					go->scale.Set(10, 10, 10);
 					go->prevEnemyBullet = elapsedTime;
 					go->hitboxSizeDivider = 0.75;
+					go->enemyDamage = 0;
 					shopactive = true;
 				}
 				//if (randomEnemy < 100 && waveCount >= 4 && shopactive == false)
@@ -1132,27 +1172,27 @@ void Assignment1::Update(double dt)
 					go->speedFactor = 1;
 					go->hitboxSizeDivider = 2.8;
 					go->enemyDamage = 10;*/
-				//}
-				//else if (randomEnemy < 60)
-				//{
-		/*			go->type = GameObject::GO_EXPLODER;
-					go->hp = round(10 * hpFactor);
-					go->scale.Set(15, 15, 1);
-					go->hitboxSizeDivider = 4.5;
-					go->enemyDamage = 15;
-					go->angle = 0;
-					go->maxHP = go->hp;*/
+					//}
+					//else if (randomEnemy < 60)
+					//{
+			/*			go->type = GameObject::GO_EXPLODER;
+						go->hp = round(10 * hpFactor);
+						go->scale.Set(15, 15, 1);
+						go->hitboxSizeDivider = 4.5;
+						go->enemyDamage = 15;
+						go->angle = 0;
+						go->maxHP = go->hp;*/
 
-				//}
-				//// Spawn ghost
-				//else
-				//{
-				//	go->type = GameObject::GO_GHOST;
-				//	go->hp = round(1 * hpFactor);
-				//	go->scale.Set(10, 10, 10);
-				//	go->hitboxSizeDivider = 3.5;
-				//	go->enemyDamage = 2;
-				//}
+						//}
+						//// Spawn ghost
+						//else
+						//{
+						//	go->type = GameObject::GO_GHOST;
+						//	go->hp = round(1 * hpFactor);
+						//	go->scale.Set(10, 10, 10);
+						//	go->hitboxSizeDivider = 3.5;
+						//	go->enemyDamage = 2;
+						//}
 				go->angle = 0;
 				go->maxHP = go->hp;
 
@@ -1203,7 +1243,7 @@ void Assignment1::Update(double dt)
 
 
 		// BOSS
-		if (Application::IsKeyPressed('V') && tempSpawnCount < 1 && bossspawned==false)
+		if (Application::IsKeyPressed('V') && tempSpawnCount < 1 && bossspawned == false)
 		{
 			GameObject* go = FetchGO();
 			go->type = GameObject::GO_BOSS;
@@ -1223,7 +1263,7 @@ void Assignment1::Update(double dt)
 
 
 		}
-		
+
 
 		// WORM ENEMY
 		if (Application::IsKeyPressed('C') && tempSpawnCount < 1)
@@ -1459,7 +1499,7 @@ void Assignment1::Update(double dt)
 
 
 
-	
+
 
 
 		//********************************************************************************************************
@@ -1519,7 +1559,7 @@ void Assignment1::Update(double dt)
 								go2->type == GameObject::GO_BDEMON ||
 								go2->type == GameObject::GO_NIGHTMARE ||
 								go2->type == GameObject::GO_ENEMYBULLET ||
-								go2->type == GameObject::GO_BOSS||
+								go2->type == GameObject::GO_BOSS ||
 								go2->type == GameObject::GO_WORMHEAD ||
 								go2->type == GameObject::GO_WORMBODY1 ||
 								go2->type == GameObject::GO_WORMBODY2 ||
@@ -1554,8 +1594,8 @@ void Assignment1::Update(double dt)
 								go2->type == GameObject::GO_WORMBODY1 ||
 								go2->type == GameObject::GO_WORMBODY2 ||
 								go2->type == GameObject::GO_WORMTAIL ||
-								go2->type == GameObject::GO_EXPLODER 
-							    )
+								go2->type == GameObject::GO_EXPLODER
+								)
 							{
 								HitEnemy(go, go2);
 							}
@@ -1737,7 +1777,7 @@ void Assignment1::Update(double dt)
 			BarrierSprite->PlayAnimation("Aura", -1, 4.0f);
 
 			ringUse = false;
-		cout << ringUse << endl;
+			cout << ringUse << endl;
 		}
 
 		if (flamingarrowUse == false)
@@ -2220,10 +2260,10 @@ void Assignment1::Update(double dt)
 
 				//// unspawn offscreen
 				else if (enemy->type == GameObject::GO_ENEMYBULLET ||
-						enemy->type == GameObject::GO_LASER ||
-						enemy->type == GameObject::GO_WORMTAIL)
+					enemy->type == GameObject::GO_LASER ||
+					enemy->type == GameObject::GO_WORMTAIL)
 				{
-					
+
 					// Enemy projectile despawns after a certain lifetime
 					if (enemy->type != GameObject::GO_WORMTAIL)
 					{
@@ -2356,7 +2396,7 @@ void Assignment1::Collision(GameObject* go)
 		}
 
 		// Access upgrade screen
-		if (Application::IsKeyPressed('E')/* && go->type == GameObject::GO_SHOP*/)
+		if (Application::IsKeyPressed('E') && go->type == GameObject::GO_SHOP)
 		{
 			upgradeScreen = true;
 		}
@@ -2746,7 +2786,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 	else if (bullet->type == GameObject::GO_RINGAURA)
 	{
 		float dis = bullet->pos.DistanceSquared(target->pos);
-		float rad = ((bullet->scale.x + ringAOE + target->scale.x) / 2.2) * ((bullet->scale.x + ringAOE + target->scale.x)/ 2.2);
+		float rad = ((bullet->scale.x + ringAOE + target->scale.x) / 2.2) * ((bullet->scale.x + ringAOE + target->scale.x) / 2.2);
 		if (dis < rad)
 		{
 
@@ -2766,8 +2806,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				// Money gained
 				if (target->type != GameObject::GO_ENEMYBULLET)
 				{
-				m_money += 1 + bonusMoney;
-				// Drop  Item
+					m_money += 1 + bonusMoney;
+					// Drop  Item
 
 					m_objectCount--;
 					if (target->type == GameObject::GO_NIGHTMARE)
@@ -2862,8 +2902,8 @@ void Assignment1::RenderGO(GameObject* go)
 		{
 			// Running Animations
 			if (Application::IsKeyPressed('W') ||
-				Application::IsKeyPressed('A') || 
-				Application::IsKeyPressed('S') || 
+				Application::IsKeyPressed('A') ||
+				Application::IsKeyPressed('S') ||
 				Application::IsKeyPressed('D'))
 			{
 				// Idle Animations
@@ -3207,24 +3247,24 @@ void Assignment1::RenderGO(GameObject* go)
 		break;
 
 
-		case GameObject::GO_SHOP:
-			modelStack.PushMatrix();
-			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
-			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	case GameObject::GO_SHOP:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 
-			if (go->facingLeft == true)
-			{
-				RenderMesh(meshList[GEO_SHREK_LEFT], false);
-			}
-			else
-			{
-				modelStack.PushMatrix();
-				modelStack.Rotate(180, 0, 0, 1);
-				RenderMesh(meshList[GEO_SHREK], false);
-				modelStack.PopMatrix();
-			}
+		if (go->facingLeft == true)
+		{
+			RenderMesh(meshList[GEO_SHREK_LEFT], false);
+		}
+		else
+		{
+			modelStack.PushMatrix();
+			modelStack.Rotate(180, 0, 0, 1);
+			RenderMesh(meshList[GEO_SHREK], false);
 			modelStack.PopMatrix();
-			break;
+		}
+		modelStack.PopMatrix();
+		break;
 
 
 
@@ -3526,6 +3566,18 @@ void Assignment1::Render()
 	case M_GAMEOVER:
 		RenderGameOver();
 		break;
+	case M_CHOOSE:
+		RenderChoose();
+		break;
+	case M_ARROW:
+		RenderCArrow();
+		break;
+	case M_DAGGER:
+		RenderCDagger();
+		break;
+	case M_CARD:
+		RenderCCard();
+		break;
 	}
 
 	if (menuType != M_NONE)
@@ -3533,7 +3585,7 @@ void Assignment1::Render()
 
 	// Projection matrix : Orthographic Projection
 	Mtx44 projection;
-	projection.SetToOrtho(0, m_worldWidth/4, 0, m_worldHeight/4, -10, 10);
+	projection.SetToOrtho(0, m_worldWidth / 4, 0, m_worldHeight / 4, -10, 10);
 	projectionStack.LoadMatrix(projection);
 
 	// Camera matrix
@@ -3854,7 +3906,7 @@ void Assignment1::Render()
 
 			if (damageEnemy.at(it) == true) // Display enemy damage taken
 			{
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 2 * scaleText.at(it), damageTextX.at(it) + 0.2, damageTextY.at(it) + 0.2,true);
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 2 * scaleText.at(it), damageTextX.at(it) + 0.2, damageTextY.at(it) + 0.2, true);
 				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 0), 2 * scaleText.at(it), damageTextX.at(it), damageTextY.at(it), true);
 			}
 			else // Display player damage taken
@@ -3893,11 +3945,11 @@ void Assignment1::Render()
 			}
 		}
 
-	
+
 		RenderMeshOnScreen(meshList[GEO_INFOBORDER], 38, 10, 80, 30);
 		RenderMeshOnScreen(meshList[GEO_HEALTHBORDER], 44, 14, 60, 7);
 		RenderMeshOnScreen(meshList[GEO_HEALTHBACK], 44, 14, 60, 7);
-		RenderMeshOnScreen(meshList[GEO_PLAYERHEALTH], 44, 14, 60 *(m_ship->hp / 100), 7);
+		RenderMeshOnScreen(meshList[GEO_PLAYERHEALTH], 44, 14, 60 * (m_ship->hp / 100), 7);
 
 		RenderMeshOnScreen(meshList[GEO_HEROICON], 7, 12, 11, 11);
 
@@ -3983,7 +4035,6 @@ void Assignment1::Render()
 		/*ss.str("");
 		ss << "GAME OVER";
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 5, 20, 40);
-
 		ss.str("");
 		ss << "Died at wave " << waveCount;
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 20, 30);*/
@@ -4013,3 +4064,4 @@ static Vector3 RotateVector(const Vector3& vec, float radian)
 	return Vector3(vec.x * cos(radian) + vec.y * -sin(radian),
 		vec.x * sin(radian) + vec.y * cos(radian), 0.f);
 }
+
