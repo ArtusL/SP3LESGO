@@ -61,8 +61,7 @@ void Assignment1::Init()
 
 	m_money = 10000;
 	m_objectCount = 0;
-	bossHp = 10000;
-	waveCount = 5;
+	waveCount = 1;
 	gravity = -4;
 
 	hpFactor = moneyFactor = 1;
@@ -121,7 +120,7 @@ void Assignment1::Init()
 	movementLastPressed = ' ';
 
 	asteroidCount = 0;
-	maxEnemyCount = 10;
+	maxEnemyCount = 20;
 
 
 	//Exercise 2c: Construct m_ship, set active, type, scale and pos
@@ -165,10 +164,10 @@ void Assignment1::Init()
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Punch.ogg"), 15, true);
 
 
-	int obstacleCount = 300;
+	int obstacleCount = 150;
 	int obstacleIndex = 0;
 	float obstacleX, obstacleY;
-	while (obstacleIndex < 300)
+	while (obstacleIndex < 150)
 	{
 		obstacleX = Math::RandFloatMinMax(3, m_worldWidth - 3);
 		obstacleY = Math::RandFloatMinMax(3, m_worldHeight - 3);
@@ -195,7 +194,7 @@ void Assignment1::Init()
 					GameObject* newObstacle = FetchGO();
 					newObstacle->type = GameObject::GO_TREE;
 					newObstacle->pos.Set(obstacleX, obstacleY, 1);
-					newObstacle->scale.Set(20, 20, 1);
+					newObstacle->scale.Set(14, 16, 1);
 					newObstacle->direction = 0;
 					newObstacle->vel = 0;
 					newObstacle->hitboxSizeDivider = 3;
@@ -253,7 +252,7 @@ void Assignment1::RestartGame()
 	m_hp = 100;
 	m_money = 10000;
 	m_objectCount = 0;
-	waveCount = 5;
+	waveCount = 1;
 	gravity = -4;
 
 	hpFactor = moneyFactor = 1;
@@ -317,7 +316,7 @@ void Assignment1::RestartGame()
 	movementLastPressed = ' ';
 
 	asteroidCount = 0;
-	maxEnemyCount = 10;
+	maxEnemyCount = 20;
 
 
 	//Exercise 2c: Construct m_ship, set active, type, scale and pos
@@ -713,20 +712,20 @@ void Assignment1::Update(double dt)
 
 		// Nightmare
 		NightmareSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_NIGHTMARE]);
-		NightmareSprite->PlayAnimation("IDLE", -1, 0.5f);
+		NightmareSprite->PlayAnimation("IDLE", -1, 0.3f);
 		NightmareSprite->Update(dt);
 
 		NightmareSpriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_NIGHTMARE_LEFT]);
-		NightmareSpriteLeft->PlayAnimation("IDLE", -1, 0.5f);
+		NightmareSpriteLeft->PlayAnimation("IDLE", -1, 0.3f);
 		NightmareSpriteLeft->Update(dt);
 
 		// Flame Demon
 		FdemonSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FDEMON]);
-		FdemonSprite->PlayAnimation("IDLE", -1, 0.8f);
+		FdemonSprite->PlayAnimation("IDLE", -1, 0.5f);
 		FdemonSprite->Update(dt);
 
 		FdemonSpriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_FDEMON_LEFT]);
-		FdemonSpriteLeft->PlayAnimation("IDLE", -1, 0.8f);
+		FdemonSpriteLeft->PlayAnimation("IDLE", -1, 0.5f);
 		FdemonSpriteLeft->Update(dt);
 
 		// B Demon (dunno what b stands for)
@@ -881,22 +880,199 @@ void Assignment1::Update(double dt)
 		if (diff > 25)
 		{
 			waveCount++;
-			hpFactor += 1.05;
-			moneyFactor += 1.05;
+			hpFactor += 0.4;
+			moneyFactor += 0.25;
 			bonusMoney++;
-			maxEnemyCount++;
+			maxEnemyCount += 5 ;
 			waveTimer = elapsedTime;
 		}
 
 
 		// Randomised enemy spawns
 		diff = elapsedTime - prevElapsedAsteroid;
-		if (diff > 0.4 && tempSpawnCount < 1)
+		if (diff > 1/* && tempSpawnCount < 1*/)
 		{
-			for (int i = 0; i < 1; ++i)
+			for (int i = 0; i < 3; ++i)
 			{
 				GameObject* go = FetchGO();
 				int randomEnemy = rand() % 100;
+
+				//wave 1 to 2
+				if (waveCount <= 2)
+				{
+					go->type = GameObject::GO_GHOST;
+					go->hp = round(2 * hpFactor);
+					go->scale.Set(10, 10, 10);
+					go->hitboxSizeDivider = 3.5;
+					go->enemyDamage = 2;
+				}
+				//wave 3
+				else if (waveCount == 3)
+				{
+					for (int i = 0; i < 35; ++i)
+					{
+						go->type = GameObject::GO_GHOST;
+						go->hp = round(1 * hpFactor);
+						go->scale.Set(12, 12, 12);
+						go->hitboxSizeDivider = 3.5;
+						go->enemyDamage = 4;
+					}
+				}
+				//wave 4
+				else if (waveCount == 4)
+				{
+					if (randomEnemy <= 5)
+					{
+						go->type = GameObject::GO_BDEMON;
+						go->hp = round(10 * hpFactor);
+						go->scale.Set(14, 14, 10);
+						go->prevEnemyBullet = 0.0;
+						go->hitboxSizeDivider = 3;
+						go->enemyDamage = 5;
+					}
+					else
+					{
+						go->type = GameObject::GO_GHOST;
+						go->hp = round(1 * hpFactor);
+						go->scale.Set(10, 10, 10);
+						go->hitboxSizeDivider = 3.5;
+						go->enemyDamage = 2;
+					}
+				}
+				//special wave 5
+				else if (waveCount == 5)
+				{
+					if (randomEnemy <= 5)
+					{
+
+						go->type = GameObject::GO_BDEMON;
+						go->hp = round(8 * hpFactor);
+						go->scale.Set(14, 14, 10);
+						go->prevEnemyBullet = 0.0;
+						go->hitboxSizeDivider = 3;
+						go->enemyDamage = 5;
+					}
+					else if (5 < randomEnemy && randomEnemy<= 15)
+					{
+						go->type = GameObject::GO_NIGHTMARE;
+						go->hp = round(10 * hpFactor);
+						go->scale.Set(20, 18, 10);
+						go->hitboxSizeDivider = 4.5;
+						go->enemyDamage = 10;
+					}
+					else if (15 < randomEnemy && randomEnemy <= 25)
+					{
+						go->type = GameObject::GO_FLAMEDEMON;
+						go->scale.Set(15, 15, 10);
+						go->hp = round(8 * hpFactor);
+						go->maxHP = go->hp;
+						go->prevEnemyBullet = elapsedTime;
+						go->speedFactor = 1;
+						go->hitboxSizeDivider = 2.8;
+						go->enemyDamage = 10;
+					}
+					else
+					{
+						go->type = GameObject::GO_GHOST;
+						go->hp = round(2 * hpFactor);
+						go->scale.Set(10, 10, 10);
+						go->hitboxSizeDivider = 3.5;
+						go->enemyDamage = 2;
+					}
+				}
+
+				//wave 6 to 9
+				else if (5 < waveCount <= 9)
+				{
+					if (randomEnemy <= 5)
+					{
+						go->type = GameObject::GO_BDEMON;
+						go->hp = round(9 * hpFactor);
+						go->scale.Set(14, 14, 10);
+						go->prevEnemyBullet = 0.0;
+						go->hitboxSizeDivider = 3;
+						go->enemyDamage = 5;
+
+					}
+					else if (5 < randomEnemy && randomEnemy <= 10)
+					{
+						go->type = GameObject::GO_NIGHTMARE;
+						go->hp = round(11 * hpFactor);
+						go->scale.Set(20, 18, 10);
+						go->hitboxSizeDivider = 4.5;
+						go->enemyDamage = 10;
+					}
+					else if (10 < randomEnemy && randomEnemy <= 25)
+					{
+						go->type = GameObject::GO_EXPLODER;
+						go->hp = round(5 * hpFactor);
+						go->scale.Set(15, 15, 1);
+						go->hitboxSizeDivider = 4.5;
+						go->enemyDamage = 15;
+						go->angle = 0;
+						go->maxHP = go->hp;
+
+					}
+					else if (25 < randomEnemy && randomEnemy <= 40)
+					{
+						go->type = GameObject::GO_FLAMEDEMON;
+						go->scale.Set(15, 15, 10);
+						go->hp = round(8 * hpFactor);
+						go->maxHP = go->hp;
+						go->prevEnemyBullet = elapsedTime;
+						go->speedFactor = 1;
+						go->hitboxSizeDivider = 2.8;
+						go->enemyDamage = 10;
+					}
+					else
+					{
+						go->type = GameObject::GO_GHOST;
+						go->hp = round(1 * hpFactor);
+						go->scale.Set(15, 15, 15);
+						go->hitboxSizeDivider = 3.5;
+						go->enemyDamage = 2;
+					}
+				}
+				//special wave 10
+				else if (waveCount == 10)
+				{
+				    if (randomEnemy <= 35)
+				    {
+
+						go->type = GameObject::GO_EXPLODER;
+						go->hp = round(1 * hpFactor);
+						go->scale.Set(14, 14, 10);
+						go->prevEnemyBullet = 0.0;
+						go->hitboxSizeDivider = 3;
+						go->enemyDamage = 15;
+
+					}
+					else if (35 < randomEnemy && randomEnemy <= 50)
+					{
+						go->type = GameObject::GO_FLAMEDEMON;
+						go->scale.Set(15, 15, 10);
+						go->hp = round(8 * hpFactor);
+						go->maxHP = go->hp;
+						go->prevEnemyBullet = elapsedTime;
+						go->speedFactor = 1;
+						go->hitboxSizeDivider = 2.8;
+						go->enemyDamage = 10;
+					}
+					else
+					{
+						go->type = GameObject::GO_GHOST;
+						go->hp = round(1 * hpFactor);
+						go->scale.Set(15, 15, 15);
+						go->hitboxSizeDivider = 3.5;
+						go->enemyDamage = 2;
+					}
+				
+				}
+
+
+
+
+
 
 				if (randomEnemy < 100 && waveCount >= 4 && shopactive == false)
 				{
@@ -906,57 +1082,65 @@ void Assignment1::Update(double dt)
 					go->hitboxSizeDivider = 0.75;
 					shopactive = true;
 				}
-				// Spawn shooting demon
-				else if (randomEnemy < 10 && waveCount >= 4)
-				{
-					go->type = GameObject::GO_BDEMON;
-					go->hp = round(7 * hpFactor);
-					go->scale.Set(14, 14, 10);
-					go->prevEnemyBullet = 0.0;
-					go->hitboxSizeDivider = 3;
-					go->enemyDamage = 5;
-				}
-				// Spawn nightmare
-				else if (randomEnemy < 15)
-				{
-					go->type = GameObject::GO_NIGHTMARE;
-					go->hp = round(10 * hpFactor);
-					go->scale.Set(20, 20, 10);
-					go->hitboxSizeDivider = 4.5;
-					go->enemyDamage = 10;
-				}
-				// Spawn Flamedemon
-				else if (randomEnemy < 40)
-				{
-					go->type = GameObject::GO_FLAMEDEMON;
+				//if (randomEnemy < 100 && waveCount >= 4 && shopactive == false)
+				//{
+				//	go->type = GameObject::GO_SHOP;
+				//	go->scale.Set(10, 10, 10);
+				//	go->prevEnemyBullet = elapsedTime;
+				//	go->hitboxSizeDivider = 0.75;
+				//	shopactive = true;
+				//}
+				//// Spawn shooting demon
+				//else if (randomEnemy < 10 && waveCount >= 4)
+				//{
+				//	go->type = GameObject::GO_BDEMON;
+				//	go->hp = round(7 * hpFactor);
+				//	go->scale.Set(14, 14, 10);
+				//	go->prevEnemyBullet = 0.0;
+				//	go->hitboxSizeDivider = 3;
+				//	go->enemyDamage = 5;
+				//}
+				//// Spawn nightmare
+				//else if (randomEnemy < 15)
+				//{
+				//	go->type = GameObject::GO_NIGHTMARE;
+				//	go->hp = round(10 * hpFactor);
+				//	go->scale.Set(20, 18, 10);
+				//	go->hitboxSizeDivider = 4.5;
+				//	go->enemyDamage = 10;
+				//}
+				//// Spawn Flamedemon
+				//else if (randomEnemy < 40)
+				//{
+			/*		go->type = GameObject::GO_FLAMEDEMON;
 					go->scale.Set(15, 15, 10);
 					go->hp = round(10 * hpFactor);
 					go->maxHP = go->hp;
 					go->prevEnemyBullet = elapsedTime;
 					go->speedFactor = 1;
 					go->hitboxSizeDivider = 2.8;
-					go->enemyDamage = 10;
-				}
-				else if (randomEnemy < 60)
-				{
-					go->type = GameObject::GO_EXPLODER;
+					go->enemyDamage = 10;*/
+				//}
+				//else if (randomEnemy < 60)
+				//{
+		/*			go->type = GameObject::GO_EXPLODER;
 					go->hp = round(10 * hpFactor);
 					go->scale.Set(15, 15, 1);
 					go->hitboxSizeDivider = 4.5;
 					go->enemyDamage = 15;
 					go->angle = 0;
-					go->maxHP = go->hp;
+					go->maxHP = go->hp;*/
 
-				}
-				// Spawn ghost
-				else
-				{
-					go->type = GameObject::GO_GHOST;
-					go->hp = round(1 * hpFactor);
-					go->scale.Set(10, 10, 10);
-					go->hitboxSizeDivider = 3.5;
-					go->enemyDamage = 2;
-				}
+				//}
+				//// Spawn ghost
+				//else
+				//{
+				//	go->type = GameObject::GO_GHOST;
+				//	go->hp = round(1 * hpFactor);
+				//	go->scale.Set(10, 10, 10);
+				//	go->hitboxSizeDivider = 3.5;
+				//	go->enemyDamage = 2;
+				//}
 				go->angle = 0;
 				go->maxHP = go->hp;
 
