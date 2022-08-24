@@ -391,6 +391,10 @@ void SceneBase::Init()
 	Barriersprite->AddAnimation("Aura", 0, 10);
 
 
+	// Obstacles
+	meshList[GEO_TREE] = MeshBuilder::GenerateQuad("Tree", Color(1, 1, 1), 1.f);
+	meshList[GEO_TREE]->textureID = LoadTGA("Image//tree.tga");
+
 	//Extras
 	meshList[GEO_CHEST] = MeshBuilder::GenerateSpriteAnimation("Chest", 8, 5);
 	meshList[GEO_CHEST]->textureID = LoadTexture("Image//Chests.png", false);
