@@ -145,6 +145,7 @@ protected:
 	double explosionTimer;
 	double ringauraTimer;
 	double iFrames;
+	double chestTimer;
 
 	bool shopactive;
 	bool missleUse;

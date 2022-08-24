@@ -404,11 +404,11 @@ void SceneBase::Init()
 
 	//Extras
 	meshList[GEO_CHEST] = MeshBuilder::GenerateSpriteAnimation("Chest", 8, 5);
-	meshList[GEO_CHEST]->textureID = LoadTexture("Image//Chests.png", false);
+	meshList[GEO_CHEST]->textureID = LoadTexture("Image//Chests.png", true);
 	meshList[GEO_CHEST]->material.kAmbient.Set(1, 1, 1);
 	SpriteAnimation* Chestsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_CHEST]);
-	Chestsprite->AddAnimation("IDLE", 0, 4);
-	Chestsprite->AddAnimation("OPEN", 5, 10);
+	Chestsprite->AddAnimation("IDLE", 20, 24);
+	Chestsprite->AddAnimation("OPEN", 25, 30);
 
 
 

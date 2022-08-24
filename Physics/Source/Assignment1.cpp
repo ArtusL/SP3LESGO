@@ -170,7 +170,10 @@ void Assignment1::Init()
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Punch.ogg"), 15, true);
 
 
+	// World map generation on game start
 	int obstacleCount = 150;
+	int chestCount = 5;
+
 	int obstacleIndex = 0;
 	float obstacleX, obstacleY;
 	while (obstacleIndex < 150)
@@ -179,31 +182,71 @@ void Assignment1::Init()
 		obstacleY = Math::RandFloatMinMax(3, m_worldHeight - 3);
 		if (obstacleIndex > 0)
 		{
+			// Checks for surrounding area to spawn safely in
 			for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 			{
 				GameObject* go = (GameObject*)*it;
-				if (go->type == GameObject::GO_TREE)
+				if (go->type == GameObject::GO_CHEST ||
+					go->type == GameObject::GO_TREE)
 				{
 					// Prevent checking with itself
 					if (go->pos.x != obstacleX &&
 						go->pos.y != obstacleY)
 					{
-						// Preventing spawning obstacle inside another obstacle or player
-						if (go->pos.DistanceSquared(Vector3(obstacleX, obstacleY, 1)) < 400.0f)
+
+						// Spawn Chest far away from each other
+						if (chestCount < 5)
 						{
-							break;
+
+							if (go->type == GameObject::GO_CHEST)
+							{
+								if (go->pos.DistanceSquared(Vector3(obstacleX, obstacleY, 1)) < 34000.f &&
+									go->pos.DistanceSquared(Vector3(obstacleX, obstacleY, 1)) < 34000.f)
+								{
+									break;
+								}
+							}
+							else
+							{
+								if (go->pos.DistanceSquared(Vector3(obstacleX, obstacleY, 1)) < 400.0f &&
+									m_ship->pos.DistanceSquared(Vector3(obstacleX, obstacleY, 1)) < 400.0f)
+								{
+									break;
+								}
+							}
+						}
+						else
+						{
+							// Preventing spawning obstacle inside another obstacle or player
+							if (go->pos.DistanceSquared(Vector3(obstacleX, obstacleY, 1)) < 400.0f ||
+								m_ship->pos.DistanceSquared(Vector3(obstacleX, obstacleY, 1)) < 400.0f)
+							{
+								break;
+							}
 						}
 					}
 				}
+				// Position does not interfere with other objects, spawn successful
 				if (it + 1 >= m_goList.end())
 				{
 					GameObject* newObstacle = FetchGO();
-					newObstacle->type = GameObject::GO_TREE;
-					newObstacle->pos.Set(obstacleX, obstacleY, 1);
-					newObstacle->scale.Set(14, 16, 1);
+					if (obstacleIndex < chestCount)
+					{
+						newObstacle->type = GameObject::GO_CHEST;
+						newObstacle->pos.Set(obstacleX, obstacleY, 1);
+						newObstacle->scale.Set(12, 12, 1);
+					}
+					else
+					{
+						newObstacle->type = GameObject::GO_TREE;
+						newObstacle->pos.Set(obstacleX, obstacleY, 1);
+						newObstacle->scale.Set(14, 16, 1);
+					}
 					newObstacle->direction = 0;
 					newObstacle->vel = 0;
+					newObstacle->timer = 0;
 					newObstacle->hitboxSizeDivider = 3;
+					newObstacle->moneyDrop = 300;
 					obstacleIndex++;
 					break;
 				}
@@ -212,15 +255,25 @@ void Assignment1::Init()
 		else
 		{
 			GameObject* newObstacle = FetchGO();
-			newObstacle->type = GameObject::GO_TREE;
-			newObstacle->pos.Set(obstacleX, obstacleY, 1);
-			newObstacle->scale.Set(20, 20, 1);
+			if (obstacleIndex < chestCount)
+			{
+				newObstacle->type = GameObject::GO_CHEST;
+				newObstacle->pos.Set(obstacleX, obstacleY, 1);
+				newObstacle->scale.Set(12, 12, 1);
+			}
+			else
+			{
+				newObstacle->type = GameObject::GO_TREE;
+				newObstacle->pos.Set(obstacleX, obstacleY, 1);
+				newObstacle->scale.Set(14, 16, 1);
+			}
 			newObstacle->direction = 0;
 			newObstacle->vel = 0;
 			newObstacle->hitboxSizeDivider = 3;
+			newObstacle->timer = 0;
+			newObstacle->moneyDrop = 300;
 			obstacleIndex++;
 		}
-
 	}
 	SceneBase::menuType = M_MAIN;
 }
@@ -267,6 +320,7 @@ void Assignment1::RestartGame()
 	fireTimer = 0;
 	ringauraTimer = 0;
 	explosionTimer = 0;
+	chestTimer = 0;
 
 	shopactive = false;
 	fireRate = 5;
@@ -329,7 +383,7 @@ void Assignment1::RestartGame()
 	//Exercise 2c: Construct m_ship, set active, type, scale and pos
 	m_ship = new GameObject(GameObject::GO_HERO);
 	m_ship->active = true;
-	m_ship->scale.Set(7, 7, 1);
+	m_ship->scale.Set(9, 9, 1);
 	m_ship->pos.Set(m_worldWidth / 2, m_worldHeight / 2);
 	m_ship->vel.Set(1, 0, 0);
 	m_ship->direction.Set(1, 0, 0);
@@ -478,6 +532,13 @@ void Assignment1::Update(double dt)
 	PurpleShot->PlayAnimation("Purple Projectile", -1, 2.0f);
 	PurpleShot->Update(dt);
 
+	ChestSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_CHEST]);
+	// Chest Opening Animation
+	if (chestTimer <= 0)
+	{
+		ChestSprite->PlayAnimation("IDLE", -1, 1.0f);
+	}
+	ChestSprite->Update(dt);
 
 
 	// Enter to begin game
@@ -1376,7 +1437,7 @@ void Assignment1::Update(double dt)
 
 					go->direction = m_ship->pos - Vector3(worldPosX, worldPosY, m_ship->pos.z);
 					go->direction = go->direction.Normalized();
-					go->vel = -(go->direction * BULLET_SPEED * 0.8);
+					go->vel = -(go->direction * BULLET_SPEED * 1.5);
 					go->scale.Set(4.0f, 4.0f, 4.0f);
 					go->angle = m_ship->angle;
 
@@ -1388,7 +1449,7 @@ void Assignment1::Update(double dt)
 
 					go->direction = m_ship->pos - Vector3(worldPosX, worldPosY, m_ship->pos.z);
 					go->direction = go->direction.Normalized();
-					go->vel = -(go->direction * BULLET_SPEED * 0.8);
+					go->vel = -(go->direction * BULLET_SPEED * 1.5);
 					go->scale.Set(4.0f, 4.0f, 4.0f);
 					go->angle = m_ship->angle;
 
@@ -1400,7 +1461,7 @@ void Assignment1::Update(double dt)
 
 					go->direction = m_ship->pos - Vector3(worldPosX, worldPosY, m_ship->pos.z);
 					go->direction = go->direction.Normalized();
-					go->vel = -(go->direction * BULLET_SPEED * 0.8);
+					go->vel = - (go->direction * BULLET_SPEED * 1.5);
 					go->scale.Set(4.0f, 4.0f, 4.0f);
 					go->angle = m_ship->angle;
 
@@ -1413,7 +1474,7 @@ void Assignment1::Update(double dt)
 
 					go->direction = m_ship->pos - Vector3(worldPosX, worldPosY, m_ship->pos.z);
 					go->direction = go->direction.Normalized();
-					go->vel = -(go->direction * BULLET_SPEED * 0.8);
+					go->vel = -(go->direction * BULLET_SPEED * 1.5);
 					go->angle = m_ship->angle;
 
 					m_objectCount++;
@@ -1539,7 +1600,8 @@ void Assignment1::Update(double dt)
 					go->type == GameObject::GO_WORMTAIL ||
 					go->type == GameObject::GO_SHOP ||
 					go->type == GameObject::GO_EXPLODER ||
-					go->type == GameObject::GO_TREE
+					go->type == GameObject::GO_TREE ||
+					go->type == GameObject::GO_CHEST
 					)
 				{
 					Collision(go);
@@ -2025,7 +2087,7 @@ void Assignment1::Update(double dt)
 						enemy->enemyDamage = 35;
 						if (diff > 0.6)
 						{
-							enemy->speedFactor = 10;
+							enemy->speedFactor = 21;
 							enemy->prevEnemyBullet = elapsedTime;
 							enemy->direction += Vector3(Math::RandFloatMinMax(-0.5, 0.5), Math::RandFloatMinMax(-0.5, 0.5), 0);
 							cSoundController->StopSoundByID(11);
@@ -2037,7 +2099,7 @@ void Assignment1::Update(double dt)
 						{
 							if (enemy->speedFactor > 1)
 							{
-								enemy->speedFactor -= 20 * dt;
+								enemy->speedFactor -= 42 * dt;
 								if (enemy->speedFactor < 1)
 								{
 									enemy->speedFactor = 1;
@@ -2236,7 +2298,7 @@ void Assignment1::Update(double dt)
 						go2->angle = enemy->angle;
 						go2->enemyDamage = 4;
 						go2->hitboxSizeDivider = 2;
-						go2->timer = 10;
+						go2->timer = 6;
 
 						go2->direction = go2->pos - m_ship->pos;
 						go2->direction = -go2->direction.Normalized();
@@ -2251,17 +2313,30 @@ void Assignment1::Update(double dt)
 				}
 
 				else if (enemy->type == GameObject::GO_GHOST ||
-					enemy->type == GameObject::GO_NIGHTMARE)
+						 enemy->type == GameObject::GO_NIGHTMARE)
 				{
 					enemy->direction = m_ship->pos - Vector3(enemy->pos.x, enemy->pos.y, enemy->pos.z);
 					enemy->direction = enemy->direction.Normalized();
 					enemy->vel = (enemy->direction * 10);
 				}
 
+
+				else if (enemy->type == GameObject::GO_CHEST)
+				{
+					if (enemy->timer > 0)
+					{
+						enemy->timer -= 1 * dt;
+						if (enemy->timer <= 0)
+						{
+							enemy->active = false;
+						}
+					}
+				}
+
 				//// unspawn offscreen
 				else if (enemy->type == GameObject::GO_ENEMYBULLET ||
-					enemy->type == GameObject::GO_LASER ||
-					enemy->type == GameObject::GO_WORMTAIL)
+						 enemy->type == GameObject::GO_LASER ||
+						 enemy->type == GameObject::GO_WORMTAIL)
 				{
 
 					// Enemy projectile despawns after a certain lifetime
@@ -2351,6 +2426,11 @@ void Assignment1::Update(double dt)
 			explosionTimer -= 1 * dt;
 		}
 
+		if (chestTimer > 0)
+		{
+			chestTimer -= 1 * dt;
+		}
+
 		// If health reaches zero
 		if (m_ship->hp <= 0)
 		{
@@ -2431,6 +2511,18 @@ void Assignment1::Collision(GameObject* go)
 			m_ship->pos = m_ship->previousPos;
 		}
 
+		// Chest gold can only be obtained once per chest
+		if (go->type == GameObject::GO_CHEST &&
+			go->moneyDrop > 0)
+		{
+			m_money += go->moneyDrop;
+			go->moneyDrop = 0;
+
+			ChestSprite->Reset();
+			ChestSprite->PlayAnimation("OPEN", 0, 2.0f);
+			go->timer = 1;
+			chestTimer = 3;
+		}
 
 		if (go->enemyDamage <= 0) // Healing items and buffs
 		{
@@ -2442,7 +2534,7 @@ void Assignment1::Collision(GameObject* go)
 			iFrames = 1;
 
 			displayDamage.push_back(go->enemyDamage);
-			damageTextX.push_back((go->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
+			damageTextX.push_back((go->pos.x - camera.position.x) * 80 / (192 * (m_worldHeight / (4 * 100))));
 			damageTextY.push_back((go->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
 			scaleText.push_back(1);
 			translateTextY.push_back(0);
@@ -2527,8 +2619,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				bullet->active = false;
 
 				displayDamage.push_back(damageDealt);
-				damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
-				damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
+				damageTextX.push_back((target->pos.x - camera.position.x + Math::RandFloatMinMax(-5, 5)) * 80 / (192 * (m_worldHeight / (4 * 100))));
+				damageTextY.push_back((target->pos.y - camera.position.y + Math::RandFloatMinMax(-5, 5)) * 65 / (100 * (m_worldHeight / (4 * 100))));
 				scaleText.push_back(0);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
@@ -2558,8 +2650,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 						int damageDealt = round(basicBulletDamage * Math::RandFloatMinMax(0.7, 1.5));
 						target->hp -= damageDealt;
 						displayDamage.push_back(damageDealt);
-						damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
-						damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
+						damageTextX.push_back((target->pos.x - camera.position.x + Math::RandFloatMinMax(-5, 5)) * 80 / (192 * (m_worldHeight / (4 * 100))));
+						damageTextY.push_back((target->pos.y - camera.position.y + Math::RandFloatMinMax(-5, 5)) * 65 / (100 * (m_worldHeight / (4 * 100))));
 						scaleText.push_back(0);
 						translateTextY.push_back(0);
 						damageTimer.push_back(elapsedTime);
@@ -2573,8 +2665,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 						int damageDealt = round(basicBulletDamage * 3 * Math::RandFloatMinMax(0.7, 1.5));
 						target->hp -= damageDealt;
 						displayDamage.push_back(damageDealt);
-						damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
-						damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
+						damageTextX.push_back((target->pos.x - camera.position.x + Math::RandFloatMinMax(-5, 5)) * 80 / (192 * (m_worldHeight / (4 * 100))));
+						damageTextY.push_back((target->pos.y - camera.position.y + Math::RandFloatMinMax(-5, 5)) * 65 / (100 * (m_worldHeight / (4 * 100))));
 						scaleText.push_back(0);
 						translateTextY.push_back(0);
 						damageTimer.push_back(elapsedTime);
@@ -2594,8 +2686,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 						int damageDealt = round(basicBulletDamage * 2 * Math::RandFloatMinMax(0.7, 1.5));
 						target->hp -= damageDealt;
 						displayDamage.push_back(damageDealt);
-						damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
-						damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
+						damageTextX.push_back((target->pos.x - camera.position.x + Math::RandFloatMinMax(-5, 5)) * 80 / (192 * (m_worldHeight / (4 * 100))));
+						damageTextY.push_back((target->pos.y - camera.position.y + Math::RandFloatMinMax(-5, 5)) * 65 / (100 * (m_worldHeight / (4 * 100))));
 						scaleText.push_back(0);
 						translateTextY.push_back(0);
 						damageTimer.push_back(elapsedTime);
@@ -2607,8 +2699,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 						int damageDealt = round(basicBulletDamage * Math::RandFloatMinMax(0.7, 1.5));
 						target->hp -= damageDealt;
 						displayDamage.push_back(damageDealt);
-						damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
-						damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
+						damageTextX.push_back((target->pos.x - camera.position.x + Math::RandFloatMinMax(-5, 5)) * 80 / (192 * (m_worldHeight / (4 * 100))));
+						damageTextY.push_back((target->pos.y - camera.position.y + Math::RandFloatMinMax(-5, 5)) * 65 / (100 * (m_worldHeight / (4 * 100))));
 						scaleText.push_back(0);
 						translateTextY.push_back(0);
 						damageTimer.push_back(elapsedTime);
@@ -2626,7 +2718,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				bullet->active = false;
 
 				displayDamage.push_back(damageDealt);
-				damageTextX.push_back((target->pos.x - camera.position.x + Math::RandFloatMinMax(-5, 5)) * 85 / (192 * (m_worldHeight / (4 * 100))));
+				damageTextX.push_back((target->pos.x - camera.position.x + Math::RandFloatMinMax(-5, 5)) * 80 / (192 * (m_worldHeight / (4 * 100))));
 				damageTextY.push_back((target->pos.y - camera.position.y + Math::RandFloatMinMax(-5, 5)) * 65 / (100 * (m_worldHeight / (4 * 100))));
 				scaleText.push_back(0);
 				translateTextY.push_back(0);
@@ -2644,8 +2736,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				bullet->active = false;
 
 				displayDamage.push_back(damageDealt);
-				damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
-				damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
+				damageTextX.push_back((target->pos.x - camera.position.x + Math::RandFloatMinMax(-5, 5)) * 80 / (192 * (m_worldHeight / (4 * 100))));
+				damageTextY.push_back((target->pos.y - camera.position.y + Math::RandFloatMinMax(-5, 5)) * 65 / (100 * (m_worldHeight / (4 * 100))));
 				scaleText.push_back(0);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
@@ -2668,8 +2760,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				bullet->active = false;
 
 				displayDamage.push_back(damageDealt);
-				damageTextX.push_back((target->pos.x - camera.position.x) * 85 / (192 * (m_worldHeight / (4 * 100))));
-				damageTextY.push_back((target->pos.y - camera.position.y) * 65 / (100 * (m_worldHeight / (4 * 100))));
+				damageTextX.push_back((target->pos.x - camera.position.x + Math::RandFloatMinMax(-5, 5)) * 80 / (192 * (m_worldHeight / (4 * 100))));
+				damageTextY.push_back((target->pos.y - camera.position.y + Math::RandFloatMinMax(-5, 5)) * 65 / (100 * (m_worldHeight / (4 * 100))));
 				scaleText.push_back(0);
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
@@ -2759,7 +2851,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 
 					GameObject* go3 = FetchGO();
 					go3->type = GameObject::GO_TRIPLESHOT;
-					go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), target->pos.z);
+					go3->vel = 0;
 					go3->pos.Set(target->pos.x, target->pos.y, 8);
 					go3->scale.Set(7, 7, 1);
 					go3->enemyDamage = 0;
@@ -2772,7 +2864,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 
 					GameObject* go3 = FetchGO();
 					go3->type = GameObject::GO_HEAL;
-					go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), target->pos.z);
+					go3->vel = 0;
 					go3->pos.Set(target->pos.x, target->pos.y, target->pos.z);
 					go3->scale.Set(5, 5, 1);
 					go3->enemyDamage = -5;
@@ -2806,7 +2898,6 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				// Money gained
 				if (target->type != GameObject::GO_ENEMYBULLET)
 				{
-					m_money += 1 + bonusMoney;
 					// Drop  Item
 
 					m_objectCount--;
@@ -2834,7 +2925,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 
 						GameObject* go3 = FetchGO();
 						go3->type = GameObject::GO_TRIPLESHOT;
-						go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), target->pos.z);
+						go3->vel = 0;
 						go3->pos.Set(target->pos.x, target->pos.y, target->pos.z);
 						go3->scale.Set(9, 9, 1);
 						go3->enemyDamage = 0;
@@ -2847,7 +2938,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 
 						GameObject* go3 = FetchGO();
 						go3->type = GameObject::GO_HEAL;
-						go3->vel.Set(Math::RandFloatMinMax(-maxVel, 0), Math::RandFloatMinMax(-maxVel, maxVel), target->pos.z);
+						go3->vel = 0;
 						go3->pos.Set(target->pos.x, target->pos.y, target->pos.z);
 						go3->scale.Set(5, 5, 1);
 						go3->enemyDamage = -5;
@@ -2886,14 +2977,14 @@ void Assignment1::RenderGO(GameObject* go)
 			{
 				modelStack.PushMatrix();
 				modelStack.Rotate(180, 0, 0, 1);
-				modelStack.Scale(2, 1, 1);
+				modelStack.Scale(3, 1, 1);
 				RenderMesh(meshList[GEO_HEROATTACK_LEFT], false);
 				modelStack.PopMatrix();
 			}
 			else
 			{
 				modelStack.PushMatrix();
-				modelStack.Scale(2, 1, 1);
+				modelStack.Scale(3, 1, 1);
 				RenderMesh(meshList[GEO_HEROATTACK], false);
 				modelStack.PopMatrix();
 			}
@@ -3374,6 +3465,15 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PopMatrix();
 		break;
 
+	case GameObject::GO_CHEST:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_CHEST], false);
+		modelStack.PopMatrix();
+		break;
+
+
 	case GameObject::GO_BULLET:
 		go->angle += 5;
 		modelStack.PushMatrix();
@@ -3598,16 +3698,30 @@ void Assignment1::Render()
 	// Model matrix : an identity matrix (model will be at the origin)
 	modelStack.LoadIdentity();
 
-	RenderMesh(meshList[GEO_AXES], false);
+	//RenderMesh(meshList[GEO_AXES], false);
 
 
 
 	//Render background
-	modelStack.PushMatrix();
-	modelStack.Translate(100, 50, -1);
-	modelStack.Scale(200, 150, 1);
+	/*modelStack.PushMatrix();
+	modelStack.Translate(576, 300, -3);
+	modelStack.Scale(1152, 600, 1);
 	RenderMesh(meshList[GEO_BACKGROUND], false);
-	modelStack.PopMatrix();
+	modelStack.PopMatrix();*/
+
+	// Render Background (Multi-tile)
+	for (float rows = 1; rows < 8; rows++)
+	{
+		for (float cols = 1; cols < 8; cols++)
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(144 * rows, 75 * cols, -5);
+			modelStack.Scale(288, 150, 1);
+			RenderMesh(meshList[GEO_BACKGROUND], false);
+			modelStack.PopMatrix();
+		}
+	}
+
 
 
 	if (upgradeScreen)
