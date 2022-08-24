@@ -51,6 +51,8 @@ protected:
 	float m_worldWidth;
 	float m_worldHeight;
 	GameObject *m_ship;
+	GameObject* m_boss;
+
 	SpriteAnimation* HeroSprite;
 	SpriteAnimation* ShrekSprite;
 	SpriteAnimation* ShrekSpriteLeft;
@@ -84,8 +86,6 @@ protected:
 	int waveCount;
 
 	float m_hp;
-
-	float bossHp;
 
 	// Player variable
 	float hpFactor;

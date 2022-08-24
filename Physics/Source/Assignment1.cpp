@@ -58,7 +58,6 @@ void Assignment1::Init()
 
 	//Exercise 2b: Initialize m_hp and m_score
 	m_hp = 100;
-	bossHp = 10000;
 
 	m_money = 10000;
 	m_objectCount = 0;
@@ -163,14 +162,6 @@ void Assignment1::Init()
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\FwooshFire.ogg"), 14, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Punch.ogg"), 15, true);
 
-	//cSoundController->MasterVolumeDecrease();
-	//cSoundController->MasterVolumeDecrease();
-	//cSoundController->MasterVolumeDecrease();
-	//cSoundController->MasterVolumeDecrease();
-	//cSoundController->MasterVolumeDecrease();
-	//cSoundController->MasterVolumeDecrease();
-	//cSoundController->MasterVolumeDecrease();
-
 	SceneBase::menuType = M_MAIN;
 }
 
@@ -205,7 +196,6 @@ void Assignment1::RestartGame()
 	}
 	//Exercise 2b: Initialize m_hp and m_score
 	m_hp = 100;
-	bossHp = 10000;
 
 	m_money = 10000;
 	m_objectCount = 0;
@@ -268,7 +258,7 @@ void Assignment1::RestartGame()
 	upgradeScreen = false;
 	isAlive = true;
 	gameStart = false;
-	bossspawned = false;
+
 
 	movementLastPressed = ' ';
 
@@ -832,7 +822,7 @@ void Assignment1::Update(double dt)
 
 		// Wave count increases after a certain period
 		float diff = elapsedTime - waveTimer;
-		if (diff > 15)
+		if (diff > 25)
 		{
 			waveCount++;
 			hpFactor += 1.05;
@@ -845,7 +835,7 @@ void Assignment1::Update(double dt)
 
 		// Randomised enemy spawns
 		diff = elapsedTime - prevElapsedAsteroid;
-		if (diff > 1 && tempSpawnCount < 1)
+		if (diff > 0.4 && tempSpawnCount < 1)
 		{
 			for (int i = 0; i < 1; ++i)
 			{
@@ -2972,6 +2962,24 @@ void Assignment1::RenderGO(GameObject* go)
 			RenderMesh(meshList[GEO_GREENHEALTH], false);
 			modelStack.PopMatrix();
 		}
+
+		if (bossspawned == true)
+		{
+			if (go->active && go->hp != 0)
+			{
+
+				RenderTextOnScreen(meshList[GEO_TEXT], "NightBorne", Color(0, 0, 0), 2, 33, 53, false);
+
+				RenderMeshOnScreen(meshList[GEO_HEALTHBORDER], 97, 85, 65, 6);
+				RenderMeshOnScreen(meshList[GEO_HEALTHBACK], 97, 85, 65, 6);
+				RenderMeshOnScreen(meshList[GEO_BOSSHEALTH], 97, 85, 65 * ((go->hp / go->maxHP)), 6);
+				std::ostringstream ss;
+
+				ss << "" << go->hp;
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 2, 38, 50, false);
+			}
+		}
+
 		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_LASER:
@@ -3549,19 +3557,6 @@ void Assignment1::Render()
 		else if (m_ship->hp <= 50)
 		{
 			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.3, 0.7), 1.6, 12, 7.6, false);
-		}
-
-		if (bossspawned == true)
-		{
-			GameObject* bossgo = FetchGO();
-			bossgo->type = GameObject::GO_BOSS;
-
-			if (bossgo->active && bossgo->hp != 0)
-			{
-				RenderMeshOnScreen(meshList[GEO_HEALTHBORDER], 97, 85, 65, 6);
-				RenderMeshOnScreen(meshList[GEO_HEALTHBACK], 97, 85, 65, 6);
-				RenderMeshOnScreen(meshList[GEO_BOSSHEALTH], 97, 85, 65 * ((bossgo->hp / bossgo->maxHP)), 6);
-			}
 		}
 	
 
