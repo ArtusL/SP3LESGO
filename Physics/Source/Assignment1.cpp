@@ -46,7 +46,7 @@ void Assignment1::Init()
 	//Physics code here
 	m_speed = 1.f;
 
-	shipSpeed = 13.f;
+	shipSpeed = 130.f;
 	prevElapsedAsteroid = prevElapsedBullet = elapsedTime = waveTimer = prevElapsedMissle = keyDelay = prevHealthRegen = tripleShotTimer = 0.0;
 	Math::InitRNG();
 
@@ -736,7 +736,6 @@ void Assignment1::Update(double dt)
 
 			camera.position.x = m_ship->pos.x - m_worldWidth * 0.125;
 			camera.position.y = m_ship->pos.y - m_worldHeight * 0.125;
-			cout << camera.position.y << endl;
 			camera.target.x = m_ship->pos.x - m_worldWidth * 0.125;
 			camera.target.y = m_ship->pos.y - m_worldHeight * 0.125;
 
@@ -893,17 +892,22 @@ void Assignment1::Update(double dt)
 				switch (random)
 				{
 				case 0:
-					go->pos.Set(m_worldWidth + 1, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+					go->pos.Set(m_worldWidth - 5, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
 					break;
 				case 1:
-					go->pos.Set(0 - 1, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+
+					go->pos.Set(0 + 5, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+					
 					break;
 				case 2:
-					go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), m_worldHeight + 1, go->pos.z);
+
+					go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), m_worldHeight - 5, go->pos.z);
+					
 					break;
 				case 3:
-					go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), 0 - 1, go->pos.z);
-					break;
+
+					go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), 0 + 5, go->pos.z);
+
 				}
 				go->direction.Set(0.1, 0.1, 0.1);
 				go->vel = go->direction;
@@ -1823,9 +1827,17 @@ void Assignment1::Update(double dt)
 				else if (enemy->type == GameObject::GO_SHOP)
 				{
 					// Move towards player
-					enemy->direction = m_ship->pos - Vector3(enemy->pos.x, enemy->pos.y, enemy->pos.z);
+					enemy->direction = Vector3(enemy->pos.x, enemy->pos.y, enemy->pos.z);
 					enemy->direction = enemy->direction.Normalized();
-					enemy->vel = (enemy->direction * 40);
+					if (enemy->pos.x >= 1152 || enemy->pos.x <= 0)
+					{
+						enemy->vel = -(enemy->direction * 40);
+					}
+
+					if (enemy->pos.y >= 600 || enemy->pos.y <= 0)
+					{
+						enemy->vel = -(enemy->direction * 40);
+					}
 				}
 				else if (enemy->type == GameObject::GO_BDEMON)
 				{
@@ -3066,8 +3078,8 @@ void Assignment1::Render()
 
 	//Render background
 	modelStack.PushMatrix();
-	modelStack.Translate(100, 50, -1);
-	modelStack.Scale(200, 150, 1);
+	modelStack.Translate(576, 300, -1);
+	modelStack.Scale(1152, 602, 1);
 	RenderMesh(meshList[GEO_BACKGROUND], false);
 	modelStack.PopMatrix();
 
@@ -3142,7 +3154,7 @@ void Assignment1::Render()
 	{
 		// Upgrade information
 
-		RenderMeshOnScreen(meshList[GEO_UPGRADESCREEN], 95.5, 40, 200, 100);
+		RenderMeshOnScreen(meshList[GEO_UPGRADESCREEN], 95.5, 50, 200, 100);
 		ss.str("");
 		ss << "UPGRADE MENU";
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 30, 50, false);
@@ -3316,16 +3328,19 @@ void Assignment1::Render()
 
 	if (!gameStart)
 	{
-		ss.str("");
-		ss << "Asteroid Shooter";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 45, false);
+		RenderMeshOnScreen(meshList[GEO_CUBE], 100, 65, 100, 70);
+		RenderMeshOnScreen(meshList[GEO_EVIL], 97.5, 65, 120, 60);
 
 		ss.str("");
-		ss << "Press [SPACEBAR] to start";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 20, false);
+        ss << "Aku has send out his forces to try and takeover our memes,";
+        RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.75, 4, 15, false);
 
-
-		RenderMeshOnScreen(meshList[GEO_EVIL], 100, 65, 100, 60);
+		ss.str("");
+		ss << "it's up to you to stop him!";
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.75, 4, 12, false);
+        ss.str("");
+        ss << "Press [SPACEBAR] to continue";
+        RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 0.75, 65, 1, false);
 	}
 
 	if (isAlive && !upgradeScreen && gameStart)
