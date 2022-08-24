@@ -64,6 +64,7 @@ void Assignment1::Init()
 	m_objectCount = 0;
 	waveCount = 5;
 	gravity = -4;
+	storystate = 1;
 
 	hpFactor = moneyFactor = 1;
 	bonusMoney = 1;
@@ -121,7 +122,7 @@ void Assignment1::Init()
 	movementLastPressed = ' ';
 
 	asteroidCount = 0;
-	maxEnemyCount = 10;
+	maxEnemyCount = 20;
 
 
 	//Exercise 2c: Construct m_ship, set active, type, scale and pos
@@ -273,7 +274,7 @@ void Assignment1::RestartGame()
 	movementLastPressed = ' ';
 
 	asteroidCount = 0;
-	maxEnemyCount = 10;
+	maxEnemyCount = 20;
 
 
 	//Exercise 2c: Construct m_ship, set active, type, scale and pos
@@ -369,6 +370,10 @@ void Assignment1::Update(double dt)
 	if (menuType != M_NONE)
 		return;
 
+	if (keyDelay > 0)
+	{
+		keyDelay -= 1.0 * dt;
+	}
 
 	SceneBase::Update(dt);
 	elapsedTime += dt;
@@ -462,15 +467,16 @@ void Assignment1::Update(double dt)
 	PurpleShot->Update(dt);
 
 
-
 	// Enter to begin game
 	if (!gameStart)
 	{
-		if (Application::IsKeyPressed(' '))
+		if (Application::IsKeyReleased(' '))
 		{
-			gameStart = true;
+			keyDelay = 3.0;
+			storystate += 1;
 		}
 	}
+
 
 	// Player ship ugrade screen
 	if (upgradeScreen == true && gameStart)
@@ -483,13 +489,6 @@ void Assignment1::Update(double dt)
 		cSoundController->PlaySoundByID(2);
 		
 
-
-		if (keyDelay > 0)
-		{
-			keyDelay -= 1.0 * dt;
-		}
-		else
-		{
 			if (Application::IsKeyPressed('I') && fireRateCost < 60)
 			{
 				keyDelay = 0.3;
@@ -690,7 +689,7 @@ void Assignment1::Update(double dt)
 					cSoundController->PlaySoundByID(10);
 				}
 			}
-		}
+		
 		// Upgrade ship keys
 
 		if (Application::IsKeyPressed('Q'))
@@ -845,7 +844,7 @@ void Assignment1::Update(double dt)
 
 		// Randomised enemy spawns
 		diff = elapsedTime - prevElapsedAsteroid;
-		if (diff > 1 && tempSpawnCount < 1)
+		if (diff > 1 && m_objectCount < maxEnemyCount && tempSpawnCount < 1)
 		{
 			for (int i = 0; i < 1; ++i)
 			{
@@ -953,7 +952,7 @@ void Assignment1::Update(double dt)
 				go->direction.Set(0.1, 0.1, 0.1);
 				go->vel = go->direction;
 				prevElapsedAsteroid = elapsedTime;
-				//m_objectCount++;
+				m_objectCount++;
 			}
 		}
 
@@ -1133,8 +1132,6 @@ void Assignment1::Update(double dt)
 					go->direction = go->direction.Normalized();
 					go->vel = -(go->direction * BULLET_SPEED * 0.8);
 					go->angle = m_ship->angle;
-
-					m_objectCount++;
 				}
 				prevElapsedBullet = elapsedTime;
 			}
@@ -1346,7 +1343,6 @@ void Assignment1::Update(double dt)
 						|| go->pos.y < camera.position.y)
 					{
 						go->active = false;
-						m_objectCount--;
 					}
 				}
 
@@ -1428,7 +1424,6 @@ void Assignment1::Update(double dt)
 				go->scale.Set(6.0f, 4.0f, 4.0f);
 				go->angle = m_ship->angle;
 				go->hitboxSizeDivider = 3;
-				m_objectCount++;
 
 				prevElapsedMissle = elapsedTime;
 			}
@@ -1447,7 +1442,6 @@ void Assignment1::Update(double dt)
 				go->angle = m_ship->angle;
 				go->hitboxSizeDivider = 3;
 				prevElapsedBomb = elapsedTime;
-				m_objectCount++;
 			}
 		}
 
@@ -1479,7 +1473,6 @@ void Assignment1::Update(double dt)
 						go->scale.Set(6.0f, 6.0f, 6.0f);
 						go->angle = m_ship->angle + 45;
 						prevElapsedArrow = elapsedTime;
-						m_objectCount++;
 					}
 				}
 			}
@@ -1501,7 +1494,6 @@ void Assignment1::Update(double dt)
 					go->scale.Set(6.0f, 6.0f, 6.0f);
 					go->angle = m_ship->angle + 45;
 					prevElapsedArrow = elapsedTime;
-					m_objectCount++;
 				}
 			}
 		}
@@ -1523,7 +1515,6 @@ void Assignment1::Update(double dt)
 						go->angle = m_ship->angle;
 						go->hitboxSizeDivider = 3;
 						prevElapsedMolotov = elapsedTime;
-						m_objectCount++;
 					}
 				}
 			}
@@ -1907,6 +1898,7 @@ void Assignment1::Update(double dt)
 				else if (enemy->type == GameObject::GO_BDEMON)
 				{
 					// Enemy ship shooting at player
+					float diff = elapsedTime - enemy->prevEnemyBullet;
 					if (diff > 1)
 					{
 						GameObject* go2 = FetchGO();
@@ -2067,7 +2059,6 @@ void Assignment1::Collision(GameObject* go)
 			go->type == GameObject::GO_EXPLODER
 			)
 		{
-			m_objectCount--;
 			go->active = false;
 		}
 
@@ -2333,7 +2324,6 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				// Money gained
 				m_money += 1 + bonusMoney;
 
-				m_objectCount--;
 				if (target->type == GameObject::GO_NIGHTMARE)
 				{
 					for (int i = 0; i < 4; ++i)
@@ -2457,7 +2447,6 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				m_money += 1 + bonusMoney;
 				// Drop  Item
 
-					m_objectCount--;
 					if (target->type == GameObject::GO_NIGHTMARE)
 					{
 						for (int i = 0; i < 4; ++i)
@@ -3214,8 +3203,8 @@ void Assignment1::Render()
 
 	//Render background
 	modelStack.PushMatrix();
-	modelStack.Translate(100, 50, -1);
-	modelStack.Scale(200, 150, 1);
+	modelStack.Translate(590, 310, -1);
+	modelStack.Scale(1180, 620, 1);
 	RenderMesh(meshList[GEO_BACKGROUND], false);
 	modelStack.PopMatrix();
 
@@ -3290,7 +3279,7 @@ void Assignment1::Render()
 	{
 		// Upgrade information
 
-		RenderMeshOnScreen(meshList[GEO_UPGRADESCREEN], 95.5, 40, 200, 100);
+		RenderMeshOnScreen(meshList[GEO_UPGRADESCREEN], 95.5, 50, 200, 100);
 		ss.str("");
 		ss << "UPGRADE MENU";
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 30, 50, false);
@@ -3464,16 +3453,48 @@ void Assignment1::Render()
 
 	if (!gameStart)
 	{
-		ss.str("");
-		ss << "Asteroid Shooter";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 45, false);
 
-		ss.str("");
-		ss << "Press [SPACEBAR] to start";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 20, false);
+		// Enter to begin game
+		switch (storystate)
+		{
+		case 1:
 
+			RenderMeshOnScreen(meshList[GEO_CUBE], 100, 65, 100, 70);
+			RenderMeshOnScreen(meshList[GEO_EVIL], 97.5, 65, 120, 60);
 
-		RenderMeshOnScreen(meshList[GEO_EVIL], 100, 65, 100, 60);
+			ss.str("");
+			ss << "Aku has send out his forces to try and takeover our memes,";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.75, 4, 15, false);
+
+			ss.str("");
+			ss << "it's up to you to stop him!";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.75, 4, 12, false);
+			ss.str("");
+			ss << "Press [SPACEBAR] to continue";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 0.75, 65, 1, false);
+			break;
+
+		case 2:
+		
+			RenderMeshOnScreen(meshList[GEO_CUBE], 100, 65, 100, 70);
+			RenderMeshOnScreen(meshList[GEO_MAFIASHREK], 97.5, 65, 120, 60);
+
+			ss.str("");
+			ss << "Your first destination is the swamp, find shrek and protect";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.75, 4, 15, false);
+
+			ss.str("him with some weaponry and equipment he will sell to you");
+			ss << "";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.75, 4, 12, false);
+			ss.str("");
+			ss << "Press [SPACEBAR] to continue";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 0.75, 65, 1, false);
+			break;
+
+		case 3:
+			gameStart = true;
+		
+		}
 	}
 
 	if (isAlive && !upgradeScreen && gameStart)
@@ -3618,10 +3639,10 @@ void Assignment1::Render()
 		//ss << "FPS: " << fps;
 		//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 0, false);
 
-		//ss.str("");
-		//ss.precision(5);
-		//ss << "Object: " << m_objectCount;
-		//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 0, false);
+		ss.str("");
+		ss.precision(5);
+		ss << "Object: " << m_objectCount;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 0, false);
 
 		/*ss.str("");
 		ss << "Gain: " << trunc(4 * moneyFactor);

@@ -105,6 +105,7 @@ protected:
 	int molotovAmount;
 	int arrowCost;
 	int arrowlvl;
+	int storystate;
 	int arrowAmount;
 	int flamingarrowCost;
 	int flamingarrowlvl;
