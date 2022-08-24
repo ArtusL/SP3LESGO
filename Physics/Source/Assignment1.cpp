@@ -46,7 +46,7 @@ void Assignment1::Init()
 	//Physics code here
 	m_speed = 1.f;
 
-	shipSpeed = 130.f;
+	shipSpeed = 13.f;
 	prevElapsedAsteroid = prevElapsedBullet = elapsedTime = waveTimer = prevElapsedMissle = keyDelay = prevHealthRegen = tripleShotTimer = 0.0;
 	Math::InitRNG();
 
@@ -58,6 +58,8 @@ void Assignment1::Init()
 
 	//Exercise 2b: Initialize m_hp and m_score
 	m_hp = 100;
+	bossHp = 10000;
+
 	m_money = 10000;
 	m_objectCount = 0;
 	waveCount = 5;
@@ -203,6 +205,8 @@ void Assignment1::RestartGame()
 	}
 	//Exercise 2b: Initialize m_hp and m_score
 	m_hp = 100;
+	bossHp = 10000;
+
 	m_money = 10000;
 	m_objectCount = 0;
 	waveCount = 5;
@@ -359,6 +363,7 @@ void Assignment1::Update(double dt)
 
 	SceneBase::Update(dt);
 	UpdateMenu();
+	deltaTime = dt;
 
 	//dont update anything if in menu
 	if (menuType != M_NONE)
@@ -425,6 +430,16 @@ void Assignment1::Update(double dt)
 	BdemonSpriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_BDEMON_LEFT]);
 	BdemonSpriteLeft->PlayAnimation("IDLE", -1, 1.0f);
 	BdemonSpriteLeft->Update(dt);
+
+	// Exploding Enemy 
+	ExploderSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_EXPLODER]);
+	ExploderSprite->PlayAnimation("IDLE", -1, 1.0f);
+	ExploderSprite->Update(dt);
+
+	ExploderSpriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_EXPLODER_LEFT]);
+	ExploderSpriteLeft->PlayAnimation("IDLE", -1, 1.0f);
+	ExploderSpriteLeft->Update(dt);
+
 
 	// Fire
 	FireSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FIRE]);
@@ -736,6 +751,7 @@ void Assignment1::Update(double dt)
 
 			camera.position.x = m_ship->pos.x - m_worldWidth * 0.125;
 			camera.position.y = m_ship->pos.y - m_worldHeight * 0.125;
+			cout << camera.position.y << endl;
 			camera.target.x = m_ship->pos.x - m_worldWidth * 0.125;
 			camera.target.y = m_ship->pos.y - m_worldHeight * 0.125;
 
@@ -875,6 +891,17 @@ void Assignment1::Update(double dt)
 					go->hitboxSizeDivider = 2.8;
 					go->enemyDamage = 10;
 				}
+				else if (randomEnemy < 60)
+				{
+					go->type = GameObject::GO_EXPLODER;
+					go->hp = round(10 * hpFactor);
+					go->scale.Set(15, 15, 1);
+					go->hitboxSizeDivider = 4.5;
+					go->enemyDamage = 15;
+					go->angle = 0;
+					go->maxHP = go->hp;
+
+				}
 				// Spawn ghost
 				else
 				{
@@ -887,28 +914,42 @@ void Assignment1::Update(double dt)
 				go->angle = 0;
 				go->maxHP = go->hp;
 
-				// This spawn enemies from the 4 sides
+				// Spawning from edge of world
 				int random = rand() % 4;
+				//switch (random)
+				//{
+				//case 0:
+				//	go->pos.Set(m_worldWidth + 1, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+				//	break;
+				//case 1:
+				//	go->pos.Set(0 - 1, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+				//	break;
+				//case 2:
+				//	go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), m_worldHeight + 1, go->pos.z);
+				//	break;
+				//case 3:
+				//	go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), 0 - 1, go->pos.z);
+				//	break;
+				//}
+
+				// Spawning outside camera
 				switch (random)
 				{
 				case 0:
-					go->pos.Set(m_worldWidth - 5, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+					go->pos.Set(m_ship->pos.x + (m_ship->pos.x - camera.position.x), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
 					break;
 				case 1:
-
-					go->pos.Set(0 + 5, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
-					
+					go->pos.Set(camera.position.x, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
 					break;
 				case 2:
-
-					go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), m_worldHeight - 5, go->pos.z);
-					
+					go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), m_ship->pos.y + (m_ship->pos.y - camera.position.y), go->pos.z);
 					break;
 				case 3:
-
-					go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), 0 + 5, go->pos.z);
+					go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), go->pos.y < camera.position.y, go->pos.z);
+					break;
 
 				}
+
 				go->direction.Set(0.1, 0.1, 0.1);
 				go->vel = go->direction;
 				prevElapsedAsteroid = elapsedTime;
@@ -1214,7 +1255,8 @@ void Assignment1::Update(double dt)
 					go->type == GameObject::GO_WORMBODY1 ||
 					go->type == GameObject::GO_WORMBODY2 ||
 					go->type == GameObject::GO_WORMTAIL ||
-					go->type == GameObject::GO_SHOP
+					go->type == GameObject::GO_SHOP ||
+					go->type == GameObject::GO_EXPLODER
 					)
 				{
 					Collision(go);
@@ -1237,7 +1279,8 @@ void Assignment1::Update(double dt)
 								go2->type == GameObject::GO_WORMHEAD ||
 								go2->type == GameObject::GO_WORMBODY1 ||
 								go2->type == GameObject::GO_WORMBODY2 ||
-								go2->type == GameObject::GO_WORMTAIL)
+								go2->type == GameObject::GO_WORMTAIL ||
+								go2->type == GameObject::GO_EXPLODER)
 							{
 
 								HitEnemy(go, go2);
@@ -1274,7 +1317,8 @@ void Assignment1::Update(double dt)
 								go2->type == GameObject::GO_WORMHEAD ||
 								go2->type == GameObject::GO_WORMBODY1 ||
 								go2->type == GameObject::GO_WORMBODY2 ||
-								go2->type == GameObject::GO_WORMTAIL
+								go2->type == GameObject::GO_WORMTAIL ||
+								go2->type == GameObject::GO_EXPLODER
 								)
 							{
 
@@ -1333,6 +1377,35 @@ void Assignment1::Update(double dt)
 										m_goList[j]->vel += 10.f / m_goList[j]->mass * dir * force
 											* dt * m_speed;
 									}
+								}
+							}
+							else if (m_goList[j]->type == GameObject::GO_EXPLODER)
+							{
+								//1 Close Destroy the object (absorb its mass)
+								if (m_goList[j]->pos.DistanceSquared(go->pos) > 10000.f)
+								{
+									//go->mass += m_goList[j]->mass;
+									//m_goList[j]->active = false;
+									m_goList[j]->direction = m_ship->pos - Vector3(m_goList[j]->pos.x, m_goList[j]->pos.y, m_goList[j]->pos.z);
+									m_goList[j]->direction = m_goList[j]->direction.Normalized();
+									m_goList[j]->vel = (m_goList[j]->direction * 10);
+								}
+								//2 Not Close Enough ... affect the object through force
+								else
+								{
+									float sign = (go->type == GameObject::GO_WHITEHOLE) ? -1 : 1;
+									Vector3 dir = sign * (go->pos - m_goList[j]->pos).Normalized();
+									float force = CalculateAdditionalForce(m_goList[j], go);
+									m_goList[j]->vel += 70.f / m_goList[j]->mass * dir * force * dt * m_speed;
+
+
+									//if (m_goList[j]->pos.x < m_ship->pos.x + (m_ship->pos.x - camera.position.x)
+									//	&& m_goList[j]->pos.x > camera.position.x
+									//	&& m_goList[j]->pos.y < m_ship->pos.y + (m_ship->pos.y - camera.position.y)
+									//	&& m_goList[j]->pos.y > camera.position.y)
+									//{
+
+									//}
 								}
 							}
 						}
@@ -1827,17 +1900,9 @@ void Assignment1::Update(double dt)
 				else if (enemy->type == GameObject::GO_SHOP)
 				{
 					// Move towards player
-					enemy->direction = Vector3(enemy->pos.x, enemy->pos.y, enemy->pos.z);
+					enemy->direction = m_ship->pos - Vector3(enemy->pos.x, enemy->pos.y, enemy->pos.z);
 					enemy->direction = enemy->direction.Normalized();
-					if (enemy->pos.x >= 1152 || enemy->pos.x <= 0)
-					{
-						enemy->vel = -(enemy->direction * 40);
-					}
-
-					if (enemy->pos.y >= 600 || enemy->pos.y <= 0)
-					{
-						enemy->vel = -(enemy->direction * 40);
-					}
+					enemy->vel = (enemy->direction * 40);
 				}
 				else if (enemy->type == GameObject::GO_BDEMON)
 				{
@@ -1859,12 +1924,17 @@ void Assignment1::Update(double dt)
 
 
 					}
-				}
-				else if(enemy->type == GameObject::GO_GHOST)
-				{
 					enemy->direction = m_ship->pos - Vector3(enemy->pos.x, enemy->pos.y, enemy->pos.z);
 					enemy->direction = enemy->direction.Normalized();
 					enemy->vel = (enemy->direction * 6);
+				}
+
+				else if (enemy->type == GameObject::GO_GHOST ||
+					enemy->type == GameObject::GO_NIGHTMARE)
+				{
+					enemy->direction = m_ship->pos - Vector3(enemy->pos.x, enemy->pos.y, enemy->pos.z);
+					enemy->direction = enemy->direction.Normalized();
+					enemy->vel = (enemy->direction * 10);
 				}
 
 			}
@@ -1976,14 +2046,31 @@ void Assignment1::Collision(GameObject* go)
 			upgradeScreen = true;
 		}
 
+		if (go->type == GameObject::GO_EXPLODER)
+		{
+			GameObject* explosion = FetchGO();
+			explosion->type = GameObject::GO_ENEMYEXPLOSION;
+			explosion->pos = go->pos;
+			explosion->scale.Set(20, 20, 10);
+			explosion->vel = 0;
+			explosion->explosionScale = 0;
+			explosion->scaleDown = false;
+			explosionTimer = 1;
+			EnemyExplosionSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_ENEMYEXPLOSION]);
+			EnemyExplosionSprite->PlayAnimation("Explode", -1, 1.0f);
+		}
+
+
 		if (go->type == GameObject::GO_TRIPLESHOT ||
 			go->type == GameObject::GO_HEAL ||
-			go->type == GameObject::GO_ENEMYBULLET
+			go->type == GameObject::GO_ENEMYBULLET ||
+			go->type == GameObject::GO_EXPLODER
 			)
 		{
 			m_objectCount--;
 			go->active = false;
 		}
+
 
 		if (go->enemyDamage <= 0) // Healing items and buffs
 		{
@@ -2696,6 +2783,46 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PopMatrix();
 		break;
 
+	case GameObject::GO_EXPLODER:
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+
+		if (go->facingLeft == true)
+		{
+			RenderMesh(meshList[GEO_EXPLODER_LEFT], false);
+		}
+		else
+		{
+			modelStack.PushMatrix();
+			modelStack.Rotate(180, 0, 0, 1);
+			RenderMesh(meshList[GEO_EXPLODER], false);
+			modelStack.PopMatrix();
+		}
+
+		RenderMesh(meshList[GEO_EXPLODER], false);
+		// Display health bar if asteroid is damaged
+		if (go->hp < go->maxHP)
+		{
+			float greenHealthPercent = (go->hp / go->maxHP) * 100;
+			float redHealthPercent = 100 - greenHealthPercent;
+
+			modelStack.PushMatrix();
+			modelStack.Translate(0, 0.5, 0.1);
+			modelStack.Scale(go->scale.x * 0.08, go->scale.y * 0.015, go->scale.z);
+			RenderMesh(meshList[GEO_REDHEALTH], false);
+			modelStack.PopMatrix();
+
+			modelStack.PushMatrix();
+			modelStack.Translate(0, 0.5, 0.2);
+			modelStack.Scale(go->scale.x * 0.0008 * greenHealthPercent, go->scale.y * 0.015, go->scale.z);
+			RenderMesh(meshList[GEO_GREENHEALTH], false);
+			modelStack.PopMatrix();
+		}
+		modelStack.PopMatrix();
+		break;
+
 	case GameObject::GO_WORMHEAD:
 	case GameObject::GO_WORMBODY1:
 	case GameObject::GO_WORMBODY2:
@@ -2971,11 +3098,20 @@ void Assignment1::RenderGO(GameObject* go)
 
 
 	case GameObject::GO_EXPLOSION:
+	case GameObject::GO_ENEMYEXPLOSION:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Rotate(go->angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x + go->explosionScale, go->scale.y + go->explosionScale, go->scale.z);
-		RenderMesh(meshList[GEO_EXPLOSION], false);
+		if (go->type == GameObject::GO_EXPLOSION)
+		{
+			RenderMesh(meshList[GEO_EXPLOSION], false);
+		}
+		else if (go->type == GameObject::GO_ENEMYEXPLOSION)
+		{
+			EnemyExplosionSprite->Update(deltaTime);
+			RenderMesh(meshList[GEO_ENEMYEXPLOSION], false);
+		}
 		modelStack.PopMatrix();
 
 		// Scale the explosion effect
@@ -3078,8 +3214,8 @@ void Assignment1::Render()
 
 	//Render background
 	modelStack.PushMatrix();
-	modelStack.Translate(576, 300, -1);
-	modelStack.Scale(1152, 602, 1);
+	modelStack.Translate(100, 50, -1);
+	modelStack.Scale(200, 150, 1);
 	RenderMesh(meshList[GEO_BACKGROUND], false);
 	modelStack.PopMatrix();
 
@@ -3154,7 +3290,7 @@ void Assignment1::Render()
 	{
 		// Upgrade information
 
-		RenderMeshOnScreen(meshList[GEO_UPGRADESCREEN], 95.5, 50, 200, 100);
+		RenderMeshOnScreen(meshList[GEO_UPGRADESCREEN], 95.5, 40, 200, 100);
 		ss.str("");
 		ss << "UPGRADE MENU";
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 30, 50, false);
@@ -3328,19 +3464,16 @@ void Assignment1::Render()
 
 	if (!gameStart)
 	{
-		RenderMeshOnScreen(meshList[GEO_CUBE], 100, 65, 100, 70);
-		RenderMeshOnScreen(meshList[GEO_EVIL], 97.5, 65, 120, 60);
+		ss.str("");
+		ss << "Asteroid Shooter";
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 45, false);
 
 		ss.str("");
-        ss << "Aku has send out his forces to try and takeover our memes,";
-        RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.75, 4, 15, false);
+		ss << "Press [SPACEBAR] to start";
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 20, false);
 
-		ss.str("");
-		ss << "it's up to you to stop him!";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.75, 4, 12, false);
-        ss.str("");
-        ss << "Press [SPACEBAR] to continue";
-        RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 0.75, 65, 1, false);
+
+		RenderMeshOnScreen(meshList[GEO_EVIL], 100, 65, 100, 60);
 	}
 
 	if (isAlive && !upgradeScreen && gameStart)
@@ -3393,10 +3526,11 @@ void Assignment1::Render()
 		}
 
 	
-		RenderMeshOnScreen(meshList[GEO_INFOBORDER], 38, 10, 80, 30);
-		RenderMeshOnScreen(meshList[GEO_HEALTHBORDER], 44, 14, 60, 7);
-		RenderMeshOnScreen(meshList[GEO_HEALTHBACK], 44, 14, 60, 7);
-		RenderMeshOnScreen(meshList[GEO_PLAYERHEALTH], 44, 14, 60 *(m_ship->hp / 100), 7);
+		RenderMeshOnScreen(meshList[GEO_INFOBORDER], 34, 10, 70, 30);
+
+		RenderMeshOnScreen(meshList[GEO_HEALTHBORDER], 40, 14, 50, 7);
+		RenderMeshOnScreen(meshList[GEO_HEALTHBACK], 40, 14, 50, 7);
+		RenderMeshOnScreen(meshList[GEO_PLAYERHEALTH], 40, 14, 50 *(m_ship->hp / 100), 7);
 
 		RenderMeshOnScreen(meshList[GEO_HEROICON], 7, 12, 11, 11);
 
@@ -3406,8 +3540,30 @@ void Assignment1::Render()
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 6, 3.6, false);
 
 		ss.str("");
-		ss << "Health: " << m_ship->hp;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 3, 55, false);
+		ss << "Health: " << m_ship->hp; 
+
+		if (m_ship->hp > 50)
+		{
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0.5), 1.3, 12, 7.8, false);
+		}
+		else if (m_ship->hp <= 50)
+		{
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.3, 0.7), 1.6, 12, 7.6, false);
+		}
+
+		if (bossspawned == true)
+		{
+			GameObject* bossgo = FetchGO();
+			bossgo->type = GameObject::GO_BOSS;
+
+			if (bossgo->active && bossgo->hp != 0)
+			{
+				RenderMeshOnScreen(meshList[GEO_HEALTHBORDER], 97, 85, 65, 6);
+				RenderMeshOnScreen(meshList[GEO_HEALTHBACK], 97, 85, 65, 6);
+				RenderMeshOnScreen(meshList[GEO_BOSSHEALTH], 97, 85, 65 * ((bossgo->hp / bossgo->maxHP)), 6);
+			}
+		}
+	
 
 
 
@@ -3415,7 +3571,7 @@ void Assignment1::Render()
 		ss.str("");
 		ss.precision(5);
 		ss << "FPS: " << fps;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 0, false);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.2,0, 58, false);
 
 		//RenderTextOnScreen(meshList[GEO_TEXT], "Asteroid", Color(0, 1, 0), 20, 0, 0);
 
@@ -3427,8 +3583,30 @@ void Assignment1::Render()
 
 		// Wave Count Display
 		ss.str("");
-		ss << "Wave: " << waveCount;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 55, 55, false);
+		ss << "Wave:" << waveCount;
+
+		if (waveCount != 6 && waveCount != 10 && waveCount != 13
+			&& waveCount != 15 && waveCount != 18 && waveCount != 20)
+		{
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.5, 0), 2.5, 35, 57, false);
+		}
+		//Put Emphasis On Special Waves
+		else if (waveCount == 6 || waveCount == 10 || waveCount == 13
+			|| waveCount == 15 || waveCount == 18 || waveCount == 20)
+		{
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 3.5, 33, 55, false);
+		}
+
+		//if (waveCount != 3,5,7,10)
+		//{
+		//	
+		//}
+		//else if (waveCount == 3, 5, 7, 10)
+		//{
+
+		//}
+
+
 
 
 

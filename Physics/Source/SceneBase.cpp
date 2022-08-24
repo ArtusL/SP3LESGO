@@ -170,7 +170,7 @@ void SceneBase::Init()
 	meshList[GEO_PLAYERHEALTH]->textureID = LoadTGA("Image//HpBar.tga");
 
 	meshList[GEO_BOSSHEALTH] = MeshBuilder::GenerateQuad("health", Color(1, 1, 1), 1.f);
-	meshList[GEO_BOSSHEALTH]->textureID = LoadTGA("Image//HpBar.tga");
+	meshList[GEO_BOSSHEALTH]->textureID = LoadTGA("Image//HpBarBoss.tga");
 
 	meshList[GEO_HEALTHBACK] = MeshBuilder::GenerateQuad("hpback", Color(1, 1, 1), 1.f);
 	meshList[GEO_HEALTHBACK]->textureID = LoadTGA("Image//HpBack.tga");
@@ -246,6 +246,24 @@ void SceneBase::Init()
 	SpriteAnimation* GhostspriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_GHOST_LEFT]);
 	GhostspriteLeft->AddAnimation("IDLE", 0, 7);
 
+	// Exploder
+	meshList[GEO_EXPLODER] = MeshBuilder::GenerateSpriteAnimation("Skull", 1, 8);
+	meshList[GEO_EXPLODER]->textureID = LoadTexture("Image//FlameSkull.png", false);
+	meshList[GEO_EXPLODER]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* Explodersprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_EXPLODER]);
+	Explodersprite->AddAnimation("IDLE", 0, 7);
+
+	meshList[GEO_EXPLODER_LEFT] = MeshBuilder::GenerateSpriteAnimation("Skull Left", 1, 8);
+	meshList[GEO_EXPLODER_LEFT]->textureID = LoadTexture("Image//FlameSkull.png", true);
+	meshList[GEO_EXPLODER_LEFT]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* ExploderspriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_EXPLODER_LEFT]);
+	ExploderspriteLeft->AddAnimation("IDLE", 0, 7);
+
+	meshList[GEO_ENEMYEXPLOSION] = MeshBuilder::GenerateSpriteAnimation("Explosion", 1, 11);
+	meshList[GEO_ENEMYEXPLOSION]->textureID = LoadTexture("Image//EnemyExplosion.png", true);
+	meshList[GEO_ENEMYEXPLOSION]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* EnemyExplosionsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_ENEMYEXPLOSION]);
+	EnemyExplosionsprite->AddAnimation("Explode", 0, 11);
 
 	// Worm enemy (Boss 2?)
 
