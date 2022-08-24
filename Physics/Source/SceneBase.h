@@ -17,6 +17,10 @@ enum MENU_TYPE
 	M_MAIN,
 	M_PAUSE,
 	M_GAMEOVER,
+	M_CHOOSE,
+	M_DAGGER,
+	M_ARROW,
+	M_CARD,
 	M_TOTAL
 };
 class SceneBase : public Scene
@@ -145,6 +149,9 @@ public:
 	static MENU_TYPE menuType;
 	static bool restartGame;
 	static bool resetGame;
+	static bool daggerChoose;
+	static bool arrowChoose;
+	static bool cardChoose;
 
 	SceneBase();
 	~SceneBase();
@@ -162,6 +169,14 @@ public:
 	void RenderMainMenu();
 	void RenderPauseMenu();
 	void RenderGameOver();
+	void RenderChoose();
+	void RenderCDagger();
+	void RenderCArrow();
+	void RenderCCard();
+	void UpdateCDagger(float& m_speed);
+	void UpdateCArrow(float& m_speed);
+	void UpdateCCard(float& m_speed);
+	void UpdateChoose(float& m_speed);
 	void UpdateMainMenu(float& m_speed);
 	void UpdatePauseMenu(float& m_speed);
 	void UpdateGameOver(float& m_speed);
