@@ -113,6 +113,7 @@ public:
 		GEO_TRIPLESHOT,
 
 		GEO_CHEST,
+		GEO_TREE,
 
 		GEO_HERO,
 		GEO_HERO_LEFT,

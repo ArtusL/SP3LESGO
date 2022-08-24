@@ -41,6 +41,8 @@ struct GameObject
 		GO_CHEST,
 		GO_HEROHEALTH,
 
+		GO_TREE,
+
 		GO_BULLET,
 		GO_SPLITBULLET,
 		GO_ENEMYBULLET,
@@ -63,6 +65,7 @@ struct GameObject
 	Vector3 scale;
 	Vector3 direction;
 	Vector3 targetPos;
+	Vector3 previousPos;
 	bool active;
 	float mass;
 	float angle;

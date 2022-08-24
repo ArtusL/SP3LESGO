@@ -106,7 +106,7 @@ void SceneBase::Init()
 	}
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("reference", 1000, 1000, 1000);
 	meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 1), 10, 10, 1.f);
-	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(0, 0, 0), 2.f);
+	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 2.f);
 
 	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("background", Color(1, 1, 1), 1.f);
 	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//background.tga");
@@ -390,6 +390,10 @@ void SceneBase::Init()
 	SpriteAnimation* Barriersprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_RINGAURA]);
 	Barriersprite->AddAnimation("Aura", 0, 10);
 
+
+	// Obstacles
+	meshList[GEO_TREE] = MeshBuilder::GenerateQuad("Tree", Color(1, 1, 1), 1.f);
+	meshList[GEO_TREE]->textureID = LoadTGA("Image//tree.tga");
 
 	//Extras
 	meshList[GEO_CHEST] = MeshBuilder::GenerateSpriteAnimation("Chest", 8, 5);
