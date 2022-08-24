@@ -61,10 +61,9 @@ void Assignment1::Init()
 
 	m_money = 10000;
 	m_objectCount = 0;
-	bossHp = 10000;
 	waveCount = 5;
 	gravity = -4;
-
+	storystate = 1;
 	hpFactor = moneyFactor = 1;
 	bonusMoney = 1;
 	iFrames = 0;
@@ -113,6 +112,10 @@ void Assignment1::Init()
 	doubleBullet = false;
 	tripleShot = false;
 	flamingarrowUse = false;
+	bombUse = false;
+	arrowUse = false;
+	molotovUse = false;
+	missleUse = false;
 	upgradeScreen = false;
 	isAlive = true;
 	gameStart = false;
@@ -255,7 +258,7 @@ void Assignment1::RestartGame()
 	m_objectCount = 0;
 	waveCount = 5;
 	gravity = -4;
-
+	storystate = 1;
 	hpFactor = moneyFactor = 1;
 	bonusMoney = 1;
 	iFrames = 0;
@@ -304,14 +307,15 @@ void Assignment1::RestartGame()
 	doubleBullet = false;
 	tripleShot = false;
 	flamingarrowUse = false;
+	ringUse = false;
 	bombUse = false;
 	arrowUse = false;
 	molotovUse = false;
 	missleUse = false;
-	ringUse = false;
 	upgradeScreen = false;
 	isAlive = true;
 	gameStart = false;
+	bossspawned = false;
 
 
 	movementLastPressed = ' ';
@@ -360,7 +364,6 @@ void Assignment1::UpdateMenu()
 		SceneBase::menuType = M_NONE;
 		SceneBase::restartGame = false;
 		SceneManager::activeScene = S_ASSIGNMENT1;
-		shopactive = false;
 	}
 
 	if (SceneBase::resetGame)
@@ -369,7 +372,6 @@ void Assignment1::UpdateMenu()
 		SceneBase::resetGame = false;
 		SceneBase::menuType = M_MAIN;
 		SceneManager::activeScene = S_ASSIGNMENT1;
-		shopactive = false;
 	}
 	if (Application::IsKeyReleased(VK_ESCAPE))
 		SceneBase::menuType = M_PAUSE;
@@ -409,6 +411,7 @@ void Assignment1::Update(double dt)
 	UpdateMenu();
 	deltaTime = dt;
 
+
 	//dont update anything if in menu
 	if (menuType != M_NONE)
 		return;
@@ -419,10 +422,6 @@ void Assignment1::Update(double dt)
 	cSoundController->PlaySoundByID(1);
 	//Calculating aspect ratio
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
-
-
-	
-
 
 	// Fire
 	FireSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FIRE]);
@@ -449,9 +448,18 @@ void Assignment1::Update(double dt)
 	// Enter to begin game
 	if (!gameStart)
 	{
-		if (Application::IsKeyPressed(' '))
+		if (keyDelay > 0)
 		{
-			gameStart = true;
+			keyDelay -= 1.0 * dt;
+		}
+		if (Application::IsKeyReleased(' '))
+		{
+			if (keyDelay <= 0)
+			{
+				keyDelay = 1.5;
+				storystate += 1;
+			}
+			
 		}
 	}
 
@@ -463,7 +471,7 @@ void Assignment1::Update(double dt)
 		cSoundController->StopSoundByID(3);
 		cSoundController->StopSoundByID(4);
 		cSoundController->StopSoundByID(13);
-		cSoundController->PlaySoundByID(2);
+		//cSoundController->PlaySoundByID(2);
 		
 
 
@@ -543,6 +551,7 @@ void Assignment1::Update(double dt)
 					if (ringCost < 300)
 					{
 						ringUse = true;
+
 						ringlvl++;
 					}
 					else
@@ -1339,6 +1348,37 @@ void Assignment1::Update(double dt)
 					}
 				}
 
+				else if (go->type == GameObject::GO_TREE)
+				{
+					//Exercise 18: collision check between GO_BULLET and GO_ASTEROID
+					for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
+					{
+						GameObject* go2 = (GameObject*)*it2;
+						if (go2->active)
+						{
+
+							if (go2->type == GameObject::GO_GHOST ||
+								go2->type == GameObject::GO_FLAMEDEMON ||
+								go2->type == GameObject::GO_BDEMON ||
+								go2->type == GameObject::GO_NIGHTMARE ||
+								go2->type == GameObject::GO_ENEMYBULLET ||
+								go2->type == GameObject::GO_BOSS ||
+								go2->type == GameObject::GO_WORMHEAD ||
+								go2->type == GameObject::GO_WORMBODY1 ||
+								go2->type == GameObject::GO_WORMBODY2 ||
+								go2->type == GameObject::GO_WORMTAIL ||
+								go2->type == GameObject::GO_EXPLODER 
+							    )
+							{
+								HitEnemy(go, go2);
+							}
+
+						}
+
+					}
+				}
+
+
 				//Exercise 16: unspawn bullets when they leave screen
 				else if (go->type == GameObject::GO_BULLET || go->type == GameObject::GO_MISSLE || go->type == GameObject::GO_BOMB || go->type == GameObject::GO_MOLOTOV || go->type == GameObject::GO_ARROW || go->type == GameObject::GO_FLAMINGARROW)
 				{
@@ -1500,15 +1540,17 @@ void Assignment1::Update(double dt)
 				m_objectCount++;
 			}
 		}
-
+		cout << ringUse << endl;
 		if (ringUse == true)
 		{
 
 			GameObject* go = FetchGO();
 			go->type = GameObject::GO_RINGAURA;
+			go->pos = m_ship->pos;
 			BarrierSprite->PlayAnimation("Aura", -1, 4.0f);
 
 			ringUse = false;
+		cout << ringUse << endl;
 		}
 
 		if (flamingarrowUse == false)
@@ -2097,7 +2139,6 @@ void Assignment1::Update(double dt)
 			SceneBase::restartGame = false;
 			SceneBase::menuType = M_NONE;
 			SceneManager::activeScene = S_ASSIGNMENT1;
-			shopactive = false;
 		}
 
 		if (SceneBase::resetGame)
@@ -2106,7 +2147,6 @@ void Assignment1::Update(double dt)
 			SceneBase::resetGame = false;
 			SceneBase::menuType = M_MAIN;
 			SceneManager::activeScene = S_ASSIGNMENT1;
-			shopactive = false;
 		}
 	}
 }
@@ -2129,7 +2169,7 @@ void Assignment1::Collision(GameObject* go)
 		}
 
 		// Access upgrade screen
-		if (Application::IsKeyPressed('E') && go->type == GameObject::GO_SHOP)
+		if (Application::IsKeyPressed('E')/* && go->type == GameObject::GO_SHOP*/)
 		{
 			upgradeScreen = true;
 		}
@@ -2214,11 +2254,6 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 			bullet->active = false;
 			return;
 		}
-		//else if (rad < dis && bullet->type == GameObject::GO_TREE)
-		//{
-		//	target->pos = target->previousPos;
-		//	return;
-		//}
 
 
 		if (dis < rad && target->type != GameObject::GO_ENEMYBULLET)
@@ -2533,9 +2568,6 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				if (ringauraTimer == 0.75)
 				{
 					target->hp -= basicBulletDamage;
-					displayDamage.push_back(basicBulletDamage);
-					damageTextX.push_back((target->pos.x - camera.position.x) * 79 / 192);
-					damageTextY.push_back((target->pos.y - camera.position.y) * 59 / 100);
 				}
 			}
 
@@ -3106,6 +3138,7 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PopMatrix();
 
 		break;
+
 	case GameObject::GO_TREE:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
@@ -3408,7 +3441,7 @@ void Assignment1::Render()
 	{
 		// Upgrade information
 
-		RenderMeshOnScreen(meshList[GEO_UPGRADESCREEN], 95.5, 40, 200, 100);
+		RenderMeshOnScreen(meshList[GEO_UPGRADESCREEN], 95.5, 50, 200, 100);
 		ss.str("");
 		ss << "UPGRADE MENU";
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 30, 50, false);
@@ -3579,21 +3612,51 @@ void Assignment1::Render()
 
 		}
 	}
-
 	if (!gameStart)
 	{
-		ss.str("");
-		ss << "Asteroid Shooter";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 45, false);
 
-		ss.str("");
-		ss << "Press [SPACEBAR] to start";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 20, false);
+		// Enter to begin game
+		switch (storystate)
+		{
+		case 1:
 
+			RenderMeshOnScreen(meshList[GEO_CUBE], 100, 65, 100, 70);
+			RenderMeshOnScreen(meshList[GEO_EVIL], 97.5, 65, 120, 60);
 
-		RenderMeshOnScreen(meshList[GEO_EVIL], 100, 65, 100, 60);
+			ss.str("");
+			ss << "Aku has send out his forces to try and takeover our memes,";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.75, 4, 15, false);
+
+			ss.str("");
+			ss << "it's up to you to stop him!";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.75, 4, 12, false);
+			ss.str("");
+			ss << "Press [SPACEBAR] to continue";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 0.75, 65, 1, false);
+			break;
+
+		case 2:
+
+			RenderMeshOnScreen(meshList[GEO_CUBE], 100, 65, 100, 70);
+			RenderMeshOnScreen(meshList[GEO_MAFIASHREK], 97.5, 65, 120, 60);
+
+			ss.str("");
+			ss << "Your first destination is the swamp, find shrek and protect";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.75, 4, 15, false);
+
+			ss.str("him with some weaponry and equipment he will sell to you");
+			ss << "";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.75, 4, 12, false);
+			ss.str("");
+			ss << "Press [SPACEBAR] to continue";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 0.75, 65, 1, false);
+			break;
+
+		case 3:
+			gameStart = true;
+
+		}
 	}
-
 	if (isAlive && !upgradeScreen && gameStart)
 	{
 
