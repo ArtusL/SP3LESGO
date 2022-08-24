@@ -151,6 +151,7 @@ protected:
 	bool ringUse;
 	bool bombUse;
 	bool flamingarrowUse;
+	bool daggerUse;
 	bool arrowUse;
 	bool molotovUse;
 	bool healthRegen;
@@ -158,6 +159,7 @@ protected:
 	bool tripleShot;
 	bool isAlive;
 	bool upgradeScreen;
+	bool ChooseScreen;
 	bool gameStart;
 	bool heroFacingLeft;
 
