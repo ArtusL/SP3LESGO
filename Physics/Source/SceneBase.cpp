@@ -170,7 +170,7 @@ void SceneBase::Init()
 	meshList[GEO_PLAYERHEALTH]->textureID = LoadTGA("Image//HpBar.tga");
 
 	meshList[GEO_BOSSHEALTH] = MeshBuilder::GenerateQuad("health", Color(1, 1, 1), 1.f);
-	meshList[GEO_BOSSHEALTH]->textureID = LoadTGA("Image//HpBar.tga");
+	meshList[GEO_BOSSHEALTH]->textureID = LoadTGA("Image//HpBarBoss.tga");
 
 	meshList[GEO_HEALTHBACK] = MeshBuilder::GenerateQuad("hpback", Color(1, 1, 1), 1.f);
 	meshList[GEO_HEALTHBACK]->textureID = LoadTGA("Image//HpBack.tga");

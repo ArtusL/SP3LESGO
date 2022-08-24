@@ -58,6 +58,8 @@ void Assignment1::Init()
 
 	//Exercise 2b: Initialize m_hp and m_score
 	m_hp = 100;
+	bossHp = 10000;
+
 	m_money = 10000;
 	m_objectCount = 0;
 	waveCount = 5;
@@ -203,6 +205,8 @@ void Assignment1::RestartGame()
 	}
 	//Exercise 2b: Initialize m_hp and m_score
 	m_hp = 100;
+	bossHp = 10000;
+
 	m_money = 10000;
 	m_objectCount = 0;
 	waveCount = 5;
@@ -3378,10 +3382,11 @@ void Assignment1::Render()
 		}
 
 	
-		RenderMeshOnScreen(meshList[GEO_INFOBORDER], 38, 10, 80, 30);
-		RenderMeshOnScreen(meshList[GEO_HEALTHBORDER], 44, 14, 60, 7);
-		RenderMeshOnScreen(meshList[GEO_HEALTHBACK], 44, 14, 60, 7);
-		RenderMeshOnScreen(meshList[GEO_PLAYERHEALTH], 44, 14, 60 *(m_ship->hp / 100), 7);
+		RenderMeshOnScreen(meshList[GEO_INFOBORDER], 34, 10, 70, 30);
+
+		RenderMeshOnScreen(meshList[GEO_HEALTHBORDER], 40, 14, 50, 7);
+		RenderMeshOnScreen(meshList[GEO_HEALTHBACK], 40, 14, 50, 7);
+		RenderMeshOnScreen(meshList[GEO_PLAYERHEALTH], 40, 14, 50 *(m_ship->hp / 100), 7);
 
 		RenderMeshOnScreen(meshList[GEO_HEROICON], 7, 12, 11, 11);
 
@@ -3391,8 +3396,30 @@ void Assignment1::Render()
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 6, 3.6, false);
 
 		ss.str("");
-		ss << "Health: " << m_ship->hp;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 3, 55, false);
+		ss << "Health: " << m_ship->hp; 
+
+		if (m_ship->hp > 50)
+		{
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0.5), 1.3, 12, 7.8, false);
+		}
+		else if (m_ship->hp <= 50)
+		{
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.3, 0.7), 1.6, 12, 7.6, false);
+		}
+
+		if (bossspawned == true)
+		{
+			GameObject* bossgo = FetchGO();
+			bossgo->type = GameObject::GO_BOSS;
+
+			if (bossgo->active && bossgo->hp != 0)
+			{
+				RenderMeshOnScreen(meshList[GEO_HEALTHBORDER], 97, 85, 65, 6);
+				RenderMeshOnScreen(meshList[GEO_HEALTHBACK], 97, 85, 65, 6);
+				RenderMeshOnScreen(meshList[GEO_BOSSHEALTH], 97, 85, 65 * ((bossgo->hp / bossgo->maxHP)), 6);
+			}
+		}
+	
 
 
 
@@ -3400,7 +3427,7 @@ void Assignment1::Render()
 		ss.str("");
 		ss.precision(5);
 		ss << "FPS: " << fps;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 0, false);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.2,0, 58, false);
 
 		//RenderTextOnScreen(meshList[GEO_TEXT], "Asteroid", Color(0, 1, 0), 20, 0, 0);
 
@@ -3412,8 +3439,30 @@ void Assignment1::Render()
 
 		// Wave Count Display
 		ss.str("");
-		ss << "Wave: " << waveCount;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 55, 55, false);
+		ss << "Wave:" << waveCount;
+
+		if (waveCount != 6 && waveCount != 10 && waveCount != 13
+			&& waveCount != 15 && waveCount != 18 && waveCount != 20)
+		{
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.5, 0), 2.5, 35, 57, false);
+		}
+		//Put Emphasis On Special Waves
+		else if (waveCount == 6 || waveCount == 10 || waveCount == 13
+			|| waveCount == 15 || waveCount == 18 || waveCount == 20)
+		{
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 3.5, 33, 55, false);
+		}
+
+		//if (waveCount != 3,5,7,10)
+		//{
+		//	
+		//}
+		//else if (waveCount == 3, 5, 7, 10)
+		//{
+
+		//}
+
+
 
 
 

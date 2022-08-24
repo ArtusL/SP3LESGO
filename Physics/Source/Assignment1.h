@@ -82,6 +82,8 @@ protected:
 
 	float m_hp;
 
+	float bossHp;
+
 	// Player variable
 	float hpFactor;
 	int m_money;
