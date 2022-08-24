@@ -63,6 +63,9 @@ protected:
 	SpriteAnimation* BdemonSpriteLeft;
 	SpriteAnimation* NightborneSprite;
 	SpriteAnimation* NightborneSpriteLeft;
+	SpriteAnimation* ExploderSprite;
+	SpriteAnimation* ExploderSpriteLeft;
+	SpriteAnimation* EnemyExplosionSprite;
 	SpriteAnimation* FireSprite;
 	SpriteAnimation* NightmareSprite;
 	SpriteAnimation* NightmareSpriteLeft;
@@ -120,6 +123,7 @@ protected:
 	int bonusMoney;
 
 	// Timers
+	double deltaTime;
 	double prevElapsedAsteroid;
 	double prevElapsedArrow;
 	double prevElapsedBomb;
