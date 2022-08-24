@@ -105,6 +105,7 @@ protected:
 	int molotovAmount;
 	int arrowCost;
 	int arrowlvl;
+	int storystate;
 	int arrowAmount;
 	int flamingarrowCost;
 	int flamingarrowlvl;
@@ -150,6 +151,7 @@ protected:
 	bool ringUse;
 	bool bombUse;
 	bool flamingarrowUse;
+	bool daggerUse;
 	bool arrowUse;
 	bool molotovUse;
 	bool healthRegen;
@@ -157,6 +159,7 @@ protected:
 	bool tripleShot;
 	bool isAlive;
 	bool upgradeScreen;
+	bool ChooseScreen;
 	bool gameStart;
 	bool heroFacingLeft;
 

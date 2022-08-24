@@ -4,12 +4,16 @@
 #include "shader.hpp"
 #include "MeshBuilder.h"
 #include "Application.h"
+#include "Assignment1.h"
 #include "Utility.h"
 #include "LoadTGA.h"
 #include "LoadTexture.h"
 #include <sstream>
 bool SceneBase::restartGame = false;
 bool SceneBase::resetGame = false;
+bool SceneBase::daggerChoose = false;
+bool SceneBase::arrowChoose = false;
+bool SceneBase::cardChoose = false;
 MENU_TYPE SceneBase::menuType = M_MAIN;
 SceneBase::SceneBase()
 {
@@ -106,10 +110,13 @@ void SceneBase::Init()
 	}
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("reference", 1000, 1000, 1000);
 	meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 1), 10, 10, 1.f);
-	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 2.f);
+	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(0, 0, 0), 2.f);
 
 	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("background", Color(1, 1, 1), 1.f);
 	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//background.tga");
+
+	meshList[GEO_MAFIASHREK] = MeshBuilder::GenerateQuad("background", Color(1, 1, 1), 1.f);
+	meshList[GEO_MAFIASHREK]->textureID = LoadTGA("Image//mafiashrek.tga");
 
 	meshList[GEO_BOSS] = MeshBuilder::GenerateQuad("boss", Color(1, 1, 1), 1.f);
 	meshList[GEO_BOSS]->textureID = LoadTGA("Image//NightBorne.tga");
@@ -592,6 +599,89 @@ void SceneBase::RenderMainMenu()
 
 }
 
+void SceneBase::RenderCDagger()
+{
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
+    RenderMeshOnScreen(meshList[GEO_BOMB], 96, 60, 15, 15);
+	RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);
+	switch (selectorIndex)
+	{
+	case 0:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 40, 45, 45);
+		break;
+	case 1:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 25, 45, 45);
+		break;
+	}
+	RenderTextOnScreen(meshList[GEO_TEXT], "BOMBS", Color(1, 1, 1), 7, 25, 45, false);
+	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
+
+}
+void SceneBase::RenderCArrow()
+{
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
+	RenderMeshOnScreen(meshList[GEO_ARROW], 96, 60, 15, 15);
+	RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);
+	switch (selectorIndex)
+	{
+	case 0:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 40, 45, 45);
+		break;
+	case 1:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 25, 45, 45);
+		break;
+	}
+	RenderTextOnScreen(meshList[GEO_TEXT], "ARROW", Color(1, 1, 1), 7, 28, 45, false);
+	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
+
+}
+void SceneBase::RenderCCard()
+{
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
+	RenderMeshOnScreen(meshList[GEO_BOW], 96, 60, 15, 15);
+	RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);
+	switch (selectorIndex)
+	{
+	case 0:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 40, 45, 45);
+		break;
+	case 1:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 25, 45, 45);
+		break;
+	}
+	RenderTextOnScreen(meshList[GEO_TEXT], "CARD", Color(1, 1, 1), 7, 31, 45, false);
+	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
+
+}
+void SceneBase::RenderChoose()
+{
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
+
+	/*RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);*/
+	switch (selectorIndex)
+	{
+	case 0:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 70, 45, 45);
+		break;
+	case 1:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 55, 45, 45);
+		break;
+	case 2:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 40, 45, 45);
+		break;
+	case 3:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 25, 45, 45);
+		break;
+	}
+	RenderTextOnScreen(meshList[GEO_TEXT], "Choose Weapon", Color(1, 1, 1), 7, 1, 45, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "BOMB", Color(1, 1, 1), 4, 35, 35, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "ARROW", Color(1, 1, 1), 4, 32.5, 28, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "CARD", Color(1, 1, 1), 4, 35, 21, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "MENU", Color(1, 1, 1), 4, 35, 13, false);
+	selectorIndex = Math::Clamp(selectorIndex, 0, 3);
+
+}
+
 void SceneBase::RenderGameOver()
 {
 	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
@@ -610,7 +700,7 @@ void SceneBase::RenderGameOver()
 		break;
 	}
 	RenderTextOnScreen(meshList[GEO_TEXT], "Gameover", Color(1, 1, 1), 7, 23, 35, false);
-	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
+	selectorIndex = Math::Clamp(selectorIndex, 0, 2);
 
 }
 void SceneBase::RenderPauseMenu()
@@ -636,7 +726,7 @@ void SceneBase::UpdateMainMenu(float& m_speed)
 	switch (selectorIndex)
 	{
 	case 0:
-		menuType = M_NONE;
+		menuType = M_CHOOSE;
 		m_speed = 1;
 		break;
 	case 1:
@@ -645,6 +735,76 @@ void SceneBase::UpdateMainMenu(float& m_speed)
 	}
 }
 
+void SceneBase::UpdateChoose(float& m_speed)
+{
+	switch (selectorIndex)
+	{
+	case 0:
+		menuType = M_DAGGER;
+		break;
+	case 1:
+		menuType = M_ARROW;
+		break;
+	case 2:
+		menuType = M_CARD;
+		break;
+	case 3:
+		menuType = M_MAIN;
+		break;
+	}
+}
+
+void SceneBase::UpdateCDagger(float& m_speed)
+{
+	switch (selectorIndex)
+	{
+	case 0:
+		menuType = M_NONE;
+		cardChoose = false;
+		arrowChoose = false;
+		daggerChoose = true;
+		m_speed = 1;
+		break;
+	case 1:
+		selectorIndex = 0;
+		menuType = M_CHOOSE;
+		break;
+	}
+}
+void SceneBase::UpdateCArrow(float& m_speed)
+{
+	switch (selectorIndex)
+	{
+	case 0:
+		menuType = M_NONE;
+		arrowChoose = true;
+		cardChoose = false;
+		daggerChoose = false;
+		m_speed = 1;
+		break;
+	case 1:
+		selectorIndex = 0;
+		menuType = M_CHOOSE;
+		break;
+	}
+}
+void SceneBase::UpdateCCard(float& m_speed)
+{
+	switch (selectorIndex)
+	{
+	case 0:
+		menuType = M_NONE;
+		cardChoose = true;
+		arrowChoose = false;
+		daggerChoose = false;
+		m_speed = 1;
+		break;
+	case 1:
+		selectorIndex = 0;
+		menuType = M_CHOOSE;
+		break;
+	}
+}
 void SceneBase::UpdateGameOver(float& m_speed)
 {
 	restartGame = true;
@@ -656,7 +816,7 @@ void SceneBase::UpdateGameOver(float& m_speed)
 		break;
 	case 1:
 		selectorIndex = 0;
-		menuType = M_MAIN;
+		menuType = M_CHOOSE;
 		resetGame = true;
 		break;
 	case 2:
