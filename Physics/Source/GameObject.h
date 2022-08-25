@@ -83,7 +83,6 @@ struct GameObject
 	bool scaleDown;
 	bool facingLeft;
 	bool reachTarget;
-	bool isHit;
 
 	GameObject* nextNode;
 	GameObject* prevNode;

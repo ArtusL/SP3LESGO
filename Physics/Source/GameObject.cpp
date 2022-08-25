@@ -7,7 +7,6 @@ GameObject::GameObject(GAMEOBJECT_TYPE typeValue)
 	active(false),
 	enemyDamage(0),
 	hitboxSizeDivider(1),
-	isHit(false),
 	mass(1.f)
 {
 }
