@@ -86,6 +86,10 @@ void Assignment1::Init()
 	healthRegenCost = 20;
 
 	tempSpawnCount = 0;
+	tempWormCount = 0;
+	WormMax = 2;
+	spawnrate = 0.8;
+	killcount = 0;
 
 	shootCount = 0;
 	bossState = 0;
@@ -168,11 +172,12 @@ void Assignment1::Init()
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\ABossTheme.ogg"), 13, true, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\FwooshFire.ogg"), 14, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Punch.ogg"), 15, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\Coins.ogg"), 16, true);
 
 
 	// World map generation on game start
 	int obstacleCount = 150;
-	int chestCount = 5;
+	int chestCount = 10;
 
 	int obstacleIndex = 0;
 	float obstacleX, obstacleY;
@@ -195,7 +200,7 @@ void Assignment1::Init()
 					{
 
 						// Spawn Chest far away from each other
-						if (chestCount < 5)
+						if (chestCount < 140)
 						{
 
 							if (go->type == GameObject::GO_CHEST)
@@ -234,7 +239,7 @@ void Assignment1::Init()
 					{
 						newObstacle->type = GameObject::GO_CHEST;
 						newObstacle->pos.Set(obstacleX, obstacleY, 1);
-						newObstacle->scale.Set(12, 12, 1);
+						newObstacle->scale.Set(10, 8, 1);
 					}
 					else
 					{
@@ -293,7 +298,7 @@ GameObject* Assignment1::FetchGO()
 
 	//Get Size before adding 10
 	int prevSize = m_goList.size();
-	for (int i = 0; i < 500; ++i) {
+	for (int i = 0; i < 10; ++i) {
 		m_goList.push_back(new GameObject(GameObject::GO_GHOST));
 	}
 	m_goList.at(prevSize)->active = true;
@@ -335,6 +340,10 @@ void Assignment1::RestartGame()
 	healthRegenCost = 20;
 
 	tempSpawnCount = 0;
+	tempWormCount = 0;
+	WormMax = 2;
+	spawnrate = 0.8;
+	killcount = 0;
 
 	shootCount = 0;
 	bossState = 0;
@@ -403,6 +412,106 @@ void Assignment1::RestartGame()
 	hole->vel.SetZero();
 
 	//spawn and reset enemy station and turrets
+}
+
+void Assignment1:: SpawnWorm()
+{
+	if ((waveCount == 10 || waveCount == 15 || waveCount > 20) && tempWormCount < 1)
+	{
+		for (int i = 0; i < WormMax; ++i)
+		{
+			GameObject* prevBody;
+			int segmentCount = 30;
+			for (int i = 0; i < segmentCount; i++)
+			{
+				GameObject* go = FetchGO();
+				if (i == 0)
+				{
+					go->type = GameObject::GO_WORMHEAD;
+					go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+					go->scale.Set(10, 10, 1);
+					go->vel.Set(2, 2, 0);
+					go->timer = 10;
+
+					go->enemyDamage = 35;
+
+					go->prevNode = nullptr;
+					go->nextNode = nullptr;
+					go->hitboxSizeDivider = 1.8;
+				}
+				else if (i == segmentCount - 1)
+				{
+					go->type = GameObject::GO_WORMTAIL;
+					go->pos = prevBody->pos;
+					go->scale.Set(10, 10, 1);
+					go->vel.Set(0, 0, 0);
+
+					go->enemyDamage = 20;
+
+					go->prevNode = prevBody;
+					go->prevNode->nextNode = go;
+					go->nextNode = nullptr;
+					go->hitboxSizeDivider = 3;
+				}
+				else
+				{
+
+					if (prevBody->type == GameObject::GO_WORMHEAD ||
+						prevBody->type == GameObject::GO_WORMBODY2)
+					{
+						go->type = GameObject::GO_WORMBODY1;
+					}
+					else
+					{
+						go->type = GameObject::GO_WORMBODY2;
+					}
+
+					go->pos = prevBody->pos;
+					go->vel.Set(0, 0, 0);
+					go->scale.Set(10, 10, 1);
+
+					go->enemyDamage = 20;
+
+					go->prevNode = prevBody;
+					go->prevNode->nextNode = go;
+					go->nextNode = nullptr;
+					go->hitboxSizeDivider = 3;
+				}
+				go->hp = 70;
+				go->maxHP = go->hp;
+				go->prevEnemyBullet = elapsedTime;
+				go->speedFactor = 1;
+
+
+				go->facingLeft = true;
+				go->reachTarget = true;
+				prevBody = go;
+			}
+		}
+		tempWormCount++;
+	}
+}
+
+void Assignment1::SpawnBoss()
+{
+	if ((waveCount == 20||waveCount ==25 ||waveCount > 25) && tempSpawnCount < 1 && bossspawned == false)
+	{
+		GameObject* go = FetchGO();
+		go->type = GameObject::GO_BOSS;
+		go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+		go->vel.Set(Math::RandFloatMinMax(-20, 20), Math::RandFloatMinMax(-20, 20), 0);
+		go->scale.Set(30, 30, 1);
+		go->hp = 10000;
+		go->maxHP = go->hp;
+		go->prevEnemyBullet = elapsedTime;
+		go->speedFactor = 1;
+		go->hitboxSizeDivider = 8;
+		go->enemyDamage = 25;
+		go->facingLeft = true;
+		tempSpawnCount++;
+
+		bossspawned = true;
+	}
 }
 
 void Assignment1::UpdateMenu()
@@ -581,6 +690,14 @@ void Assignment1::Update(double dt)
 		ChestSprite->PlayAnimation("IDLE", -1, 1.0f);
 	}
 	ChestSprite->Update(dt);
+
+	Chestparticlesprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_CHEST_PARTICLE]);
+	// Chest Opening Animation
+	if (chestTimer <= 0)
+	{
+		Chestparticlesprite->PlayAnimation("OPEN", -1, 1.0f);
+	}
+	Chestparticlesprite->Update(dt);
 
 
 	// Enter to begin game
@@ -780,7 +897,7 @@ void Assignment1::Update(double dt)
 				}
 			}
 			
-			if (arrowUse = true && Application::IsKeyPressed('N') && arrowCost <= 220)
+			if (arrowUse == true && Application::IsKeyPressed('N') || arrowUse == false && Application::IsKeyPressed('N'))
 			{
 
 				keyDelay = 0.3;
@@ -788,8 +905,10 @@ void Assignment1::Update(double dt)
 				{
 					if (arrowCost < 30)
 					{
-					
+						arrowUse = true;
 						arrowlvl++;
+						cSoundController->StopSoundByID(10);
+						cSoundController->PlaySoundByID(10);
 					}
 					else
 					{
@@ -797,11 +916,15 @@ void Assignment1::Update(double dt)
 						{
 							arrowAmount++;
 							arrowlvl++;
+							cSoundController->StopSoundByID(10);
+							cSoundController->PlaySoundByID(10);
 						}
 						else if (arrowlvl <= 8)
 						{
 							arrowRate += 0.15;
 							arrowlvl++;
+							cSoundController->StopSoundByID(10);
+							cSoundController->PlaySoundByID(10);
 						}
 					}
 					if (arrowlvl <= 9)
@@ -809,8 +932,7 @@ void Assignment1::Update(double dt)
 						m_money -= arrowCost;
 						arrowCost += 25;
 					}
-					cSoundController->StopSoundByID(10);
-					cSoundController->PlaySoundByID(10);
+
 				}
 			}
 
@@ -1037,17 +1159,28 @@ void Assignment1::Update(double dt)
 		if (diff > 25)
 		{
 			waveCount++;
-			hpFactor += 0.4;
-			moneyFactor += 0.25;
-			bonusMoney++;
-			maxEnemyCount += 5;
+			if (waveCount < 20)
+			{
+				hpFactor += 0.4;
+				moneyFactor += 0.35;
+				bonusMoney++;
+				maxEnemyCount += 4;
+			}
+			else if (waveCount > 20)
+			{
+				WormMax = 4;
+				maxEnemyCount = 120;
+				moneyFactor = 6;
+				hpFactor += 1;
+				spawnrate = 0.4;
+			}
 			waveTimer = elapsedTime;
 		}
 
 
 		// Randomised enemy spawns
 		diff = elapsedTime - prevElapsedAsteroid;
-		if (diff > 1/* && tempSpawnCount < 1*/)
+		if (diff > spawnrate/* && tempSpawnCount < 1*/)
 		{
 			for (int i = 0; i < 3; ++i)
 			{
@@ -1117,7 +1250,7 @@ void Assignment1::Update(double dt)
 						go->hitboxSizeDivider = 4.5;
 						go->enemyDamage = 10;
 					}
-					else if (15 < randomEnemy && randomEnemy <= 25)
+					else if (15 < randomEnemy && randomEnemy <= 45)
 					{
 						go->type = GameObject::GO_FLAMEDEMON;
 						go->scale.Set(15, 15, 10);
@@ -1159,18 +1292,7 @@ void Assignment1::Update(double dt)
 						go->hitboxSizeDivider = 4.5;
 						go->enemyDamage = 10;
 					}
-					else if (10 < randomEnemy && randomEnemy <= 25)
-					{
-						go->type = GameObject::GO_EXPLODER;
-						go->hp = round(5 * hpFactor);
-						go->scale.Set(15, 15, 1);
-						go->hitboxSizeDivider = 4.5;
-						go->enemyDamage = 15;
-						go->angle = 0;
-						go->maxHP = go->hp;
-
-					}
-					else if (25 < randomEnemy && randomEnemy <= 40)
+					else if (10 < randomEnemy && randomEnemy <= 25 )
 					{
 						go->type = GameObject::GO_FLAMEDEMON;
 						go->scale.Set(15, 15, 10);
@@ -1180,6 +1302,16 @@ void Assignment1::Update(double dt)
 						go->speedFactor = 1;
 						go->hitboxSizeDivider = 2.8;
 						go->enemyDamage = 10;
+					}
+					else if (25 < randomEnemy && randomEnemy <= (40 + waveCount*1.2))
+					{
+						go->type = GameObject::GO_EXPLODER;
+						go->hp = round(5 * hpFactor);
+						go->scale.Set(15, 15, 1);
+						go->hitboxSizeDivider = 4.5;
+						go->enemyDamage = 15;
+						go->angle = 0;
+						go->maxHP = go->hp;
 					}
 					else
 					{
@@ -1225,11 +1357,89 @@ void Assignment1::Update(double dt)
 					}
 
 				}
+				else if (10 < waveCount <= 20)
+				{
+					if (randomEnemy <= 10)
+					{
 
+						go->type = GameObject::GO_EXPLODER;
+						go->hp = round(1 * hpFactor);
+						go->scale.Set(16, 16, 10);
+						go->prevEnemyBullet = 0.0;
+						go->hitboxSizeDivider = 3;
+						go->enemyDamage = 25;
 
+					}
+					else if (10 < randomEnemy && randomEnemy <= 30)
+					{
+						go->type = GameObject::GO_FLAMEDEMON;
+						go->scale.Set(25, 25, 10);
+						go->hp = round(8 * hpFactor);
+						go->maxHP = go->hp;
+						go->prevEnemyBullet = elapsedTime;
+						go->speedFactor = 1;
+						go->hitboxSizeDivider = 2.8;
+						go->enemyDamage = 15;
+					}
+					else if (30 < randomEnemy <= 45)
+					{
+						go->type = GameObject::GO_BDEMON;
+						go->hp = round(12 * hpFactor);
+						go->scale.Set(10, 10, 10);
+						go->prevEnemyBullet = 0.0;
+						go->hitboxSizeDivider = 3;
+						go->enemyDamage = 15;
 
+					}
+					else if (45 < randomEnemy && randomEnemy <= 65)
+					{
+						go->type = GameObject::GO_NIGHTMARE;
+						go->hp = round(15 * hpFactor);
+						go->scale.Set(20, 18, 10);
+						go->hitboxSizeDivider = 4.5;
+						go->enemyDamage = 20;
+					}
+					else
+					{
+						go->type = GameObject::GO_GHOST;
+						go->hp = round(1 * hpFactor);
+						go->scale.Set(15, 15, 15);
+						go->hitboxSizeDivider = 3.5;
+						go->enemyDamage = 4;
+					}
+				}
+				else if(waveCount > 20)
+				{
+					if (randomEnemy <= 10)
+					{
 
+						go->type = GameObject::GO_EXPLODER;
+						go->hp = round(1 * hpFactor);
+						go->scale.Set(16, 16, 10);
+						go->prevEnemyBullet = 0.0;
+						go->hitboxSizeDivider = 3;
+						go->enemyDamage = 25;
 
+					}
+					else if (10 < randomEnemy && randomEnemy <= 20)
+					{
+						go->type = GameObject::GO_FLAMEDEMON;
+						go->scale.Set(25, 25, 10);
+						go->hp = round(8 * hpFactor);
+						go->maxHP = go->hp;
+						go->prevEnemyBullet = elapsedTime;
+						go->speedFactor = 1;
+						go->hitboxSizeDivider = 2.8;
+						go->enemyDamage = 15;
+					}
+					else if (20 < randomEnemy <= 25)
+					{
+						go->type = GameObject::GO_BDEMON;
+						go->hp = round(12 * hpFactor);
+						go->scale.Set(10, 10, 10);
+						go->prevEnemyBullet = 0.0;
+						go->hitboxSizeDivider = 3;
+						go->enemyDamage = 15;
 
 				if (randomEnemy < 100 && waveCount >= 1 && shopactive == false)
 				{
@@ -1240,110 +1450,75 @@ void Assignment1::Update(double dt)
 					go->enemyDamage = 0;
 					shopactive = true;
 				}
-				//if (randomEnemy < 100 && waveCount >= 4 && shopactive == false)
-				//{
-				//	go->type = GameObject::GO_SHOP;
-				//	go->scale.Set(10, 10, 10);
-				//	go->prevEnemyBullet = elapsedTime;
-				//	go->hitboxSizeDivider = 0.75;
-				//	shopactive = true;
-				//}
-				//// Spawn shooting demon
-				//else if (randomEnemy < 10 && waveCount >= 4)
-				//{
-				//	go->type = GameObject::GO_BDEMON;
-				//	go->hp = round(7 * hpFactor);
-				//	go->scale.Set(14, 14, 10);
-				//	go->prevEnemyBullet = 0.0;
-				//	go->hitboxSizeDivider = 3;
-				//	go->enemyDamage = 5;
-				//}
-				//// Spawn nightmare
-				//else if (randomEnemy < 15)
-				//{
-				//	go->type = GameObject::GO_NIGHTMARE;
-				//	go->hp = round(10 * hpFactor);
-				//	go->scale.Set(20, 18, 10);
-				//	go->hitboxSizeDivider = 4.5;
-				//	go->enemyDamage = 10;
-				//}
-				//// Spawn Flamedemon
-				//else if (randomEnemy < 40)
-				//{
-			/*		go->type = GameObject::GO_FLAMEDEMON;
-					go->scale.Set(15, 15, 10);
-					go->hp = round(10 * hpFactor);
-					go->maxHP = go->hp;
-					go->prevEnemyBullet = elapsedTime;
-					go->speedFactor = 1;
-					go->hitboxSizeDivider = 2.8;
-					go->enemyDamage = 10;*/
-					//}
-					//else if (randomEnemy < 60)
-					//{
-			/*			go->type = GameObject::GO_EXPLODER;
-						go->hp = round(10 * hpFactor);
-						go->scale.Set(15, 15, 1);
-						go->hitboxSizeDivider = 4.5;
-						go->enemyDamage = 15;
-						go->angle = 0;
-						go->maxHP = go->hp;*/
+				if (waveCount == 10 || waveCount ==15)
+				{
+					SpawnWorm();
+				}
+				else if (waveCount == 20 || waveCount == 25)
+				{
+					SpawnBoss();
+				}
 
-						//}
-						//// Spawn ghost
-						//else
-						//{
-						//	go->type = GameObject::GO_GHOST;
-						//	go->hp = round(1 * hpFactor);
-						//	go->scale.Set(10, 10, 10);
-						//	go->hitboxSizeDivider = 3.5;
-						//	go->enemyDamage = 2;
-						//}
 				go->angle = 0;
 				go->maxHP = go->hp;
 
 				// Spawning from edge of world
 				int random = rand() % 4;
-				switch (random)
+				if (0 < waveCount <= 10 || waveCount > 20)
 				{
-				case 0:
-					go->pos.Set(m_worldWidth + 1, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
-					break;
-				case 1:
-					go->pos.Set(0 - 1, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
-					break;
-				case 2:
-					go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), m_worldHeight + 1, go->pos.z);
-					break;
-				case 3:
-					go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), 0 - 1, go->pos.z);
-					break;
+					// Spawning outside camera
+					switch (random)
+					{
+					case 0:
+						go->pos.Set(m_ship->pos.x + (m_ship->pos.x - camera.position.x), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+						break;
+					case 1:
+						go->pos.Set(camera.position.x, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+						break;
+					case 2:
+						go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), m_ship->pos.y + (m_ship->pos.y - camera.position.y), go->pos.z);
+						break;
+					case 3:
+						go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), go->pos.y < camera.position.y, go->pos.z);
+						break;
+
+					}
 				}
-
-				// Spawning outside camera
-				//switch (random)
-				//{
-				//case 0:
-				//	go->pos.Set(m_ship->pos.x + (m_ship->pos.x - camera.position.x), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
-				//	break;
-				//case 1:
-				//	go->pos.Set(camera.position.x, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
-				//	break;
-				//case 2:
-				//	go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), m_ship->pos.y + (m_ship->pos.y - camera.position.y), go->pos.z);
-				//	break;
-				//case 3:
-				//	go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), go->pos.y < camera.position.y, go->pos.z);
-				//	break;
-
-				//}
-
+				else if (11 <= waveCount && waveCount < 20)
+				{
+					//map spawn
+					switch (random)
+					{
+					case 0:
+						go->pos.Set(m_worldWidth + 1, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+						break;
+					case 1:
+						go->pos.Set(0 - 1, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+						break;
+					case 2:
+						go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), m_worldHeight + 1, go->pos.z);
+						break;
+					case 3:
+						go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), 0 - 1, go->pos.z);
+						break;
+					}
+				}
 				go->direction.Set(0.1, 0.1, 0.1);
 				go->vel = go->direction;
 				prevElapsedAsteroid = elapsedTime;
 				//m_objectCount++;
 			}
 		}
+		//allow worm to spawn again
+		if ((waveCount == 11 || waveCount == 16 || waveCount > 20)&& tempWormCount >= 1)
+		{
+			tempWormCount--;
+		}
+		if ((waveCount == 21 || waveCount > 25 ) && tempSpawnCount >= 1)
+		{
+			tempSpawnCount--;
+		}
+
 
 		// ****************************** Manual Spawning ***************************************88
 
@@ -1361,13 +1536,11 @@ void Assignment1::Update(double dt)
 			go->prevEnemyBullet = elapsedTime;
 			go->speedFactor = 1;
 			go->hitboxSizeDivider = 8;
-			go->enemyDamage = 20;
+			go->enemyDamage = 25;
 			go->facingLeft = true;
 			tempSpawnCount++;
 
 			bossspawned = true;
-
-
 		}
 
 
@@ -1446,7 +1619,7 @@ void Assignment1::Update(double dt)
 					prevBody = go;
 				}
 			}
-			tempSpawnCount++;
+			tempWormCount++;
 		}
 
 
@@ -1714,7 +1887,7 @@ void Assignment1::Update(double dt)
 
 
 				//Exercise 16: unspawn bullets when they leave screen
-				else if (go->type == GameObject::GO_BULLET || go->type == GameObject::GO_MISSLE || go->type == GameObject::GO_BOMB || go->type == GameObject::GO_MOLOTOV || go->type == GameObject::GO_ARROW || go->type == GameObject::GO_FLAMINGARROW)
+				else if (go->type == GameObject::GO_BULLET || go->type == GameObject::GO_CARD || go->type == GameObject::GO_BOMB || go->type == GameObject::GO_MOLOTOV || go->type == GameObject::GO_ARROW || go->type == GameObject::GO_FLAMINGARROW)
 				{
 					if (go->pos.x > m_worldWidth
 						|| go->pos.x <0
@@ -1755,7 +1928,7 @@ void Assignment1::Update(double dt)
 				// Player projectles despawn outside the camera view
 				if (go->type == GameObject::GO_BULLET ||
 					go->type == GameObject::GO_BOMB ||
-					go->type == GameObject::GO_MISSLE ||
+					go->type == GameObject::GO_CARD ||
 					go->type == GameObject::GO_FIRE ||
 					go->type == GameObject::GO_MOLOTOV ||
 					go->type == GameObject::GO_FLAMINGARROW ||
@@ -1846,7 +2019,7 @@ void Assignment1::Update(double dt)
 			if (diff > 1 / cardRate)
 			{
 				GameObject* go = FetchGO();
-				go->type = GameObject::GO_MISSLE;
+				go->type = GameObject::GO_CARD;
 				go->pos = m_ship->pos;
 				go->vel = m_ship->direction * BULLET_SPEED;
 				go->scale.Set(6.0f, 4.0f, 4.0f);
@@ -1961,7 +2134,7 @@ void Assignment1::Update(double dt)
 		for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 		{
 			GameObject* go = (GameObject*)*it;
-			if (go->active && go->type == GameObject::GO_MISSLE)
+			if (go->active && go->type == GameObject::GO_CARD)
 			{
 				// Check for enemy targets
 				for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
@@ -2014,6 +2187,15 @@ void Assignment1::Update(double dt)
 				{
 					fireTimer = 0.75;
 				}
+				if (go->timer < 0)
+				{
+					go->active = false;
+				}
+			}
+
+			if (go->type == GameObject::GO_CHEST_PARTICLE && go->active == true)
+			{
+				go->timer -= 1 * dt;
 				if (go->timer < 0)
 				{
 					go->active = false;
@@ -2568,6 +2750,16 @@ void Assignment1::Collision(GameObject* go)
 			ChestSprite->PlayAnimation("OPEN", 0, 2.0f);
 			go->timer = 1;
 			chestTimer = 3;
+			cSoundController->PlaySoundByID(16);
+
+			GameObject* chestparticle = FetchGO();
+			chestparticle->type = GameObject::GO_CHEST_PARTICLE;
+			chestparticle->pos = go->pos;
+			chestparticle->pos.x = go->pos.x - 2;
+			chestparticle->scale.Set(20, 20, 0.5);
+			chestparticle->vel.SetZero();
+			chestparticle->timer = 1;
+			
 		}
 
 		if (go->enemyDamage <= 0) // Healing items and buffs
@@ -2605,7 +2797,7 @@ void Assignment1::Collision(GameObject* go)
 }
 void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 {
-	if (bullet->type == GameObject::GO_MISSLE || bullet->type == GameObject::GO_BOMB ||
+	if (bullet->type == GameObject::GO_CARD || bullet->type == GameObject::GO_BOMB ||
 		bullet->type == GameObject::GO_BULLET || bullet->type == GameObject::GO_MOLOTOV ||
 		bullet->type == GameObject::GO_EXPLOSION || bullet->type == GameObject::GO_FIRE ||
 		bullet->type == GameObject::GO_ARROW || bullet->type == GameObject::GO_FLAMINGARROW ||
@@ -2621,10 +2813,14 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 		}
 
 
+
 		if (dis < rad && target->type != GameObject::GO_ENEMYBULLET)
 		{
-
-			if (bullet->type == GameObject::GO_MISSLE)
+			if (bullet->type != GameObject::GO_EXPLOSION)
+			{
+				target->isHit = true;
+			}
+			if (bullet->type == GameObject::GO_CARD)
 			{
 				int damageDealt = round(basicBulletDamage * 2 * Math::RandFloatMinMax(0.7, 1.5));
 				target->hp -= damageDealt;
@@ -2824,6 +3020,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 					bossspawned = false;
 				}
 				// Money gained
+				killcount++;
 				m_money += 1 + bonusMoney;
 
 				m_objectCount--;
@@ -3007,6 +3204,18 @@ void Assignment1::RenderGO(GameObject* go)
 {
 	float diff = elapsedTime - go->prevEnemyBullet;
 	go->previousPos = go->pos;
+
+	float renderColor;
+	if (go->isHit == true)
+	{
+		renderColor = 100;
+		go->isHit = false;
+	}
+	else
+	{
+		renderColor = 1;
+	}
+
 	switch (go->type)
 	{
 	case GameObject::GO_HERO:
@@ -3024,14 +3233,14 @@ void Assignment1::RenderGO(GameObject* go)
 				modelStack.PushMatrix();
 				modelStack.Rotate(180, 0, 0, 1);
 				modelStack.Scale(3, 1, 1);
-				RenderMesh(meshList[GEO_HEROATTACK_LEFT], false);
+				RenderMesh(meshList[GEO_HEROATTACK_LEFT], true);
 				modelStack.PopMatrix();
 			}
 			else
 			{
 				modelStack.PushMatrix();
 				modelStack.Scale(3, 1, 1);
-				RenderMesh(meshList[GEO_HEROATTACK], false);
+				RenderMesh(meshList[GEO_HEROATTACK], true);
 				modelStack.PopMatrix();
 			}
 		}
@@ -3049,14 +3258,14 @@ void Assignment1::RenderGO(GameObject* go)
 					modelStack.PushMatrix();
 					modelStack.Rotate(180, 0, 0, 1);
 					modelStack.Scale(2, 1, 1);
-					RenderMesh(meshList[GEO_HERORUN_LEFT], false);
+					RenderMesh(meshList[GEO_HERORUN_LEFT], true);
 					modelStack.PopMatrix();
 				}
 				else
 				{
 					modelStack.PushMatrix();
 					modelStack.Scale(2, 1, 1);
-					RenderMesh(meshList[GEO_HERORUN], false);
+					RenderMesh(meshList[GEO_HERORUN], true);
 					modelStack.PopMatrix();
 				}
 			}
@@ -3067,12 +3276,12 @@ void Assignment1::RenderGO(GameObject* go)
 				{
 					modelStack.PushMatrix();
 					modelStack.Rotate(180, 0, 0, 1);
-					RenderMesh(meshList[GEO_HERO_LEFT], false);
+					RenderMesh(meshList[GEO_HERO_LEFT], true);
 					modelStack.PopMatrix();
 				}
 				else
 				{
-					RenderMesh(meshList[GEO_HERO], false);
+					RenderMesh(meshList[GEO_HERO], true);
 				}
 			}
 		}
@@ -3109,16 +3318,18 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		meshList[GEO_GHOST_LEFT]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_GHOST]->material.kAmbient.Set(renderColor, renderColor, renderColor);
 
 		if (go->facingLeft == true)
 		{
-			RenderMesh(meshList[GEO_GHOST_LEFT], false);
+			RenderMesh(meshList[GEO_GHOST_LEFT], true);
 		}
 		else
 		{
 			modelStack.PushMatrix();
 			modelStack.Rotate(180, 0, 0, 1);
-			RenderMesh(meshList[GEO_GHOST], false);
+			RenderMesh(meshList[GEO_GHOST], true);
 			modelStack.PopMatrix();
 		}
 
@@ -3153,17 +3364,20 @@ void Assignment1::RenderGO(GameObject* go)
 		go->angle = atan2(m_ship->pos.y - go->pos.y, m_ship->pos.x - go->pos.x);
 		go->angle = (go->angle / Math::PI) * 180.0 - 90.0f;
 		modelStack.Rotate(go->angle, 0, 0, 1);
-
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+
+		meshList[GEO_BDEMON_LEFT]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_BDEMON]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+
 		if (go->facingLeft == true)
 		{
-			RenderMesh(meshList[GEO_BDEMON_LEFT], false);
+			RenderMesh(meshList[GEO_BDEMON_LEFT], true);
 		}
 		else
 		{
 			modelStack.PushMatrix();
 			modelStack.Rotate(180, 0, 0, 1);
-			RenderMesh(meshList[GEO_BDEMON], false);
+			RenderMesh(meshList[GEO_BDEMON], true);
 			modelStack.PopMatrix();
 		}
 		modelStack.PopMatrix();
@@ -3199,15 +3413,19 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PushMatrix();
 
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+
+		meshList[GEO_FDEMON_LEFT]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_FDEMON]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+
 		if (go->facingLeft == true)
 		{
-			RenderMesh(meshList[GEO_FDEMON_LEFT], false);
+			RenderMesh(meshList[GEO_FDEMON_LEFT], true);
 		}
 		else
 		{
 			modelStack.PushMatrix();
 			modelStack.Rotate(180, 0, 0, 1);
-			RenderMesh(meshList[GEO_FDEMON], false);
+			RenderMesh(meshList[GEO_FDEMON], true);
 			modelStack.PopMatrix();
 		}
 
@@ -3239,15 +3457,19 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+
+		meshList[GEO_NIGHTMARE_LEFT]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_NIGHTMARE]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+
 		if (go->facingLeft == true)
 		{
-			RenderMesh(meshList[GEO_NIGHTMARE_LEFT], false);
+			RenderMesh(meshList[GEO_NIGHTMARE_LEFT], true);
 		}
 		else
 		{
 			modelStack.PushMatrix();
 			modelStack.Rotate(180, 0, 0, 1);
-			RenderMesh(meshList[GEO_NIGHTMARE], false);
+			RenderMesh(meshList[GEO_NIGHTMARE], true);
 			modelStack.PopMatrix();
 		}
 
@@ -3278,15 +3500,18 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 
+		meshList[GEO_EXPLODER_LEFT]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_EXPLODER]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+
 		if (go->facingLeft == true)
 		{
-			RenderMesh(meshList[GEO_EXPLODER_LEFT], false);
+			RenderMesh(meshList[GEO_EXPLODER_LEFT], true);
 		}
 		else
 		{
 			modelStack.PushMatrix();
 			modelStack.Rotate(180, 0, 0, 1);
-			RenderMesh(meshList[GEO_EXPLODER], false);
+			RenderMesh(meshList[GEO_EXPLODER], true);
 			modelStack.PopMatrix();
 		}
 
@@ -3320,6 +3545,11 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 
+		meshList[GEO_WORMHEAD]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_WORMBODY1]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_WORMBODY2]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_WORMTAIL]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+
 		// Rotate to player
 		modelStack.PushMatrix();
 		if (go->type == GameObject::GO_WORMHEAD)
@@ -3345,19 +3575,19 @@ void Assignment1::RenderGO(GameObject* go)
 
 		if (go->type == GameObject::GO_WORMHEAD)
 		{
-			RenderMesh(meshList[GEO_WORMHEAD], false);
+			RenderMesh(meshList[GEO_WORMHEAD], true);
 		}
 		else if (go->type == GameObject::GO_WORMBODY1)
 		{
-			RenderMesh(meshList[GEO_WORMBODY1], false);
+			RenderMesh(meshList[GEO_WORMBODY1], true);
 		}
 		else if (go->type == GameObject::GO_WORMBODY2)
 		{
-			RenderMesh(meshList[GEO_WORMBODY2], false);
+			RenderMesh(meshList[GEO_WORMBODY2], true);
 		}
 		else if (go->type == GameObject::GO_WORMTAIL)
 		{
-			RenderMesh(meshList[GEO_WORMTAIL], false);
+			RenderMesh(meshList[GEO_WORMTAIL], true);
 		}
 		modelStack.PopMatrix();
 
@@ -3410,6 +3640,12 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+
+		meshList[GEO_BOSSATTACK_LEFT]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_BOSSATTACK]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_BOSS_LEFT]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_BOSS]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+
 		if (bossState == 1)
 		{
 			modelStack.PushMatrix();
@@ -3417,12 +3653,12 @@ void Assignment1::RenderGO(GameObject* go)
 			{
 				modelStack.PushMatrix();
 				modelStack.Rotate(180, 0, 0, 1);
-				RenderMesh(meshList[GEO_BOSSATTACK_LEFT], false);
+				RenderMesh(meshList[GEO_BOSSATTACK_LEFT], true);
 				modelStack.PopMatrix();
 			}
 			else
 			{
-				RenderMesh(meshList[GEO_BOSSATTACK], false);
+				RenderMesh(meshList[GEO_BOSSATTACK], true);
 			}
 			modelStack.PopMatrix();
 		}
@@ -3432,13 +3668,13 @@ void Assignment1::RenderGO(GameObject* go)
 			{
 				modelStack.PushMatrix();
 				modelStack.Rotate(180, 0, 0, 1);
-				RenderMesh(meshList[GEO_BOSS_LEFT], false);
+				RenderMesh(meshList[GEO_BOSS_LEFT], true);
 				modelStack.PopMatrix();
 
 			}
 			else
 			{
-				RenderMesh(meshList[GEO_BOSS], false);
+				RenderMesh(meshList[GEO_BOSS], true);
 			}
 		}
 
@@ -3451,13 +3687,13 @@ void Assignment1::RenderGO(GameObject* go)
 
 			modelStack.PushMatrix();
 			modelStack.Translate(0, 0.5, 0);
-			modelStack.Scale(go->scale.x * 0.03, go->scale.y * 0.003, go->scale.z);
+			modelStack.Scale(go->scale.x * 0.03, go->scale.y * 0.003, go->scale.z + 10);
 			RenderMesh(meshList[GEO_REDHEALTH], false);
 			modelStack.PopMatrix();
 
 			modelStack.PushMatrix();
 			modelStack.Translate(0, 0.5, 0.1);
-			modelStack.Scale(go->scale.x * 0.0003 * greenHealthPercent, go->scale.y * 0.003, go->scale.z);
+			modelStack.Scale(go->scale.x * 0.0003 * greenHealthPercent, go->scale.y * 0.003, go->scale.z + 10);
 			RenderMesh(meshList[GEO_GREENHEALTH], false);
 			modelStack.PopMatrix();
 		}
@@ -3519,6 +3755,14 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PopMatrix();
 		break;
 
+	case GameObject::GO_CHEST_PARTICLE:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_CHEST_PARTICLE], false);
+		modelStack.PopMatrix();
+		break;
+
 
 	case GameObject::GO_BULLET:
 		go->angle += 5;
@@ -3546,7 +3790,7 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PopMatrix();
 		break;
 
-	case GameObject::GO_MISSLE:
+	case GameObject::GO_CARD:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Rotate(go->angle, 0, 0, 1);
@@ -3751,15 +3995,6 @@ void Assignment1::Render()
 	modelStack.LoadIdentity();
 
 	//RenderMesh(meshList[GEO_AXES], false);
-
-
-
-	//Render background
-	/*modelStack.PushMatrix();
-	modelStack.Translate(576, 300, -3);
-	modelStack.Scale(1152, 600, 1);
-	RenderMesh(meshList[GEO_BACKGROUND], false);
-	modelStack.PopMatrix();*/
 
 	// Render Background (Multi-tile)
 	for (float rows = 1; rows < 8; rows++)
@@ -4126,6 +4361,9 @@ void Assignment1::Render()
 
 		RenderMeshOnScreen(meshList[GEO_HEROICON], 7, 12, 11, 11);
 
+		ss.str("");
+		ss << "" << killcount;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 1.2, 75, 58, false);
 
 		ss.str("");
 		ss << "$: " << m_money;
@@ -4135,16 +4373,6 @@ void Assignment1::Render()
 		ss << m_ship->hp;
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 27, 7.4, false);
 
-		//if (m_ship->hp > 50)
-		//{
-		//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 27, 7.4, false);
-		//}
-		//else if (m_ship->hp <= 50)
-		//{
-		//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 27, 7.4, false);
-		//}
-
-		//Exercise 5b: Render position, velocity & mass of ship
 		ss.str("");
 		ss.precision(5);
 		ss << "FPS: " << fps;

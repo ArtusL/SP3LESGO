@@ -34,6 +34,8 @@ public:
 	void HitEnemy(GameObject* bullet, GameObject* target);
 	void UpdateMenu();
 	void RestartGame();
+	void SpawnWorm();
+	void SpawnBoss();
 	GameObject* FetchGO();
 protected:
 
@@ -74,7 +76,7 @@ protected:
 	SpriteAnimation* ExplosionSprite;
 	SpriteAnimation* BarrierSprite;
 	SpriteAnimation* PurpleShot;
-
+	SpriteAnimation* Chestparticlesprite;
 	SpriteAnimation* ChestSprite;
 
 	Vector3 m_force;
@@ -168,6 +170,13 @@ protected:
 	bool bossspawned;
 	// FOR DEBUG ONLY
 	int tempSpawnCount;
+	int tempWormCount;
+	int WormMax;
+
+	float spawnrate;
+	float killcount;
+
+
 	int shootCount;
 	int bossState;
 	int laserAngle;
