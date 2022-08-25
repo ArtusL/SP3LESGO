@@ -34,6 +34,8 @@ public:
 	void HitEnemy(GameObject* bullet, GameObject* target);
 	void UpdateMenu();
 	void RestartGame();
+	void SpawnWorm();
+	void SpawnBoss();
 	GameObject* FetchGO();
 protected:
 
@@ -168,6 +170,7 @@ protected:
 	bool bossspawned;
 	// FOR DEBUG ONLY
 	int tempSpawnCount;
+	int tempWormCount;
 	int shootCount;
 	int bossState;
 	int laserAngle;
