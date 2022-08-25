@@ -424,7 +424,7 @@ void SceneBase::Init()
 
 
 
-	bLightEnabled = false;
+	bLightEnabled = true;
 }
 
 void SceneBase::Update(double dt)
@@ -529,7 +529,7 @@ void SceneBase::RenderMesh(Mesh* mesh, bool enableLight)
 
 	MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
 	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
-	if (enableLight && bLightEnabled)
+	if (enableLight && bLightEnabled && mesh->material.kAmbient.r >1)
 	{
 		glUniform1i(m_parameters[U_LIGHTENABLED], 1);
 		modelView = viewStack.Top() * modelStack.Top();
@@ -539,8 +539,10 @@ void SceneBase::RenderMesh(Mesh* mesh, bool enableLight)
 
 		//load material
 		glUniform3fv(m_parameters[U_MATERIAL_AMBIENT], 1, &mesh->material.kAmbient.r);
-		glUniform3fv(m_parameters[U_MATERIAL_DIFFUSE], 1, &mesh->material.kDiffuse.r);
-		glUniform3fv(m_parameters[U_MATERIAL_SPECULAR], 1, &mesh->material.kSpecular.r);
+		glUniform3fv(m_parameters[U_MATERIAL_AMBIENT], 2, &mesh->material.kAmbient.g);
+		glUniform3fv(m_parameters[U_MATERIAL_AMBIENT], 3, &mesh->material.kAmbient.b);
+		//glUniform3fv(m_parameters[U_MATERIAL_DIFFUSE], 1, &mesh->material.kDiffuse.r);
+		//glUniform3fv(m_parameters[U_MATERIAL_SPECULAR], 1, &mesh->material.kSpecular.r);
 		glUniform1f(m_parameters[U_MATERIAL_SHININESS], mesh->material.kShininess);
 	}
 	else

@@ -2824,9 +2824,13 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 		}
 
 
+
 		if (dis < rad && target->type != GameObject::GO_ENEMYBULLET)
 		{
-
+			if (bullet->type != GameObject::GO_EXPLOSION)
+			{
+				target->isHit = true;
+			}
 			if (bullet->type == GameObject::GO_CARD)
 			{
 				int damageDealt = round(basicBulletDamage * 2 * Math::RandFloatMinMax(0.7, 1.5));
@@ -3210,6 +3214,18 @@ void Assignment1::RenderGO(GameObject* go)
 {
 	float diff = elapsedTime - go->prevEnemyBullet;
 	go->previousPos = go->pos;
+
+	float renderColor;
+	if (go->isHit == true)
+	{
+		renderColor = 100;
+		go->isHit = false;
+	}
+	else
+	{
+		renderColor = 1;
+	}
+
 	switch (go->type)
 	{
 	case GameObject::GO_HERO:
@@ -3227,14 +3243,14 @@ void Assignment1::RenderGO(GameObject* go)
 				modelStack.PushMatrix();
 				modelStack.Rotate(180, 0, 0, 1);
 				modelStack.Scale(3, 1, 1);
-				RenderMesh(meshList[GEO_HEROATTACK_LEFT], false);
+				RenderMesh(meshList[GEO_HEROATTACK_LEFT], true);
 				modelStack.PopMatrix();
 			}
 			else
 			{
 				modelStack.PushMatrix();
 				modelStack.Scale(3, 1, 1);
-				RenderMesh(meshList[GEO_HEROATTACK], false);
+				RenderMesh(meshList[GEO_HEROATTACK], true);
 				modelStack.PopMatrix();
 			}
 		}
@@ -3252,14 +3268,14 @@ void Assignment1::RenderGO(GameObject* go)
 					modelStack.PushMatrix();
 					modelStack.Rotate(180, 0, 0, 1);
 					modelStack.Scale(2, 1, 1);
-					RenderMesh(meshList[GEO_HERORUN_LEFT], false);
+					RenderMesh(meshList[GEO_HERORUN_LEFT], true);
 					modelStack.PopMatrix();
 				}
 				else
 				{
 					modelStack.PushMatrix();
 					modelStack.Scale(2, 1, 1);
-					RenderMesh(meshList[GEO_HERORUN], false);
+					RenderMesh(meshList[GEO_HERORUN], true);
 					modelStack.PopMatrix();
 				}
 			}
@@ -3270,12 +3286,12 @@ void Assignment1::RenderGO(GameObject* go)
 				{
 					modelStack.PushMatrix();
 					modelStack.Rotate(180, 0, 0, 1);
-					RenderMesh(meshList[GEO_HERO_LEFT], false);
+					RenderMesh(meshList[GEO_HERO_LEFT], true);
 					modelStack.PopMatrix();
 				}
 				else
 				{
-					RenderMesh(meshList[GEO_HERO], false);
+					RenderMesh(meshList[GEO_HERO], true);
 				}
 			}
 		}
@@ -3312,16 +3328,18 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		meshList[GEO_GHOST_LEFT]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_GHOST]->material.kAmbient.Set(renderColor, renderColor, renderColor);
 
 		if (go->facingLeft == true)
 		{
-			RenderMesh(meshList[GEO_GHOST_LEFT], false);
+			RenderMesh(meshList[GEO_GHOST_LEFT], true);
 		}
 		else
 		{
 			modelStack.PushMatrix();
 			modelStack.Rotate(180, 0, 0, 1);
-			RenderMesh(meshList[GEO_GHOST], false);
+			RenderMesh(meshList[GEO_GHOST], true);
 			modelStack.PopMatrix();
 		}
 
@@ -3356,17 +3374,20 @@ void Assignment1::RenderGO(GameObject* go)
 		go->angle = atan2(m_ship->pos.y - go->pos.y, m_ship->pos.x - go->pos.x);
 		go->angle = (go->angle / Math::PI) * 180.0 - 90.0f;
 		modelStack.Rotate(go->angle, 0, 0, 1);
-
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+
+		meshList[GEO_BDEMON_LEFT]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_BDEMON]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+
 		if (go->facingLeft == true)
 		{
-			RenderMesh(meshList[GEO_BDEMON_LEFT], false);
+			RenderMesh(meshList[GEO_BDEMON_LEFT], true);
 		}
 		else
 		{
 			modelStack.PushMatrix();
 			modelStack.Rotate(180, 0, 0, 1);
-			RenderMesh(meshList[GEO_BDEMON], false);
+			RenderMesh(meshList[GEO_BDEMON], true);
 			modelStack.PopMatrix();
 		}
 		modelStack.PopMatrix();
@@ -3402,15 +3423,19 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PushMatrix();
 
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+
+		meshList[GEO_FDEMON_LEFT]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_FDEMON]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+
 		if (go->facingLeft == true)
 		{
-			RenderMesh(meshList[GEO_FDEMON_LEFT], false);
+			RenderMesh(meshList[GEO_FDEMON_LEFT], true);
 		}
 		else
 		{
 			modelStack.PushMatrix();
 			modelStack.Rotate(180, 0, 0, 1);
-			RenderMesh(meshList[GEO_FDEMON], false);
+			RenderMesh(meshList[GEO_FDEMON], true);
 			modelStack.PopMatrix();
 		}
 
@@ -3442,15 +3467,19 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+
+		meshList[GEO_NIGHTMARE_LEFT]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_NIGHTMARE]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+
 		if (go->facingLeft == true)
 		{
-			RenderMesh(meshList[GEO_NIGHTMARE_LEFT], false);
+			RenderMesh(meshList[GEO_NIGHTMARE_LEFT], true);
 		}
 		else
 		{
 			modelStack.PushMatrix();
 			modelStack.Rotate(180, 0, 0, 1);
-			RenderMesh(meshList[GEO_NIGHTMARE], false);
+			RenderMesh(meshList[GEO_NIGHTMARE], true);
 			modelStack.PopMatrix();
 		}
 
@@ -3481,15 +3510,18 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 
+		meshList[GEO_EXPLODER_LEFT]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_EXPLODER]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+
 		if (go->facingLeft == true)
 		{
-			RenderMesh(meshList[GEO_EXPLODER_LEFT], false);
+			RenderMesh(meshList[GEO_EXPLODER_LEFT], true);
 		}
 		else
 		{
 			modelStack.PushMatrix();
 			modelStack.Rotate(180, 0, 0, 1);
-			RenderMesh(meshList[GEO_EXPLODER], false);
+			RenderMesh(meshList[GEO_EXPLODER], true);
 			modelStack.PopMatrix();
 		}
 
@@ -3523,6 +3555,11 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 
+		meshList[GEO_WORMHEAD]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_WORMBODY1]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_WORMBODY2]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_WORMTAIL]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+
 		// Rotate to player
 		modelStack.PushMatrix();
 		if (go->type == GameObject::GO_WORMHEAD)
@@ -3548,19 +3585,19 @@ void Assignment1::RenderGO(GameObject* go)
 
 		if (go->type == GameObject::GO_WORMHEAD)
 		{
-			RenderMesh(meshList[GEO_WORMHEAD], false);
+			RenderMesh(meshList[GEO_WORMHEAD], true);
 		}
 		else if (go->type == GameObject::GO_WORMBODY1)
 		{
-			RenderMesh(meshList[GEO_WORMBODY1], false);
+			RenderMesh(meshList[GEO_WORMBODY1], true);
 		}
 		else if (go->type == GameObject::GO_WORMBODY2)
 		{
-			RenderMesh(meshList[GEO_WORMBODY2], false);
+			RenderMesh(meshList[GEO_WORMBODY2], true);
 		}
 		else if (go->type == GameObject::GO_WORMTAIL)
 		{
-			RenderMesh(meshList[GEO_WORMTAIL], false);
+			RenderMesh(meshList[GEO_WORMTAIL], true);
 		}
 		modelStack.PopMatrix();
 
@@ -3613,6 +3650,12 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+
+		meshList[GEO_BOSSATTACK_LEFT]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_BOSSATTACK]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_BOSS_LEFT]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+		meshList[GEO_BOSS]->material.kAmbient.Set(renderColor, renderColor, renderColor);
+
 		if (bossState == 1)
 		{
 			modelStack.PushMatrix();
@@ -3620,12 +3663,12 @@ void Assignment1::RenderGO(GameObject* go)
 			{
 				modelStack.PushMatrix();
 				modelStack.Rotate(180, 0, 0, 1);
-				RenderMesh(meshList[GEO_BOSSATTACK_LEFT], false);
+				RenderMesh(meshList[GEO_BOSSATTACK_LEFT], true);
 				modelStack.PopMatrix();
 			}
 			else
 			{
-				RenderMesh(meshList[GEO_BOSSATTACK], false);
+				RenderMesh(meshList[GEO_BOSSATTACK], true);
 			}
 			modelStack.PopMatrix();
 		}
@@ -3635,13 +3678,13 @@ void Assignment1::RenderGO(GameObject* go)
 			{
 				modelStack.PushMatrix();
 				modelStack.Rotate(180, 0, 0, 1);
-				RenderMesh(meshList[GEO_BOSS_LEFT], false);
+				RenderMesh(meshList[GEO_BOSS_LEFT], true);
 				modelStack.PopMatrix();
 
 			}
 			else
 			{
-				RenderMesh(meshList[GEO_BOSS], false);
+				RenderMesh(meshList[GEO_BOSS], true);
 			}
 		}
 
@@ -3654,13 +3697,13 @@ void Assignment1::RenderGO(GameObject* go)
 
 			modelStack.PushMatrix();
 			modelStack.Translate(0, 0.5, 0);
-			modelStack.Scale(go->scale.x * 0.03, go->scale.y * 0.003, go->scale.z);
+			modelStack.Scale(go->scale.x * 0.03, go->scale.y * 0.003, go->scale.z + 10);
 			RenderMesh(meshList[GEO_REDHEALTH], false);
 			modelStack.PopMatrix();
 
 			modelStack.PushMatrix();
 			modelStack.Translate(0, 0.5, 0.1);
-			modelStack.Scale(go->scale.x * 0.0003 * greenHealthPercent, go->scale.y * 0.003, go->scale.z);
+			modelStack.Scale(go->scale.x * 0.0003 * greenHealthPercent, go->scale.y * 0.003, go->scale.z + 10);
 			RenderMesh(meshList[GEO_GREENHEALTH], false);
 			modelStack.PopMatrix();
 		}
