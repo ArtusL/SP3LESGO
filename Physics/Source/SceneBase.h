@@ -122,6 +122,7 @@ public:
 		GEO_TRIPLESHOT,
 		// Obstacles on map
 		GEO_CHEST,
+		GEO_CHEST_PARTICLE,
 		GEO_TREE,
 		GEO_SWAMP,
 		// Players animations

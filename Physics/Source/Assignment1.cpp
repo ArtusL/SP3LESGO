@@ -168,11 +168,12 @@ void Assignment1::Init()
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\ABossTheme.ogg"), 13, true, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\FwooshFire.ogg"), 14, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Punch.ogg"), 15, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\Coins.ogg"), 16, true);
 
 
 	// World map generation on game start
 	int obstacleCount = 150;
-	int chestCount = 5;
+	int chestCount = 140;
 
 	int obstacleIndex = 0;
 	float obstacleX, obstacleY;
@@ -195,7 +196,7 @@ void Assignment1::Init()
 					{
 
 						// Spawn Chest far away from each other
-						if (chestCount < 5)
+						if (chestCount < 140)
 						{
 
 							if (go->type == GameObject::GO_CHEST)
@@ -543,6 +544,14 @@ void Assignment1::Update(double dt)
 	}
 	ChestSprite->Update(dt);
 
+	Chestparticlesprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_CHEST_PARTICLE]);
+	// Chest Opening Animation
+	if (chestTimer <= 0)
+	{
+		Chestparticlesprite->PlayAnimation("OPEN", -1, 1.0f);
+	}
+	Chestparticlesprite->Update(dt);
+
 
 	// Enter to begin game
 	if (!gameStart)
@@ -738,7 +747,7 @@ void Assignment1::Update(double dt)
 				}
 			}
 			
-			if (arrowUse = true && Application::IsKeyPressed('N') && arrowCost <= 220)
+			if (arrowUse == true && Application::IsKeyPressed('N') || arrowUse == false && Application::IsKeyPressed('N'))
 			{
 
 				keyDelay = 0.3;
@@ -746,8 +755,10 @@ void Assignment1::Update(double dt)
 				{
 					if (arrowCost < 30)
 					{
-					
+						arrowUse = true;
 						arrowlvl++;
+						cSoundController->StopSoundByID(10);
+						cSoundController->PlaySoundByID(10);
 					}
 					else
 					{
@@ -755,11 +766,15 @@ void Assignment1::Update(double dt)
 						{
 							arrowAmount++;
 							arrowlvl++;
+							cSoundController->StopSoundByID(10);
+							cSoundController->PlaySoundByID(10);
 						}
 						else if (arrowlvl <= 8)
 						{
 							arrowRate += 0.15;
 							arrowlvl++;
+							cSoundController->StopSoundByID(10);
+							cSoundController->PlaySoundByID(10);
 						}
 					}
 					if (arrowlvl <= 9)
@@ -767,8 +782,7 @@ void Assignment1::Update(double dt)
 						m_money -= arrowCost;
 						arrowCost += 25;
 					}
-					cSoundController->StopSoundByID(10);
-					cSoundController->PlaySoundByID(10);
+
 				}
 			}
 
@@ -1189,7 +1203,7 @@ void Assignment1::Update(double dt)
 
 
 
-				if (randomEnemy < 100 && waveCount >= 4 && shopactive == false)
+				if (randomEnemy < 100 && waveCount >= 1 && shopactive == false)
 				{
 					go->type = GameObject::GO_SHOP;
 					go->scale.Set(10, 10, 10);
@@ -1672,7 +1686,7 @@ void Assignment1::Update(double dt)
 
 
 				//Exercise 16: unspawn bullets when they leave screen
-				else if (go->type == GameObject::GO_BULLET || go->type == GameObject::GO_MISSLE || go->type == GameObject::GO_BOMB || go->type == GameObject::GO_MOLOTOV || go->type == GameObject::GO_ARROW || go->type == GameObject::GO_FLAMINGARROW)
+				else if (go->type == GameObject::GO_BULLET || go->type == GameObject::GO_CARD || go->type == GameObject::GO_BOMB || go->type == GameObject::GO_MOLOTOV || go->type == GameObject::GO_ARROW || go->type == GameObject::GO_FLAMINGARROW)
 				{
 					if (go->pos.x > m_worldWidth
 						|| go->pos.x <0
@@ -1713,7 +1727,7 @@ void Assignment1::Update(double dt)
 				// Player projectles despawn outside the camera view
 				if (go->type == GameObject::GO_BULLET ||
 					go->type == GameObject::GO_BOMB ||
-					go->type == GameObject::GO_MISSLE ||
+					go->type == GameObject::GO_CARD ||
 					go->type == GameObject::GO_FIRE ||
 					go->type == GameObject::GO_MOLOTOV ||
 					go->type == GameObject::GO_FLAMINGARROW ||
@@ -1804,7 +1818,7 @@ void Assignment1::Update(double dt)
 			if (diff > 1 / cardRate)
 			{
 				GameObject* go = FetchGO();
-				go->type = GameObject::GO_MISSLE;
+				go->type = GameObject::GO_CARD;
 				go->pos = m_ship->pos;
 				go->vel = m_ship->direction * BULLET_SPEED;
 				go->scale.Set(6.0f, 4.0f, 4.0f);
@@ -1919,7 +1933,7 @@ void Assignment1::Update(double dt)
 		for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 		{
 			GameObject* go = (GameObject*)*it;
-			if (go->active && go->type == GameObject::GO_MISSLE)
+			if (go->active && go->type == GameObject::GO_CARD)
 			{
 				// Check for enemy targets
 				for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
@@ -1972,6 +1986,15 @@ void Assignment1::Update(double dt)
 				{
 					fireTimer = 0.75;
 				}
+				if (go->timer < 0)
+				{
+					go->active = false;
+				}
+			}
+
+			if (go->type == GameObject::GO_CHEST_PARTICLE && go->active == true)
+			{
+				go->timer -= 1 * dt;
 				if (go->timer < 0)
 				{
 					go->active = false;
@@ -2525,6 +2548,16 @@ void Assignment1::Collision(GameObject* go)
 			ChestSprite->PlayAnimation("OPEN", 0, 2.0f);
 			go->timer = 1;
 			chestTimer = 3;
+			cSoundController->PlaySoundByID(16);
+
+			GameObject* chestparticle = FetchGO();
+			chestparticle->type = GameObject::GO_CHEST_PARTICLE;
+			chestparticle->pos = go->pos;
+			chestparticle->pos.x = go->pos.x - 2;
+			chestparticle->scale.Set(20, 20, 0.5);
+			chestparticle->vel.SetZero();
+			chestparticle->timer = 1;
+			
 		}
 
 		if (go->enemyDamage <= 0) // Healing items and buffs
@@ -2562,7 +2595,7 @@ void Assignment1::Collision(GameObject* go)
 }
 void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 {
-	if (bullet->type == GameObject::GO_MISSLE || bullet->type == GameObject::GO_BOMB ||
+	if (bullet->type == GameObject::GO_CARD || bullet->type == GameObject::GO_BOMB ||
 		bullet->type == GameObject::GO_BULLET || bullet->type == GameObject::GO_MOLOTOV ||
 		bullet->type == GameObject::GO_EXPLOSION || bullet->type == GameObject::GO_FIRE ||
 		bullet->type == GameObject::GO_ARROW || bullet->type == GameObject::GO_FLAMINGARROW ||
@@ -2581,7 +2614,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 		if (dis < rad && target->type != GameObject::GO_ENEMYBULLET)
 		{
 
-			if (bullet->type == GameObject::GO_MISSLE)
+			if (bullet->type == GameObject::GO_CARD)
 			{
 				int damageDealt = round(basicBulletDamage * 2 * Math::RandFloatMinMax(0.7, 1.5));
 				target->hp -= damageDealt;
@@ -3476,6 +3509,14 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PopMatrix();
 		break;
 
+	case GameObject::GO_CHEST_PARTICLE:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_CHEST_PARTICLE], false);
+		modelStack.PopMatrix();
+		break;
+
 
 	case GameObject::GO_BULLET:
 		go->angle += 5;
@@ -3503,7 +3544,7 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PopMatrix();
 		break;
 
-	case GameObject::GO_MISSLE:
+	case GameObject::GO_CARD:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Rotate(go->angle, 0, 0, 1);
@@ -3702,15 +3743,6 @@ void Assignment1::Render()
 	modelStack.LoadIdentity();
 
 	//RenderMesh(meshList[GEO_AXES], false);
-
-
-
-	//Render background
-	/*modelStack.PushMatrix();
-	modelStack.Translate(576, 300, -3);
-	modelStack.Scale(1152, 600, 1);
-	RenderMesh(meshList[GEO_BACKGROUND], false);
-	modelStack.PopMatrix();*/
 
 	// Render Background (Multi-tile)
 	for (float rows = 1; rows < 8; rows++)

@@ -405,6 +405,9 @@ void SceneBase::Init()
 	meshList[GEO_TREE] = MeshBuilder::GenerateQuad("Tree", Color(1, 1, 1), 1.f);
 	meshList[GEO_TREE]->textureID = LoadTGA("Image//tree.tga");
 
+	meshList[GEO_SWAMP] = MeshBuilder::GenerateQuad("Tree", Color(1, 1, 1), 1.f);
+	meshList[GEO_SWAMP]->textureID = LoadTGA("Image//swamp.tga");
+
 	//Extras
 	meshList[GEO_CHEST] = MeshBuilder::GenerateSpriteAnimation("Chest", 8, 5);
 	meshList[GEO_CHEST]->textureID = LoadTexture("Image//Chests.png", true);
@@ -412,6 +415,12 @@ void SceneBase::Init()
 	SpriteAnimation* Chestsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_CHEST]);
 	Chestsprite->AddAnimation("IDLE", 20, 24);
 	Chestsprite->AddAnimation("OPEN", 25, 30);
+
+	meshList[GEO_CHEST_PARTICLE] = MeshBuilder::GenerateSpriteAnimation("Chest Particle", 1, 6);
+	meshList[GEO_CHEST_PARTICLE]->textureID = LoadTexture("Image//Chest_Particle.png", true);
+	meshList[GEO_CHEST_PARTICLE]->material.kAmbient.Set(1, 1, 1);
+	SpriteAnimation* Chestparticlesprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_CHEST_PARTICLE]);
+	Chestparticlesprite->AddAnimation("OPEN", 0, 6);
 
 
 

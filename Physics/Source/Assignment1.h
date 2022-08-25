@@ -74,7 +74,7 @@ protected:
 	SpriteAnimation* ExplosionSprite;
 	SpriteAnimation* BarrierSprite;
 	SpriteAnimation* PurpleShot;
-
+	SpriteAnimation* Chestparticlesprite;
 	SpriteAnimation* ChestSprite;
 
 	Vector3 m_force;

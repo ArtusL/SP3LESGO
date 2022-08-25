@@ -39,6 +39,7 @@ struct GameObject
 		GO_SHOP,
 		GO_HEAL,
 		GO_CHEST,
+		GO_CHEST_PARTICLE,
 		GO_HEROHEALTH,
 
 		GO_TREE,
@@ -47,7 +48,7 @@ struct GameObject
 		GO_SPLITBULLET,
 		GO_ENEMYBULLET,
 		GO_LASER,
-		GO_MISSLE,
+		GO_CARD,
 		GO_EXPLOSION,
 		GO_RING,
 		GO_RINGAURA,
