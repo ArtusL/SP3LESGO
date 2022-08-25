@@ -67,6 +67,8 @@ public:
 		GEO_SELECTOR,
 		GEO_UIBG,
 		GEO_GAMEOVER,
+		GEO_DEADBG,
+		GEO_SHOPBG,
 
 
 		GEO_BALL,

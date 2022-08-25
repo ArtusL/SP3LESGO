@@ -8,7 +8,7 @@
 #include "SpriteAnimation.h"
 #include "System\filesystem.h"
 #include"..\Source\SoundController\SoundController.h"
-
+//extern int bomblvl;
 class Assignment1 : public SceneBase
 {
 	static const int MAX_SPEED = 2;

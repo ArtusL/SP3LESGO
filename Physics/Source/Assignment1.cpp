@@ -8,7 +8,6 @@
 const float Assignment1::ROTATION_SPEED = 5.f;
 const float Assignment1::MAX_ROTATION_SPEED = 0.7f;
 const float Assignment1::GRAVITY_CONSTANT = 1.f;
-
 Assignment1::Assignment1()
 
 	:cSoundController(NULL)
@@ -57,7 +56,7 @@ void Assignment1::Init()
 	}
 
 	//Exercise 2b: Initialize m_hp and m_score
-	m_hp = 100;
+	m_hp = 1;
 
 	m_money = 10000;
 	m_objectCount = 0;
