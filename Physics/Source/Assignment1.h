@@ -96,8 +96,8 @@ protected:
 	double fireRate;
 	int fireRateCost;
 	int damageUpCost;
-	int missleCost;
-	int misslelvl;
+	int cardCost;
+	int cardlvl;
 	int ringCost;
 	int ringlvl;
 	int bombCost;
@@ -131,10 +131,10 @@ protected:
 	double prevElapsedArrow;
 	double prevElapsedBomb;
 	double prevElapsedBullet;
-	double prevElapsedMissle;
+	double prevElapsedCard;
 	double prevElapsedMolotov;
 	double prevHealthRegen;
-	double missleRate;
+	double cardRate;
 	double molotovRate;
 	double bombRate;
 	double arrowRate;
@@ -150,7 +150,7 @@ protected:
 	double chestTimer;
 
 	bool shopactive;
-	bool missleUse;
+	bool cardUse;
 	bool ringUse;
 	bool bombUse;
 	bool flamingarrowUse;
