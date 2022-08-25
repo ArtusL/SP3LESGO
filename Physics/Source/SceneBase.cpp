@@ -11,7 +11,7 @@
 #include <sstream>
 bool SceneBase::restartGame = false;
 bool SceneBase::resetGame = false;
-bool SceneBase::daggerChoose = false;
+bool SceneBase::bombChoose = false;
 bool SceneBase::arrowChoose = false;
 bool SceneBase::cardChoose = false;
 MENU_TYPE SceneBase::menuType = M_MAIN;
@@ -291,14 +291,14 @@ void SceneBase::Init()
 	meshList[GEO_WORMTAIL]->textureID = LoadTGA("Image//worm_tail.tga");
 
 	// Bullet types
-	meshList[GEO_CLUB] = MeshBuilder::GenerateQuad("basic bullet", Color(1, 1, 1), 1.f);
-	meshList[GEO_CLUB]->textureID = LoadTGA("Image//Dagger.tga");
+	meshList[GEO_PRIMARY] = MeshBuilder::GenerateQuad("basic bullet", Color(1, 1, 1), 1.f);
+	meshList[GEO_PRIMARY]->textureID = LoadTGA("Image//Dagger.tga");
 
 	meshList[GEO_ENEMYBULLET] = MeshBuilder::GenerateQuad("enemy bullet", Color(1, 1, 1), 1.f);
 	meshList[GEO_ENEMYBULLET]->textureID = LoadTGA("Image//enemybullet.tga");
 
-	meshList[GEO_BOW] = MeshBuilder::GenerateQuad("missle", Color(1, 1, 1), 1.f);
-	meshList[GEO_BOW]->textureID = LoadTGA("Image//Cards.tga");
+	meshList[GEO_CARDS] = MeshBuilder::GenerateQuad("card", Color(1, 1, 1), 1.f);
+	meshList[GEO_CARDS]->textureID = LoadTGA("Image//Cards.tga");
 
 	meshList[GEO_BOMB] = MeshBuilder::GenerateQuad("Bomb", Color(1, 1, 1), 1.f);
 	meshList[GEO_BOMB]->textureID = LoadTGA("Image//Bomb.tga");
@@ -602,7 +602,7 @@ void SceneBase::RenderMainMenu()
 
 }
 
-void SceneBase::RenderCDagger()
+void SceneBase::RenderCBomb()
 {
 	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
 	RenderMeshOnScreen(meshList[GEO_BOMB], 96, 60, 15, 15);
@@ -641,7 +641,7 @@ void SceneBase::RenderCArrow()
 void SceneBase::RenderCCard()
 {
 	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
-	RenderMeshOnScreen(meshList[GEO_BOW], 96, 60, 15, 15);
+	RenderMeshOnScreen(meshList[GEO_CARDS], 96, 60, 15, 15);
 	RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);
 	switch (selectorIndex)
 	{
@@ -676,11 +676,11 @@ void SceneBase::RenderChoose()
 		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 25, 45, 45);
 		break;
 	}
-	RenderTextOnScreen(meshList[GEO_TEXT], "Choose Weapon", Color(1, 1, 1), 7, 1, 45, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "BOMB", Color(1, 1, 1), 4, 35, 35, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "ARROW", Color(1, 1, 1), 4, 32.5, 28, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "CARD", Color(1, 1, 1), 4, 35, 21, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "MENU", Color(1, 1, 1), 4, 35, 13, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Choose Weapon", Color(1, 1, 1), 7, 1, 50, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "BOMB", Color(1, 1, 1), 4, 35, 39.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "ARROW", Color(1, 1, 1), 4, 32.5, 30.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "CARD", Color(1, 1, 1), 4, 35, 21.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "MENU", Color(1, 1, 1), 4, 35, 12.5, false);
 	selectorIndex = Math::Clamp(selectorIndex, 0, 3);
 
 }
@@ -743,7 +743,7 @@ void SceneBase::UpdateChoose(float& m_speed)
 	switch (selectorIndex)
 	{
 	case 0:
-		menuType = M_DAGGER;
+		menuType = M_BOMB;
 		break;
 	case 1:
 		menuType = M_ARROW;
@@ -757,7 +757,7 @@ void SceneBase::UpdateChoose(float& m_speed)
 	}
 }
 
-void SceneBase::UpdateCDagger(float& m_speed)
+void SceneBase::UpdateCBomb(float& m_speed)
 {
 	switch (selectorIndex)
 	{
@@ -765,7 +765,7 @@ void SceneBase::UpdateCDagger(float& m_speed)
 		menuType = M_NONE;
 		cardChoose = false;
 		arrowChoose = false;
-		daggerChoose = true;
+		bombChoose = true;
 		m_speed = 1;
 		break;
 	case 1:
@@ -782,7 +782,7 @@ void SceneBase::UpdateCArrow(float& m_speed)
 		menuType = M_NONE;
 		arrowChoose = true;
 		cardChoose = false;
-		daggerChoose = false;
+		bombChoose = false;
 		m_speed = 1;
 		break;
 	case 1:
@@ -799,7 +799,7 @@ void SceneBase::UpdateCCard(float& m_speed)
 		menuType = M_NONE;
 		cardChoose = true;
 		arrowChoose = false;
-		daggerChoose = false;
+		bombChoose = false;
 		m_speed = 1;
 		break;
 	case 1:

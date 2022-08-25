@@ -18,7 +18,7 @@ enum MENU_TYPE
 	M_PAUSE,
 	M_GAMEOVER,
 	M_CHOOSE,
-	M_DAGGER,
+	M_BOMB,
 	M_ARROW,
 	M_CARD,
 	M_TOTAL
@@ -60,7 +60,6 @@ public:
 		GEO_TEXT,
 		GEO_BACKGROUND,
 		GEO_UPGRADESCREEN,
-		GEO_EVIL,
 		GEO_MAIN_MENU,
 		GEO_PAUSE,
 		GEO_SELECTOR,
@@ -85,9 +84,14 @@ public:
 		GEO_INFOBORDERRED,
 
 		// Enemy types
-		GEO_ASTEROID,
-		GEO_ENEMYSHIP,
-		GEO_BIGASTEROID,
+		GEO_BDEMON,
+		GEO_FDEMON,
+		GEO_GHOST,
+		GEO_NIGHTMARE,
+		GEO_BDEMON_LEFT,
+		GEO_FDEMON_LEFT,
+		GEO_GHOST_LEFT,
+		GEO_NIGHTMARE_LEFT,
 		GEO_FLAMEDEMON,
 		GEO_BOSS,
 		GEO_BOSS_LEFT,
@@ -96,17 +100,17 @@ public:
 		GEO_EXPLODER,
 		GEO_EXPLODER_LEFT,
 		GEO_ENEMYEXPLOSION,
-
+		// Unique Enemy type
 		GEO_WORMHEAD,
 		GEO_WORMBODY1,
 		GEO_WORMBODY2,
 		GEO_WORMTAIL,
-
+		// Player and All Weapons (including enemy)
 		GEO_SHIP,
-		GEO_CLUB,
+		GEO_PRIMARY,
 		GEO_ENEMYBULLET,
 		GEO_LASER,
-		GEO_BOW,
+		GEO_CARDS,
 		GEO_RING,
 		GEO_RINGAURA,
 		GEO_BOMB,
@@ -116,33 +120,23 @@ public:
 		GEO_ARROW,
 		GEO_FLAMINGARROW,
 		GEO_TRIPLESHOT,
-
+		// Obstacles on map
 		GEO_CHEST,
 		GEO_TREE,
-
+		GEO_SWAMP,
+		// Players animations
 		GEO_HERO,
 		GEO_HERO_LEFT,
 		GEO_HEROATTACK,
 		GEO_HEROATTACK_LEFT,
 		GEO_HERORUN,
 		GEO_HERORUN_LEFT,
-
+		//Shrek and animations
 		GEO_SHREK,
 		GEO_SHREK_LEFT,
+		// story photos
 		GEO_MAFIASHREK,
-
-		GEO_BDEMON,
-		GEO_FDEMON,
-		GEO_EYE,
-		GEO_SKULL,
-		GEO_GHOST,
-		GEO_NIGHTMARE,
-
-		GEO_BDEMON_LEFT,
-		GEO_FDEMON_LEFT,
-		GEO_GHOST_LEFT,
-		GEO_NIGHTMARE_LEFT,
-
+		GEO_EVIL,
 
 		NUM_GEOMETRY,
 	};
@@ -150,7 +144,7 @@ public:
 	static MENU_TYPE menuType;
 	static bool restartGame;
 	static bool resetGame;
-	static bool daggerChoose;
+	static bool bombChoose;
 	static bool arrowChoose;
 	static bool cardChoose;
 
@@ -171,10 +165,10 @@ public:
 	void RenderPauseMenu();
 	void RenderGameOver();
 	void RenderChoose();
-	void RenderCDagger();
+	void RenderCBomb();
 	void RenderCArrow();
 	void RenderCCard();
-	void UpdateCDagger(float& m_speed);
+	void UpdateCBomb(float& m_speed);
 	void UpdateCArrow(float& m_speed);
 	void UpdateCCard(float& m_speed);
 	void UpdateChoose(float& m_speed);

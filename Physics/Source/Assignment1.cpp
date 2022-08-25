@@ -47,7 +47,7 @@ void Assignment1::Init()
 	m_speed = 1.f;
 
 	shipSpeed = 13.f;
-	prevElapsedAsteroid = prevElapsedBullet = elapsedTime = waveTimer = prevElapsedMissle = keyDelay = prevHealthRegen = tripleShotTimer = 0.0;
+	prevElapsedAsteroid = prevElapsedBullet = elapsedTime = waveTimer = prevElapsedCard = keyDelay = prevHealthRegen = tripleShotTimer = 0.0;
 	Math::InitRNG();
 
 	//Exercise 2a: Construct 100 GameObject with type GO_ASTEROID and add into m_goList
@@ -77,7 +77,7 @@ void Assignment1::Init()
 	fireRate = 5;
 	fireRateCost = 10;
 	damageUpCost = 10;
-	missleCost = 20;
+	cardCost = 20;
 	ringCost = 250;
 	bombCost = 50;
 	molotovCost = 50;
@@ -96,8 +96,8 @@ void Assignment1::Init()
 	basicBulletDamage = 1;
 	healthRegen = 0;
 	healthRegenAmount = 0;
-	missleRate = 1;
-	misslelvl = 0;
+	cardRate = 1;
+	cardlvl = 0;
 	ringlvl = 0;
 	ringAOE = 6.0f;
 	bomblvl = 0;
@@ -117,7 +117,7 @@ void Assignment1::Init()
 	bombUse = false;
 	arrowUse = false;
 	molotovUse = false;
-	missleUse = false;
+	cardUse = false;
 	upgradeScreen = false;
 	isAlive = true;
 	gameStart = false;
@@ -326,7 +326,7 @@ void Assignment1::RestartGame()
 	fireRate = 5;
 	fireRateCost = 10;
 	damageUpCost = 10;
-	missleCost = 20;
+	cardCost = 20;
 	ringCost = 250;
 	bombCost = 50;
 	molotovCost = 50;
@@ -345,8 +345,8 @@ void Assignment1::RestartGame()
 	basicBulletDamage = 1;
 	healthRegen = 0;
 	healthRegenAmount = 0;
-	missleRate = 1;
-	misslelvl = 0;
+	cardRate = 1;
+	cardlvl = 0;
 	ringlvl = 0;
 	ringAOE = 6.0f;
 	bomblvl = 0;
@@ -367,11 +367,14 @@ void Assignment1::RestartGame()
 	bombUse = false;
 	arrowUse = false;
 	molotovUse = false;
-	missleUse = false;
+	cardUse = false;
 	upgradeScreen = false;
 	isAlive = true;
 	gameStart = false;
 	bossspawned = false;
+	bombChoose = false;
+	arrowChoose = false;
+	cardChoose = false;
 
 
 	movementLastPressed = ' ';
@@ -462,8 +465,8 @@ void Assignment1::UpdateMenu()
 		case M_ARROW:
 			UpdateCArrow(m_speed);
 			break;
-		case M_DAGGER:
-			UpdateCDagger(m_speed);
+		case M_BOMB:
+			UpdateCBomb(m_speed);
 			break;
 		case M_CARD:
 			UpdateCCard(m_speed);
@@ -474,19 +477,19 @@ void Assignment1::UpdateMenu()
 
 void Assignment1::Update(double dt)
 {
-	if (daggerChoose == true)
+	if (bombChoose == true)
 	{
 		bombUse = true;
 		bomblvl++;
 		bombCost += 30;
-		daggerChoose = false;
+		bombChoose = false;
 
 	}
 	else if (cardChoose == true)
 	{
-		missleUse = true;
-		misslelvl++;
-		missleCost += 15;
+		cardUse = true;
+		cardlvl++;
+		cardCost += 15;
 		cardChoose = false;
 	}
 	else if (arrowChoose == true)
@@ -494,7 +497,7 @@ void Assignment1::Update(double dt)
 		arrowUse = true;
 		arrowlvl++;
 		arrowCost += 15;
-		arrowChoose = true;
+		arrowChoose = false;
 	}
 	SceneBase::Update(dt);
 	UpdateMenu();
@@ -617,23 +620,23 @@ void Assignment1::Update(double dt)
 					cSoundController->PlaySoundByID(10);
 				}
 			}
-			if (missleUse == true && Application::IsKeyPressed('J') || missleUse == false && Application::IsKeyPressed('J'))
+			if (cardUse == true && Application::IsKeyPressed('J') || cardUse == false && Application::IsKeyPressed('J'))
 			{
 				keyDelay = 0.3;
-				if (m_money >= missleCost)
+				if (m_money >= cardCost)
 				{
-					if (missleCost < 30)
+					if (cardCost < 30)
 					{
-						misslelvl++;
-						missleUse = true;
+						cardlvl++;
+						cardUse = true;
 					}
 					else
 					{
-						missleRate += 0.5;
-						misslelvl++;
+						cardRate += 0.5;
+						cardlvl++;
 					}
-					m_money -= missleCost;
-					missleCost += 15;
+					m_money -= cardCost;
+					cardCost += 15;
 					cSoundController->StopSoundByID(10);
 					cSoundController->PlaySoundByID(10);
 				}
@@ -1795,10 +1798,10 @@ void Assignment1::Update(double dt)
 
 
 		// Player Item Usage
-		if (missleUse == true)
+		if (cardUse == true)
 		{
-			diff = elapsedTime - prevElapsedMissle;
-			if (diff > 1 / missleRate)
+			diff = elapsedTime - prevElapsedCard;
+			if (diff > 1 / cardRate)
 			{
 				GameObject* go = FetchGO();
 				go->type = GameObject::GO_MISSLE;
@@ -1809,7 +1812,7 @@ void Assignment1::Update(double dt)
 				go->hitboxSizeDivider = 3;
 				m_objectCount++;
 
-				prevElapsedMissle = elapsedTime;
+				prevElapsedCard = elapsedTime;
 			}
 		}
 
@@ -1911,7 +1914,7 @@ void Assignment1::Update(double dt)
 		}
 
 
-		// ************************************* Homing Missle Code *******************************************
+		// ************************************* Homing Card Code *******************************************
 		float closestDis = 999999;
 		for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 		{
@@ -3480,7 +3483,7 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Rotate(go->angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_CLUB], false);
+		RenderMesh(meshList[GEO_PRIMARY], false);
 		modelStack.PopMatrix();
 		break;
 
@@ -3505,7 +3508,7 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 		modelStack.Rotate(go->angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_BOW], false);
+		RenderMesh(meshList[GEO_CARDS], false);
 		modelStack.PopMatrix();
 		break;
 
@@ -3672,8 +3675,8 @@ void Assignment1::Render()
 	case M_ARROW:
 		RenderCArrow();
 		break;
-	case M_DAGGER:
-		RenderCDagger();
+	case M_BOMB:
+		RenderCBomb();
 		break;
 	case M_CARD:
 		RenderCCard();
@@ -3735,7 +3738,7 @@ void Assignment1::Render()
 		modelStack.PushMatrix();
 		modelStack.Translate(40 + camera.position.x, 51 + camera.position.y, 11);
 		modelStack.Scale(5, 5, 1);
-		RenderMesh(meshList[GEO_BOW], false);
+		RenderMesh(meshList[GEO_CARDS], false);
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
@@ -3825,16 +3828,16 @@ void Assignment1::Render()
 		ss << "[P]  Health Regen:$" << healthRegenCost;
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 35, false);
 
-		if (missleCost < 25)
+		if (cardCost < 25)
 		{
 			ss.str("");
-			ss << "[J]  Homing Missle:$" << missleCost << " LVL" << misslelvl;
+			ss << "[J]  Homing Card:$" << cardCost << " LVL" << cardlvl;
 			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 30, false);
 		}
 		else
 		{
 			ss.str("");
-			ss << "[J]  Missle Fire Rate:$" << missleCost << " LVL" << misslelvl;
+			ss << "[J]  Card Fire Rate:$" << cardCost << " LVL" << cardlvl;
 			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 30, false);
 		}
 
@@ -4060,7 +4063,7 @@ void Assignment1::Render()
 		}
 
 
-		if (m_ship->hp => 50)
+		if (m_ship->hp >= 50)
 		{
 			RenderMeshOnScreen(meshList[GEO_INFOBORDER], 38, 10, 80, 30);
 		}
