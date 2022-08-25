@@ -87,6 +87,8 @@ void Assignment1::Init()
 
 	tempSpawnCount = 0;
 	tempWormCount = 0;
+	WormMax = 2;
+	spawnrate = 0.8;
 
 	shootCount = 0;
 	bossState = 0;
@@ -174,7 +176,7 @@ void Assignment1::Init()
 
 	// World map generation on game start
 	int obstacleCount = 150;
-	int chestCount = 140;
+	int chestCount = 10;
 
 	int obstacleIndex = 0;
 	float obstacleX, obstacleY;
@@ -338,6 +340,8 @@ void Assignment1::RestartGame()
 
 	tempSpawnCount = 0;
 	tempWormCount = 0;
+	WormMax = 2;
+	spawnrate = 0.8;
 
 	shootCount = 0;
 	bossState = 0;
@@ -408,11 +412,11 @@ void Assignment1::RestartGame()
 	//spawn and reset enemy station and turrets
 }
 
-void Assignment1::SpawnWorm()
+void Assignment1:: SpawnWorm()
 {
-	if ((waveCount == 10 || waveCount == 15) && tempWormCount < 1)
+	if ((waveCount == 10 || waveCount == 15 || waveCount > 20) && tempWormCount < 1)
 	{
-		for (int i = 0; i < 2; ++i)
+		for (int i = 0; i < WormMax; ++i)
 		{
 			GameObject* prevBody;
 			int segmentCount = 30;
@@ -488,7 +492,7 @@ void Assignment1::SpawnWorm()
 
 void Assignment1::SpawnBoss()
 {
-	if ((waveCount == 20||waveCount ==25) && tempSpawnCount < 1 && bossspawned == false)
+	if ((waveCount == 20||waveCount ==25 ||waveCount > 25) && tempSpawnCount < 1 && bossspawned == false)
 	{
 		GameObject* go = FetchGO();
 		go->type = GameObject::GO_BOSS;
@@ -1111,17 +1115,28 @@ void Assignment1::Update(double dt)
 		if (diff > 25)
 		{
 			waveCount++;
-			hpFactor += 0.4;
-			moneyFactor += 0.35;
-			bonusMoney++;
-			maxEnemyCount += 4;
+			if (waveCount < 20)
+			{
+				hpFactor += 0.4;
+				moneyFactor += 0.35;
+				bonusMoney++;
+				maxEnemyCount += 4;
+			}
+			else if (waveCount > 20)
+			{
+				WormMax = 4;
+				maxEnemyCount = 120;
+				moneyFactor = 6;
+				hpFactor += 1;
+				spawnrate = 0.4;
+			}
 			waveTimer = elapsedTime;
 		}
 
 
 		// Randomised enemy spawns
 		diff = elapsedTime - prevElapsedAsteroid;
-		if (diff > 0.8/* && tempSpawnCount < 1*/)
+		if (diff > spawnrate/* && tempSpawnCount < 1*/)
 		{
 			for (int i = 0; i < 3; ++i)
 			{
@@ -1298,7 +1313,7 @@ void Assignment1::Update(double dt)
 					}
 
 				}
-				else if (10 < waveCount <= 14)
+				else if (10 < waveCount <= 20)
 				{
 					if (randomEnemy <= 10)
 					{
@@ -1349,18 +1364,95 @@ void Assignment1::Update(double dt)
 						go->enemyDamage = 4;
 					}
 				}
-				////special worm wave
-				//else if (waveCount == 15)
-				//{
+				else if(waveCount > 20)
+				{
+					if (randomEnemy <= 10)
+					{
 
-				//}
+						go->type = GameObject::GO_EXPLODER;
+						go->hp = round(1 * hpFactor);
+						go->scale.Set(16, 16, 10);
+						go->prevEnemyBullet = 0.0;
+						go->hitboxSizeDivider = 3;
+						go->enemyDamage = 25;
 
+					}
+					else if (10 < randomEnemy && randomEnemy <= 20)
+					{
+						go->type = GameObject::GO_FLAMEDEMON;
+						go->scale.Set(25, 25, 10);
+						go->hp = round(8 * hpFactor);
+						go->maxHP = go->hp;
+						go->prevEnemyBullet = elapsedTime;
+						go->speedFactor = 1;
+						go->hitboxSizeDivider = 2.8;
+						go->enemyDamage = 15;
+					}
+					else if (20 < randomEnemy <= 25)
+					{
+						go->type = GameObject::GO_BDEMON;
+						go->hp = round(12 * hpFactor);
+						go->scale.Set(10, 10, 10);
+						go->prevEnemyBullet = 0.0;
+						go->hitboxSizeDivider = 3;
+						go->enemyDamage = 15;
 
+					}
+					else if (25 < randomEnemy && randomEnemy <= 35)
+					{
+						go->type = GameObject::GO_NIGHTMARE;
+						go->hp = round(15 * hpFactor);
+						go->scale.Set(20, 18, 10);
+						go->hitboxSizeDivider = 4.5;
+						go->enemyDamage = 20;
+					}
+					else if (36 < randomEnemy <= 38)
+					{
+						go->type = GameObject::GO_GHOST;
+						go->hp = round(4000 * hpFactor);
+						go->scale.Set(25, 25, 25);
+						go->hitboxSizeDivider = 3.5;
+						go->enemyDamage = 50;
+					}
+					else if (38 < randomEnemy <= 40)
+					{
+						SpawnBoss();
+						SpawnWorm();
+					}
+					else if (40 < randomEnemy <= 42)
+					{
+						SpawnWorm();
+					}
+					else if (42 < randomEnemy <= 48)
+					{
+						go->type = GameObject::GO_FLAMEDEMON;
+						go->scale.Set(45, 45, 10);
+						go->hp = round(500);
+						go->maxHP = go->hp;
+						go->prevEnemyBullet = elapsedTime;
+						go->speedFactor = 1;
+						go->hitboxSizeDivider = 2.8;
+						go->enemyDamage = 35;
+					}
+					else if (48 < randomEnemy <= 58)
+					{
 
-
-
-
-
+						go->type = GameObject::GO_EXPLODER;
+						go->hp = round(1 * hpFactor);
+						go->scale.Set(25, 25, 10);
+						go->prevEnemyBullet = 0.0;
+						go->hitboxSizeDivider = 3;
+						go->enemyDamage = 55;
+					}
+					else
+					{
+						go->type = GameObject::GO_GHOST;
+						go->hp = round(1 * hpFactor);
+						go->scale.Set(15, 15, 15);
+						go->hitboxSizeDivider = 3.5;
+						go->enemyDamage = 4;
+					}
+				}
 				if (randomEnemy < 100 && waveCount >= 1 && shopactive == false)
 				{
 					go->type = GameObject::GO_SHOP;
@@ -1370,75 +1462,21 @@ void Assignment1::Update(double dt)
 					go->enemyDamage = 0;
 					shopactive = true;
 				}
-				//if (randomEnemy < 100 && waveCount >= 4 && shopactive == false)
-				//{
-				//	go->type = GameObject::GO_SHOP;
-				//	go->scale.Set(10, 10, 10);
-				//	go->prevEnemyBullet = elapsedTime;
-				//	go->hitboxSizeDivider = 0.75;
-				//	shopactive = true;
-				//}
-				//// Spawn shooting demon
-				//else if (randomEnemy < 10 && waveCount >= 4)
-				//{
-				//	go->type = GameObject::GO_BDEMON;
-				//	go->hp = round(7 * hpFactor);
-				//	go->scale.Set(14, 14, 10);
-				//	go->prevEnemyBullet = 0.0;
-				//	go->hitboxSizeDivider = 3;
-				//	go->enemyDamage = 5;
-				//}
-				//// Spawn nightmare
-				//else if (randomEnemy < 15)
-				//{
-				//	go->type = GameObject::GO_NIGHTMARE;
-				//	go->hp = round(10 * hpFactor);
-				//	go->scale.Set(20, 18, 10);
-				//	go->hitboxSizeDivider = 4.5;
-				//	go->enemyDamage = 10;
-				//}
-				//// Spawn Flamedemon
-				//else if (randomEnemy < 40)
-				//{
-			/*		go->type = GameObject::GO_FLAMEDEMON;
-					go->scale.Set(15, 15, 10);
-					go->hp = round(10 * hpFactor);
-					go->maxHP = go->hp;
-					go->prevEnemyBullet = elapsedTime;
-					go->speedFactor = 1;
-					go->hitboxSizeDivider = 2.8;
-					go->enemyDamage = 10;*/
-					//}
-					//else if (randomEnemy < 60)
-					//{
-			/*			go->type = GameObject::GO_EXPLODER;
-						go->hp = round(10 * hpFactor);
-						go->scale.Set(15, 15, 1);
-						go->hitboxSizeDivider = 4.5;
-						go->enemyDamage = 15;
-						go->angle = 0;
-						go->maxHP = go->hp;*/
-
-						//}
-						//// Spawn ghost
-						//else
-						//{
-						//	go->type = GameObject::GO_GHOST;
-						//	go->hp = round(1 * hpFactor);
-						//	go->scale.Set(10, 10, 10);
-						//	go->hitboxSizeDivider = 3.5;
-						//	go->enemyDamage = 2;
-						//}
-				SpawnWorm();
-				SpawnBoss();
-
+				if (waveCount == 10 || waveCount ==15)
+				{
+					SpawnWorm();
+				}
+				else if (waveCount == 20 || waveCount == 25)
+				{
+					SpawnBoss();
+				}
 
 				go->angle = 0;
 				go->maxHP = go->hp;
 
 				// Spawning from edge of world
 				int random = rand() % 4;
-				if (0 < waveCount <= 10)
+				if (0 < waveCount <= 10 || waveCount > 20)
 				{
 					// Spawning outside camera
 					switch (random)
@@ -1458,7 +1496,7 @@ void Assignment1::Update(double dt)
 
 					}
 				}
-				else if (11 <= waveCount)
+				else if (11 <= waveCount && waveCount < 20)
 				{
 					//map spawn
 					switch (random)
@@ -1477,9 +1515,6 @@ void Assignment1::Update(double dt)
 						break;
 					}
 				}
-	
-
-
 				go->direction.Set(0.1, 0.1, 0.1);
 				go->vel = go->direction;
 				prevElapsedAsteroid = elapsedTime;
@@ -1487,11 +1522,11 @@ void Assignment1::Update(double dt)
 			}
 		}
 		//allow worm to spawn again
-		if ((waveCount == 11 || waveCount == 16)&& tempWormCount >= 1)
+		if ((waveCount == 11 || waveCount == 16 || waveCount > 20)&& tempWormCount >= 1)
 		{
 			tempWormCount--;
 		}
-		if ((waveCount == 21 || waveCount == 26) && tempSpawnCount >= 1)
+		if ((waveCount == 21 || waveCount > 25 ) && tempSpawnCount >= 1)
 		{
 			tempSpawnCount--;
 		}

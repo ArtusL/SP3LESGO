@@ -171,6 +171,11 @@ protected:
 	// FOR DEBUG ONLY
 	int tempSpawnCount;
 	int tempWormCount;
+	int WormMax;
+
+	float spawnrate;
+
+
 	int shootCount;
 	int bossState;
 	int laserAngle;
