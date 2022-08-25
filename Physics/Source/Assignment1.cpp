@@ -648,10 +648,7 @@ void Assignment1::Update(double dt)
 
 	Chestparticlesprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_CHEST_PARTICLE]);
 	// Chest Opening Animation
-	if (chestTimer <= 0)
-	{
-		Chestparticlesprite->PlayAnimation("OPEN", -1, 1.0f);
-	}
+	Chestparticlesprite->PlayAnimation("OPEN", -1, 1.0f);
 	Chestparticlesprite->Update(dt);
 
 
@@ -1821,8 +1818,7 @@ void Assignment1::Update(double dt)
 								go2->type == GameObject::GO_WORMBODY1 ||
 								go2->type == GameObject::GO_WORMBODY2 ||
 								go2->type == GameObject::GO_WORMTAIL ||
-								go2->type == GameObject::GO_EXPLODER ||
-								go2->type == GameObject::GO_TREE)
+								go2->type == GameObject::GO_EXPLODER)
 							{
 								HitEnemy(go, go2);
 							}
@@ -2487,7 +2483,6 @@ void Assignment1::Update(double dt)
 					// Move towards player
 					enemy->direction = m_ship->pos - Vector3(enemy->pos.x, enemy->pos.y, enemy->pos.z);
 					enemy->direction = enemy->direction.Normalized();
-					enemy->vel = (enemy->direction * 40);
 				}
 				else if (enemy->type == GameObject::GO_BDEMON)
 				{
@@ -2694,7 +2689,7 @@ void Assignment1::Collision(GameObject* go)
 			explosion->vel = 0;
 			explosion->explosionScale = 0;
 			explosion->scaleDown = false;
-			explosionTimer = 1;
+			explosionTimer = 0.5;
 			EnemyExplosionSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_ENEMYEXPLOSION]);
 			EnemyExplosionSprite->PlayAnimation("Explode", -1, 1.0f);
 		}
@@ -2722,7 +2717,7 @@ void Assignment1::Collision(GameObject* go)
 			m_money += go->moneyDrop;
 			go->moneyDrop = 0;
 
-			ChestSprite->Reset();
+	/*		ChestSprite->Reset();*/
 			ChestSprite->PlayAnimation("OPEN", 0, 2.0f);
 			go->timer = 1;
 			chestTimer = 3;
@@ -2784,6 +2779,58 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 
 		if (dis < rad && target->type == GameObject::GO_TREE)
 		{
+			if (bullet->type == GameObject::GO_CARD)
+			{
+				GameObject* explosion = FetchGO();
+				explosion->type = GameObject::GO_EXPLOSION;
+				explosion->pos = target->pos;
+				explosion->scale.Set(20, 20, 10);
+				explosion->vel = 0;
+				explosion->explosionScale = 0;
+				explosion->scaleDown = false;
+				explosionTimer = 10.5;
+				ExplosionSprite->PlayAnimation("Explode", 1, 1.0f);
+			}
+
+			if (bullet->type == GameObject::GO_BOMB)
+			{
+				GameObject* explosion = FetchGO();
+				explosion->type = GameObject::GO_EXPLOSION;
+				explosion->pos = target->pos;
+				explosion->scale.Set(40, 40, 10);
+				explosion->vel = 0;
+				explosion->explosionScale = 0;
+				explosion->scaleDown = false;
+				explosionTimer = 0.5;
+				ExplosionSprite->PlayAnimation("Explode", 1, 1.0f);
+			}
+
+			if (bullet->type == GameObject::GO_MOLOTOV)
+			{
+				GameObject* fire = FetchGO();
+				fire->type = GameObject::GO_FIRE;
+				fire->pos = target->pos;
+				fire->scale.Set(14, 14, 14);
+				fire->direction = Vector3(0, 1, 0);
+				fire->vel = 0;
+				fire->timer = 5;
+				fireTimer = 0.75;
+				FireSprite->PlayAnimation("Fire", 1, 1.0f);
+			}
+
+			if (bullet->type == GameObject::GO_FLAMINGARROW)
+			{
+				GameObject* fire = FetchGO();
+				fire->type = GameObject::GO_FIRE;
+				fire->pos = target->pos;
+				fire->scale.Set(14, 14, 14);
+				fire->direction = Vector3(0, 1, 0);
+				fire->vel = 0;
+				fire->timer = 8;
+				fireTimer = 0.75;
+				FireSprite->PlayAnimation("Fire", 1, 1.0f);
+			}
+
 			bullet->active = false;
 			return;
 		}
@@ -2803,7 +2850,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				explosion->vel = 0;
 				explosion->explosionScale = 0;
 				explosion->scaleDown = false;
-				explosionTimer = 1;
+				explosionTimer = 10.5;
 				ExplosionSprite->PlayAnimation("Explode", 1, 1.0f);
 				bullet->active = false;
 
@@ -2828,7 +2875,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				explosion->vel = 0;
 				explosion->explosionScale = 0;
 				explosion->scaleDown = false;
-				explosionTimer = 1;
+				explosionTimer = 0.5;
 				ExplosionSprite->PlayAnimation("Explode", 1, 1.0f);
 				bullet->active = false;
 
@@ -2850,6 +2897,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				fire->direction = Vector3(0, 1, 0);
 				fire->vel = 0;
 				fire->timer = 5;
+				fireTimer = 0.75;
 				FireSprite->PlayAnimation("Fire", 1, 1.0f);
 				bullet->active = false;
 			}
@@ -2857,7 +2905,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 
 			if (bullet->type == GameObject::GO_EXPLOSION)
 			{
-				if (explosionTimer == 1)
+				if (explosionTimer == 0.5)
 				{
 					if (target->type == GameObject::GO_WORMBODY1 || target->type == GameObject::GO_WORMBODY2 || target->type == GameObject::GO_WORMHEAD || target->type == GameObject::GO_WORMTAIL)
 					{
