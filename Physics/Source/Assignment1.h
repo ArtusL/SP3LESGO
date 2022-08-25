@@ -174,6 +174,7 @@ protected:
 	int WormMax;
 
 	float spawnrate;
+	float killcount;
 
 
 	int shootCount;

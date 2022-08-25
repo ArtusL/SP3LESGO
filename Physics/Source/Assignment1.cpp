@@ -89,6 +89,7 @@ void Assignment1::Init()
 	tempWormCount = 0;
 	WormMax = 2;
 	spawnrate = 0.8;
+	killcount = 0;
 
 	shootCount = 0;
 	bossState = 0;
@@ -342,6 +343,7 @@ void Assignment1::RestartGame()
 	tempWormCount = 0;
 	WormMax = 2;
 	spawnrate = 0.8;
+	killcount = 0;
 
 	shootCount = 0;
 	bossState = 0;
@@ -3031,6 +3033,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 					bossspawned = false;
 				}
 				// Money gained
+				killcount++;
 				m_money += 1 + bonusMoney;
 
 				m_objectCount--;
@@ -4365,6 +4368,9 @@ void Assignment1::Render()
 
 		RenderMeshOnScreen(meshList[GEO_HEROICON], 7, 12, 11, 11);
 
+		ss.str("");
+		ss << "" << killcount;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 1.2, 75, 58, false);
 
 		ss.str("");
 		ss << "$: " << m_money;
@@ -4374,16 +4380,6 @@ void Assignment1::Render()
 		ss << m_ship->hp;
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 27, 7.4, false);
 
-		//if (m_ship->hp > 50)
-		//{
-		//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 27, 7.4, false);
-		//}
-		//else if (m_ship->hp <= 50)
-		//{
-		//	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 27, 7.4, false);
-		//}
-
-		//Exercise 5b: Render position, velocity & mass of ship
 		ss.str("");
 		ss.precision(5);
 		ss << "FPS: " << fps;
