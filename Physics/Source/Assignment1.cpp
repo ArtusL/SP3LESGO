@@ -2797,7 +2797,7 @@ void Assignment1::Collision(GameObject* go)
 			explosion->vel = 0;
 			explosion->explosionScale = 0;
 			explosion->scaleDown = false;
-			explosionTimer = 1;
+			explosionTimer = 0.1;
 			EnemyExplosionSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_ENEMYEXPLOSION]);
 			EnemyExplosionSprite->PlayAnimation("Explode", -1, 1.0f);
 		}
@@ -2910,7 +2910,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				explosion->vel = 0;
 				explosion->explosionScale = 0;
 				explosion->scaleDown = false;
-				explosionTimer = 1;
+				explosionTimer = 0.1;
 				ExplosionSprite->PlayAnimation("Explode", 1, 1.0f);
 				bullet->active = false;
 
@@ -2935,7 +2935,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				explosion->vel = 0;
 				explosion->explosionScale = 0;
 				explosion->scaleDown = false;
-				explosionTimer = 1;
+				explosionTimer = 0.1;
 				ExplosionSprite->PlayAnimation("Explode", 1, 1.0f);
 				bullet->active = false;
 
@@ -2964,7 +2964,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 
 			if (bullet->type == GameObject::GO_EXPLOSION)
 			{
-				if (explosionTimer == 1)
+				if (explosionTimer == 0.1)
 				{
 					if (target->type == GameObject::GO_WORMBODY1 || target->type == GameObject::GO_WORMBODY2 || target->type == GameObject::GO_WORMHEAD || target->type == GameObject::GO_WORMTAIL)
 					{

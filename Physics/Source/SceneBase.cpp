@@ -613,8 +613,8 @@ void SceneBase::RenderMainMenu()
 		RenderMeshOnScreen(meshList[GEO_SELECTOR], 97, 10, 65, 45);
 		break;
 	}
-	RenderTextOnScreen(meshList[GEO_TEXT], "GerryManDering's", Color(1, 1, 1), 7, 1, 45, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Dungeon", Color(1, 1, 1), 7, 23, 35, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "JerryManDering's", Color(1, 1, 1), 7, 1, 45, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Adventure", Color(1, 1, 1), 7, 23, 35, false);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Controls", Color(1, 1, 1), 3.5, 31, 4, false);
 	selectorIndex = Math::Clamp(selectorIndex, 0, 2);
 
