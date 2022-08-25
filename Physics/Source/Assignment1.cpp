@@ -98,7 +98,8 @@ void Assignment1::Init()
 
 
 	basicBulletDamage = 1;
-	healthRegen = 0;
+	healthRegen = false;
+	regenlvl = 0;
 	healthRegenAmount = 0;
 	cardRate = 1;
 	cardlvl = 0;
@@ -352,7 +353,7 @@ void Assignment1::RestartGame()
 
 
 	basicBulletDamage = 1;
-	healthRegen = 0;
+	healthRegen = false;
 	healthRegenAmount = 0;
 	cardRate = 1;
 	cardlvl = 0;
@@ -414,7 +415,7 @@ void Assignment1::RestartGame()
 	//spawn and reset enemy station and turrets
 }
 
-void Assignment1:: SpawnWorm()
+void Assignment1::SpawnWorm()
 {
 	if ((waveCount == 10 || waveCount == 15 || waveCount > 20) && tempWormCount < 1)
 	{
@@ -494,7 +495,7 @@ void Assignment1:: SpawnWorm()
 
 void Assignment1::SpawnBoss()
 {
-	if ((waveCount == 20||waveCount ==25 ||waveCount > 25) && tempSpawnCount < 1 && bossspawned == false)
+	if ((waveCount == 20 || waveCount == 25 || waveCount > 25) && tempSpawnCount < 1 && bossspawned == false)
 	{
 		GameObject* go = FetchGO();
 		go->type = GameObject::GO_BOSS;
@@ -592,61 +593,203 @@ void Assignment1::UpdateMenu()
 
 void Assignment1::Update(double dt)
 {
-	if (bombChoose == true)
+	if (keyDelay > 0)
 	{
-		bombUse = true;
-		bomblvl++;
-		bombCost += 30;
+		keyDelay -= 1.0 * dt;
+	}
+	else if (bombChoose == true)
+	{
+		keyDelay = 0.3;
+		if (m_money >= bombCost)
+		{
+			if (bombCost < 60)
+			{
+				bomblvl++;
+				bombUse = true;
+
+			}
+			else
+			{
+				if (bomblvl <= 8)
+				{
+					bombRate += 0.35;
+					bomblvl++;
+
+				}
+			}
+			if (bomblvl <= 8)
+			{
+				m_money -= bombCost;
+				bombCost += 30;
+				cSoundController->StopSoundByID(10);
+				cSoundController->PlaySoundByID(10);
+			}
+
+		}
 		bombChoose = false;
 
 	}
 	else if (cardChoose == true)
 	{
-		cardUse = true;
-		cardlvl++;
-		cardCost += 15;
+		keyDelay = 0.3;
+		if (m_money >= cardCost)
+		{
+			if (cardCost < 30)
+			{
+				cardlvl++;
+				cardUse = true;
+
+			}
+			else
+			{
+				if (cardlvl <= 8)
+				{
+					cardRate += 0.5;
+					cardlvl++;
+
+				}
+			}
+
+			if (cardlvl <= 8)
+			{
+				m_money -= cardCost;
+				cardCost += 15;
+				cSoundController->StopSoundByID(10);
+				cSoundController->PlaySoundByID(10);
+			}
+		}
 		cardChoose = false;
 	}
 	else if (arrowChoose == true)
 	{
-		arrowUse = true;
-		arrowlvl++;
-		arrowCost += 15;
+		keyDelay = 0.3;
+		if (m_money >= arrowCost)
+		{
+			if (arrowCost < 30)
+			{
+				arrowUse = true;
+				arrowlvl++;
+			}
+			else
+			{
+				if (arrowlvl <= 4)
+				{
+					arrowAmount++;
+					arrowlvl++;
+				}
+				else if (arrowlvl <= 8)
+				{
+					arrowRate += 0.15;
+					arrowlvl++;
+				}
+			}
+
+			if (arrowlvl == 9 && molotovlvl == 9 && m_money >= flamingarrowCost)
+			{
+				flamingarrowUse = true;
+				cSoundController->StopSoundByID(10);
+				cSoundController->PlaySoundByID(10);
+			}
+
+			if (arrowlvl <= 9)
+			{
+				m_money -= arrowCost;
+				arrowCost += 25;
+				cSoundController->StopSoundByID(10);
+				cSoundController->PlaySoundByID(10);
+			}
+		}
 		arrowChoose = false;
 	}
 	else if (healthUpgrade == true)
 	{
-		healthRegen = true;
-		healthRegenAmount++;
-		healthRegenCost += 25;
+		keyDelay = 0.3;
+		if (m_money >= healthRegenCost)
+		{
+			if (healthRegenCost < 30)
+			{
+				healthRegen = true;
+				cSoundController->StopSoundByID(10);
+				cSoundController->PlaySoundByID(10);
+			}
+			else if (regenlvl <= 2)
+			{
+				healthRegenAmount++;
+				cSoundController->StopSoundByID(10);
+				cSoundController->PlaySoundByID(10);
+			}
+			
+			if (regenlvl <= 2)
+			{
+				m_money -= healthRegenCost;
+				healthRegenCost += 25;
+			}
+		}
 		healthUpgrade = false;
 	}
 	else if (ringUpgrade == true)
 	{
-		ringUse = true;
-		ringlvl++;
-		ringCost += 50;
+	keyDelay = 0.3;
+	if (m_money >= ringCost)
+	{
+		if (ringCost < 300)
+		{
+			ringUse = true;
+
+			ringlvl++;
+		}
+		else
+		{
+			if (ringlvl <= 4)
+			{
+				ringAOE += 2.0;
+				ringlvl++;
+			}
+		}
+		if (ringlvl <= 4)
+		{
+			m_money -= ringCost;
+			ringCost += 50;
+			cSoundController->StopSoundByID(10);
+			cSoundController->PlaySoundByID(10);
+		}
 		ringUpgrade = false;
+	}
 	}
 	else if (molotovUpgrade == true)
 	{
-		molotovUse = true;
-		molotovlvl++;
-		molotovCost += 35;
-		molotovUpgrade = false;
+	keyDelay = 0.3;
+	if (m_money >= molotovCost)
+	{
+		if (molotovCost < 60)
+		{
+			molotovUse = true;
+			molotovlvl++;
+		}
+		else
+		{
+			if (molotovlvl <= 3)
+			{
+				molotovAmount++;
+				molotovlvl++;
+			}
+			else if (molotovlvl <= 8)
+			{
+				molotovRate += 0.15;
+				molotovlvl++;
+			}
+		}
+		if (molotovlvl <= 8)
+		{
+			m_money -= molotovCost;
+			molotovCost += 35;
+			cSoundController->StopSoundByID(10);
+			cSoundController->PlaySoundByID(10);
+		}
+
 	}
-	//else if (firerateUpgrade == true)
-	//{
-	//	fireRate++;
-	//	fireRateCost += 10;
-	//	firerateUpgrade = false;
-	//}
-	//else if (damageUpgrade == true)
-	//{
-	//	arrowlvl++;
-	//	arrowCost += 15;
-	//	arrowChoose = false;
-	//}
+	molotovUpgrade = false;
+	}
 	SceneBase::Update(dt);
 	UpdateMenu();
 	deltaTime = dt;
@@ -693,7 +836,10 @@ void Assignment1::Update(double dt)
 
 	Chestparticlesprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_CHEST_PARTICLE]);
 	// Chest Opening Animation
-	Chestparticlesprite->PlayAnimation("OPEN", -1, 1.0f);
+	if (chestTimer <= 0)
+	{
+		Chestparticlesprite->PlayAnimation("OPEN", -1, 1.0f);
+	}
 	Chestparticlesprite->Update(dt);
 
 
@@ -725,79 +871,32 @@ void Assignment1::Update(double dt)
 		cSoundController->StopSoundByID(13);
 		//cSoundController->PlaySoundByID(2);
 
+			//if (Application::IsKeyPressed('I') && fireRateCost < 60)
+			//{
+			//	keyDelay = 0.3;
+			//	if (m_money >= fireRateCost)
+			//	{
+			//		fireRate += 1;
+			//		m_money -= fireRateCost;
+			//		fireRateCost += 10;
+			//		cSoundController->StopSoundByID(10);
+			//		cSoundController->PlaySoundByID(10);
+			//	}
+			//}
+			//if (Application::IsKeyPressed('O'))
+			//{
+			//	keyDelay = 0.3;
+			//	if (m_money >= damageUpCost)
+			//	{
+			//		m_money -= damageUpCost;
+			//		basicBulletDamage++;
+			//		damageUpCost += 15;
+			//		cSoundController->StopSoundByID(10);
+			//		cSoundController->PlaySoundByID(10);
+			//	}
+			//}
 
-
-		if (keyDelay > 0)
-		{
-			keyDelay -= 1.0 * dt;
-		}
-		else
-		{
-			if (/*Application::IsKeyPressed('I')*/firerateUpgrade == true && fireRateCost < 60)
-			{
-				keyDelay = 0.3;
-				if (m_money >= fireRateCost)
-				{
-					fireRate += 1;
-					m_money -= fireRateCost;
-					fireRateCost += 10;
-					cSoundController->StopSoundByID(10);
-					cSoundController->PlaySoundByID(10);
-				}
-				/*firerateUpgrade == false;*/
-			}
-			if (/*Application::IsKeyPressed('O')*/ damageUpgrade == true)
-			{
-				keyDelay = 0.3;
-				if (m_money >= damageUpCost)
-				{
-					m_money -= damageUpCost;
-					basicBulletDamage++;
-					damageUpCost += 15;
-					cSoundController->StopSoundByID(10);
-					cSoundController->PlaySoundByID(10);
-				}
-				damageUpCost == false;
-			}
-			if (/*Application::IsKeyPressed('P')*/ healthRegen == true)
-			{
-				keyDelay = 0.3;
-				if (m_money >= healthRegenCost)
-				{
-					if (healthRegenCost < 30)
-					{
-						healthRegen = true;
-					}
-					healthRegenAmount++;
-					m_money -= healthRegenCost;
-					healthRegenCost += 25;
-					cSoundController->StopSoundByID(10);
-					cSoundController->PlaySoundByID(10);
-				}
-			}
-			if (cardUse == true && Application::IsKeyPressed('J') || cardUse == false && Application::IsKeyPressed('J'))
-			{
-				keyDelay = 0.3;
-				if (m_money >= cardCost)
-				{
-					if (cardCost < 30)
-					{
-						cardlvl++;
-						cardUse = true;
-					}
-					else
-					{
-						cardRate += 0.5;
-						cardlvl++;
-					}
-					m_money -= cardCost;
-					cardCost += 15;
-					cSoundController->StopSoundByID(10);
-					cSoundController->PlaySoundByID(10);
-				}
-			}
-
-			if (/*Application::IsKeyPressed('K'*/ ringUse == true)
+			if (Application::IsKeyPressed('K'))
 			{
 				keyDelay = 0.3;
 				if (m_money >= ringCost)
@@ -826,42 +925,8 @@ void Assignment1::Update(double dt)
 				}
 			}
 
-			if (bombUse == true /*&& Application::IsKeyPressed('L')*/ || bombUse == false /*&& Application::IsKeyPressed('L')*/)
-			{
-				keyDelay = 0.3;
-				if (m_money >= bombCost)
-				{
-					if (bombCost < 60)
-					{
-						bomblvl++;
-						bombUse = true;
-						cSoundController->StopSoundByID(10);
-						cSoundController->PlaySoundByID(10);
-					}
-					else
-					{
-						if (bomblvl <= 8)
-						{
-							bombRate += 0.35;
-							bomblvl++;
-							cSoundController->StopSoundByID(10);
-							cSoundController->PlaySoundByID(10);
-						}
-					}
-					if (bomblvl <= 8)
-					{
-						m_money -= bombCost;
-						bombCost += 30;
-						cSoundController->StopSoundByID(10);
-						cSoundController->PlaySoundByID(10);
-					}
 
-				}
-				bombChoose == false;
-			}
-
-
-			if (/*Application::IsKeyPressed('B'*/ molotovUse == true)
+			if (Application::IsKeyPressed('B'))
 			{
 				keyDelay = 0.3;
 				if (m_money >= molotovCost)
@@ -893,47 +958,8 @@ void Assignment1::Update(double dt)
 					cSoundController->PlaySoundByID(10);
 				}
 			}
-			
-			if (arrowUse == true && Application::IsKeyPressed('N') || arrowUse == false && Application::IsKeyPressed('N'))
-			{
 
-				keyDelay = 0.3;
-				if (m_money >= arrowCost)
-				{
-					if (arrowCost < 30)
-					{
-						arrowUse = true;
-						arrowlvl++;
-						cSoundController->StopSoundByID(10);
-						cSoundController->PlaySoundByID(10);
-					}
-					else
-					{
-						if (arrowlvl <= 4)
-						{
-							arrowAmount++;
-							arrowlvl++;
-							cSoundController->StopSoundByID(10);
-							cSoundController->PlaySoundByID(10);
-						}
-						else if (arrowlvl <= 8)
-						{
-							arrowRate += 0.15;
-							arrowlvl++;
-							cSoundController->StopSoundByID(10);
-							cSoundController->PlaySoundByID(10);
-						}
-					}
-					if (arrowlvl <= 9)
-					{
-						m_money -= arrowCost;
-						arrowCost += 25;
-					}
-
-				}
-			}
-
-			if (flamingarrowCost <= 1000 && arrowlvl == 9 && molotovlvl == 9)
+			if (Application::IsKeyPressed('M') && flamingarrowCost <= 1000 && arrowlvl == 9 && molotovlvl == 9)
 			{
 				keyDelay = 0.3;
 				if (m_money >= flamingarrowCost)
@@ -948,13 +974,13 @@ void Assignment1::Update(double dt)
 					cSoundController->PlaySoundByID(10);
 				}
 			}
-		}
+	
 		// Upgrade ship keys
 
-		if (Application::IsKeyPressed('Q'))
-		{
-			upgradeScreen = false;
-		}
+		//if (Application::IsKeyPressed('Q'))
+		//{
+		//	upgradeScreen = false;
+		//}
 	}
 	else if (gameStart && !upgradeScreen)
 	{
@@ -1289,7 +1315,7 @@ void Assignment1::Update(double dt)
 						go->hitboxSizeDivider = 4.5;
 						go->enemyDamage = 10;
 					}
-					else if (10 < randomEnemy && randomEnemy <= 25 )
+					else if (10 < randomEnemy && randomEnemy <= 25)
 					{
 						go->type = GameObject::GO_FLAMEDEMON;
 						go->scale.Set(15, 15, 10);
@@ -1300,7 +1326,7 @@ void Assignment1::Update(double dt)
 						go->hitboxSizeDivider = 2.8;
 						go->enemyDamage = 10;
 					}
-					else if (25 < randomEnemy && randomEnemy <= (40 + waveCount*1.2))
+					else if (25 < randomEnemy && randomEnemy <= (40 + waveCount * 1.2))
 					{
 						go->type = GameObject::GO_EXPLODER;
 						go->hp = round(5 * hpFactor);
@@ -1405,7 +1431,7 @@ void Assignment1::Update(double dt)
 						go->enemyDamage = 4;
 					}
 				}
-				else if(waveCount > 20)
+				else if (waveCount > 20)
 				{
 					if (randomEnemy <= 10)
 					{
@@ -1438,6 +1464,62 @@ void Assignment1::Update(double dt)
 						go->hitboxSizeDivider = 3;
 						go->enemyDamage = 15;
 
+					}
+					else if (25 < randomEnemy && randomEnemy <= 35)
+					{
+						go->type = GameObject::GO_NIGHTMARE;
+						go->hp = round(15 * hpFactor);
+						go->scale.Set(20, 18, 10);
+						go->hitboxSizeDivider = 4.5;
+						go->enemyDamage = 20;
+					}
+					else if (36 < randomEnemy <= 38)
+					{
+						go->type = GameObject::GO_GHOST;
+						go->hp = round(4000 * hpFactor);
+						go->scale.Set(25, 25, 25);
+						go->hitboxSizeDivider = 3.5;
+						go->enemyDamage = 50;
+					}
+					else if (38 < randomEnemy <= 40)
+					{
+						SpawnBoss();
+						SpawnWorm();
+					}
+					else if (40 < randomEnemy <= 42)
+					{
+						SpawnWorm();
+					}
+					else if (42 < randomEnemy <= 48)
+					{
+						go->type = GameObject::GO_FLAMEDEMON;
+						go->scale.Set(45, 45, 10);
+						go->hp = round(500);
+						go->maxHP = go->hp;
+						go->prevEnemyBullet = elapsedTime;
+						go->speedFactor = 1;
+						go->hitboxSizeDivider = 2.8;
+						go->enemyDamage = 35;
+					}
+					else if (48 < randomEnemy <= 58)
+					{
+
+						go->type = GameObject::GO_EXPLODER;
+						go->hp = round(1 * hpFactor);
+						go->scale.Set(25, 25, 10);
+						go->prevEnemyBullet = 0.0;
+						go->hitboxSizeDivider = 3;
+						go->enemyDamage = 55;
+					}
+					else
+					{
+						go->type = GameObject::GO_GHOST;
+						go->hp = round(1 * hpFactor);
+						go->scale.Set(15, 15, 15);
+						go->hitboxSizeDivider = 3.5;
+						go->enemyDamage = 4;
+					}
+				}
 				if (randomEnemy < 100 && waveCount >= 1 && shopactive == false)
 				{
 					go->type = GameObject::GO_SHOP;
@@ -1447,7 +1529,7 @@ void Assignment1::Update(double dt)
 					go->enemyDamage = 0;
 					shopactive = true;
 				}
-				if (waveCount == 10 || waveCount ==15)
+				if (waveCount == 10 || waveCount == 15)
 				{
 					SpawnWorm();
 				}
@@ -1507,11 +1589,11 @@ void Assignment1::Update(double dt)
 			}
 		}
 		//allow worm to spawn again
-		if ((waveCount == 11 || waveCount == 16 || waveCount > 20)&& tempWormCount >= 1)
+		if ((waveCount == 11 || waveCount == 16 || waveCount > 20) && tempWormCount >= 1)
 		{
 			tempWormCount--;
 		}
-		if ((waveCount == 21 || waveCount > 25 ) && tempSpawnCount >= 1)
+		if ((waveCount == 21 || waveCount > 25) && tempSpawnCount >= 1)
 		{
 			tempSpawnCount--;
 		}
@@ -1676,7 +1758,7 @@ void Assignment1::Update(double dt)
 
 					go->direction = m_ship->pos - Vector3(worldPosX, worldPosY, m_ship->pos.z);
 					go->direction = go->direction.Normalized();
-					go->vel = - (go->direction * BULLET_SPEED * 1.5);
+					go->vel = -(go->direction * BULLET_SPEED * 1.5);
 					go->scale.Set(4.0f, 4.0f, 4.0f);
 					go->angle = m_ship->angle;
 
@@ -1841,7 +1923,8 @@ void Assignment1::Update(double dt)
 								go2->type == GameObject::GO_WORMBODY1 ||
 								go2->type == GameObject::GO_WORMBODY2 ||
 								go2->type == GameObject::GO_WORMTAIL ||
-								go2->type == GameObject::GO_EXPLODER)
+								go2->type == GameObject::GO_EXPLODER ||
+								go2->type == GameObject::GO_TREE)
 							{
 								HitEnemy(go, go2);
 							}
@@ -2506,6 +2589,7 @@ void Assignment1::Update(double dt)
 					// Move towards player
 					enemy->direction = m_ship->pos - Vector3(enemy->pos.x, enemy->pos.y, enemy->pos.z);
 					enemy->direction = enemy->direction.Normalized();
+					enemy->vel = (enemy->direction * 40);
 				}
 				else if (enemy->type == GameObject::GO_BDEMON)
 				{
@@ -2535,7 +2619,7 @@ void Assignment1::Update(double dt)
 				}
 
 				else if (enemy->type == GameObject::GO_GHOST ||
-						 enemy->type == GameObject::GO_NIGHTMARE)
+					enemy->type == GameObject::GO_NIGHTMARE)
 				{
 					enemy->direction = m_ship->pos - Vector3(enemy->pos.x, enemy->pos.y, enemy->pos.z);
 					enemy->direction = enemy->direction.Normalized();
@@ -2557,8 +2641,8 @@ void Assignment1::Update(double dt)
 
 				//// unspawn offscreen
 				else if (enemy->type == GameObject::GO_ENEMYBULLET ||
-						 enemy->type == GameObject::GO_LASER ||
-						 enemy->type == GameObject::GO_WORMTAIL)
+					enemy->type == GameObject::GO_LASER ||
+					enemy->type == GameObject::GO_WORMTAIL)
 				{
 
 					// Enemy projectile despawns after a certain lifetime
@@ -2699,8 +2783,8 @@ void Assignment1::Collision(GameObject* go)
 
 		// Access upgrade screen
 		if (Application::IsKeyPressed('E') && go->type == GameObject::GO_SHOP)
-		{ 
-			//upgradeScreen = true;
+		{
+		/*	upgradeScreen = true;*/
 			menuType = M_UPGRADE;
 		}
 
@@ -2713,7 +2797,7 @@ void Assignment1::Collision(GameObject* go)
 			explosion->vel = 0;
 			explosion->explosionScale = 0;
 			explosion->scaleDown = false;
-			explosionTimer = 0.5;
+			explosionTimer = 1;
 			EnemyExplosionSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_ENEMYEXPLOSION]);
 			EnemyExplosionSprite->PlayAnimation("Explode", -1, 1.0f);
 		}
@@ -2741,7 +2825,7 @@ void Assignment1::Collision(GameObject* go)
 			m_money += go->moneyDrop;
 			go->moneyDrop = 0;
 
-	/*		ChestSprite->Reset();*/
+			ChestSprite->Reset();
 			ChestSprite->PlayAnimation("OPEN", 0, 2.0f);
 			go->timer = 1;
 			chestTimer = 3;
@@ -2754,7 +2838,7 @@ void Assignment1::Collision(GameObject* go)
 			chestparticle->scale.Set(20, 20, 0.5);
 			chestparticle->vel.SetZero();
 			chestparticle->timer = 1;
-			
+
 		}
 
 		if (go->enemyDamage <= 0) // Healing items and buffs
@@ -2803,58 +2887,6 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 
 		if (dis < rad && target->type == GameObject::GO_TREE)
 		{
-			if (bullet->type == GameObject::GO_CARD)
-			{
-				GameObject* explosion = FetchGO();
-				explosion->type = GameObject::GO_EXPLOSION;
-				explosion->pos = target->pos;
-				explosion->scale.Set(20, 20, 10);
-				explosion->vel = 0;
-				explosion->explosionScale = 0;
-				explosion->scaleDown = false;
-				explosionTimer = 10.5;
-				ExplosionSprite->PlayAnimation("Explode", 1, 1.0f);
-			}
-
-			if (bullet->type == GameObject::GO_BOMB)
-			{
-				GameObject* explosion = FetchGO();
-				explosion->type = GameObject::GO_EXPLOSION;
-				explosion->pos = target->pos;
-				explosion->scale.Set(40, 40, 10);
-				explosion->vel = 0;
-				explosion->explosionScale = 0;
-				explosion->scaleDown = false;
-				explosionTimer = 0.5;
-				ExplosionSprite->PlayAnimation("Explode", 1, 1.0f);
-			}
-
-			if (bullet->type == GameObject::GO_MOLOTOV)
-			{
-				GameObject* fire = FetchGO();
-				fire->type = GameObject::GO_FIRE;
-				fire->pos = target->pos;
-				fire->scale.Set(14, 14, 14);
-				fire->direction = Vector3(0, 1, 0);
-				fire->vel = 0;
-				fire->timer = 5;
-				fireTimer = 0.75;
-				FireSprite->PlayAnimation("Fire", 1, 1.0f);
-			}
-
-			if (bullet->type == GameObject::GO_FLAMINGARROW)
-			{
-				GameObject* fire = FetchGO();
-				fire->type = GameObject::GO_FIRE;
-				fire->pos = target->pos;
-				fire->scale.Set(14, 14, 14);
-				fire->direction = Vector3(0, 1, 0);
-				fire->vel = 0;
-				fire->timer = 8;
-				fireTimer = 0.75;
-				FireSprite->PlayAnimation("Fire", 1, 1.0f);
-			}
-
 			bullet->active = false;
 			return;
 		}
@@ -2878,7 +2910,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				explosion->vel = 0;
 				explosion->explosionScale = 0;
 				explosion->scaleDown = false;
-				explosionTimer = 10.5;
+				explosionTimer = 1;
 				ExplosionSprite->PlayAnimation("Explode", 1, 1.0f);
 				bullet->active = false;
 
@@ -2903,7 +2935,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				explosion->vel = 0;
 				explosion->explosionScale = 0;
 				explosion->scaleDown = false;
-				explosionTimer = 0.5;
+				explosionTimer = 1;
 				ExplosionSprite->PlayAnimation("Explode", 1, 1.0f);
 				bullet->active = false;
 
@@ -2925,7 +2957,6 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				fire->direction = Vector3(0, 1, 0);
 				fire->vel = 0;
 				fire->timer = 5;
-				fireTimer = 0.75;
 				FireSprite->PlayAnimation("Fire", 1, 1.0f);
 				bullet->active = false;
 			}
@@ -2933,7 +2964,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 
 			if (bullet->type == GameObject::GO_EXPLOSION)
 			{
-				if (explosionTimer == 0.5)
+				if (explosionTimer == 1)
 				{
 					if (target->type == GameObject::GO_WORMBODY1 || target->type == GameObject::GO_WORMBODY2 || target->type == GameObject::GO_WORMHEAD || target->type == GameObject::GO_WORMTAIL)
 					{

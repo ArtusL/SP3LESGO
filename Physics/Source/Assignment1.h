@@ -114,6 +114,7 @@ protected:
 	int healthRegenCost;
 	int basicBulletDamage;
 	int healthRegenAmount;
+	int regenlvl;
 	float ringAOE;
 	float gravity;
 	float zoomInFactor;
