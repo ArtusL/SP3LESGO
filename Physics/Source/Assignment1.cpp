@@ -471,6 +471,12 @@ void Assignment1::UpdateMenu()
 		case M_CARD:
 			UpdateCCard(m_speed);
 			break;
+		case M_CONTROL:
+			UpdateControl(m_speed);
+			break;
+		case M_UPGRADE:
+			UpdateUpgrade(m_speed);
+			break;
 		}
 	}
 }
@@ -499,6 +505,39 @@ void Assignment1::Update(double dt)
 		arrowCost += 15;
 		arrowChoose = false;
 	}
+	else if (healthUpgrade == true)
+	{
+		healthRegen = true;
+		healthRegenAmount++;
+		healthRegenCost += 25;
+		healthUpgrade = false;
+	}
+	else if (ringUpgrade == true)
+	{
+		ringUse = true;
+		ringlvl++;
+		ringCost += 50;
+		ringUpgrade = false;
+	}
+	else if (molotovUpgrade == true)
+	{
+		molotovUse = true;
+		molotovlvl++;
+		molotovCost += 35;
+		molotovUpgrade = false;
+	}
+	//else if (firerateUpgrade == true)
+	//{
+	//	fireRate++;
+	//	fireRateCost += 10;
+	//	firerateUpgrade = false;
+	//}
+	//else if (damageUpgrade == true)
+	//{
+	//	arrowlvl++;
+	//	arrowCost += 15;
+	//	arrowChoose = false;
+	//}
 	SceneBase::Update(dt);
 	UpdateMenu();
 	deltaTime = dt;
@@ -580,7 +619,7 @@ void Assignment1::Update(double dt)
 		}
 		else
 		{
-			if (Application::IsKeyPressed('I') && fireRateCost < 60)
+			if (/*Application::IsKeyPressed('I')*/firerateUpgrade == true && fireRateCost < 60)
 			{
 				keyDelay = 0.3;
 				if (m_money >= fireRateCost)
@@ -591,8 +630,9 @@ void Assignment1::Update(double dt)
 					cSoundController->StopSoundByID(10);
 					cSoundController->PlaySoundByID(10);
 				}
+				/*firerateUpgrade == false;*/
 			}
-			if (Application::IsKeyPressed('O'))
+			if (/*Application::IsKeyPressed('O')*/ damageUpgrade == true)
 			{
 				keyDelay = 0.3;
 				if (m_money >= damageUpCost)
@@ -603,8 +643,9 @@ void Assignment1::Update(double dt)
 					cSoundController->StopSoundByID(10);
 					cSoundController->PlaySoundByID(10);
 				}
+				damageUpCost == false;
 			}
-			if (Application::IsKeyPressed('P'))
+			if (/*Application::IsKeyPressed('P')*/ healthRegen == true)
 			{
 				keyDelay = 0.3;
 				if (m_money >= healthRegenCost)
@@ -642,7 +683,7 @@ void Assignment1::Update(double dt)
 				}
 			}
 
-			if (Application::IsKeyPressed('K'))
+			if (/*Application::IsKeyPressed('K'*/ ringUse == true)
 			{
 				keyDelay = 0.3;
 				if (m_money >= ringCost)
@@ -671,7 +712,7 @@ void Assignment1::Update(double dt)
 				}
 			}
 
-			if (bombUse == true && Application::IsKeyPressed('L') || bombUse == false && Application::IsKeyPressed('L'))
+			if (bombUse == true /*&& Application::IsKeyPressed('L')*/ || bombUse == false /*&& Application::IsKeyPressed('L')*/)
 			{
 				keyDelay = 0.3;
 				if (m_money >= bombCost)
@@ -702,10 +743,11 @@ void Assignment1::Update(double dt)
 					}
 
 				}
+				bombChoose == false;
 			}
 
 
-			if (Application::IsKeyPressed('B'))
+			if (/*Application::IsKeyPressed('B'*/ molotovUse == true)
 			{
 				keyDelay = 0.3;
 				if (m_money >= molotovCost)
@@ -772,7 +814,7 @@ void Assignment1::Update(double dt)
 				}
 			}
 
-			if (Application::IsKeyPressed('M') && flamingarrowCost <= 1000 && arrowlvl == 9 && molotovlvl == 9)
+			if (flamingarrowCost <= 1000 && arrowlvl == 9 && molotovlvl == 9)
 			{
 				keyDelay = 0.3;
 				if (m_money >= flamingarrowCost)
@@ -1189,7 +1231,7 @@ void Assignment1::Update(double dt)
 
 
 
-				if (randomEnemy < 100 && waveCount >= 4 && shopactive == false)
+				if (randomEnemy < 100 && waveCount >= 1 && shopactive == false)
 				{
 					go->type = GameObject::GO_SHOP;
 					go->scale.Set(10, 10, 10);
@@ -2480,8 +2522,9 @@ void Assignment1::Collision(GameObject* go)
 
 		// Access upgrade screen
 		if (Application::IsKeyPressed('E') && go->type == GameObject::GO_SHOP)
-		{
-			upgradeScreen = true;
+		{ 
+			//upgradeScreen = true;
+			menuType = M_UPGRADE;
 		}
 
 		if (go->type == GameObject::GO_EXPLODER)
@@ -3680,6 +3723,12 @@ void Assignment1::Render()
 		break;
 	case M_CARD:
 		RenderCCard();
+		break;
+	case M_CONTROL:
+		RenderControl();
+		break;
+	case M_UPGRADE:
+		RenderUpgrade();
 		break;
 	}
 

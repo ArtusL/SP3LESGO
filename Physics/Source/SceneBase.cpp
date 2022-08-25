@@ -14,6 +14,11 @@ bool SceneBase::resetGame = false;
 bool SceneBase::bombChoose = false;
 bool SceneBase::arrowChoose = false;
 bool SceneBase::cardChoose = false;
+bool SceneBase::damageUpgrade = false;
+bool SceneBase::healthUpgrade = false;
+bool SceneBase::molotovUpgrade = false;
+bool SceneBase::ringUpgrade = false;
+bool SceneBase::firerateUpgrade = false;
 MENU_TYPE SceneBase::menuType = M_MAIN;
 SceneBase::SceneBase()
 {
@@ -595,10 +600,31 @@ void SceneBase::RenderMainMenu()
 	case 1:
 		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 25, 45, 45);
 		break;
+	case 2:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 97, 10, 65, 45);
+		break;
 	}
 	RenderTextOnScreen(meshList[GEO_TEXT], "GerryManDering's", Color(1, 1, 1), 7, 1, 45, false);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Dungeon", Color(1, 1, 1), 7, 23, 35, false);
-	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Controls", Color(1, 1, 1), 3.5, 31, 4, false);
+	selectorIndex = Math::Clamp(selectorIndex, 0, 2);
+
+}
+
+void SceneBase::RenderControl()
+{
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
+
+	//RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);
+	switch (selectorIndex)
+	{
+	case 0:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 169, 25, 35, 35);
+		break;
+	}
+	RenderTextOnScreen(meshList[GEO_TEXT], "Controls", Color(1, 1, 1), 7, 1, 45, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "MENU", Color(1, 1, 1), 4, 65, 12.5, false);
+	selectorIndex = Math::Clamp(selectorIndex, 0, 0);
 
 }
 
@@ -724,18 +750,49 @@ void SceneBase::RenderPauseMenu()
 	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
 }
 
-void SceneBase::UpdateMainMenu(float& m_speed)
+void SceneBase::RenderUpgrade()
 {
+	/*RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);*/
+
+	/*RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);*/
 	switch (selectorIndex)
 	{
 	case 0:
-		menuType = M_CHOOSE;
-		m_speed = 1;
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 50, 70, 45, 45);
 		break;
 	case 1:
-		Application::gameExit = true;
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 50, 55, 45, 45);
 		break;
+	case 2:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 50, 40, 45, 45);
+		break;
+	case 3:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 50, 25, 45, 45);
+		break;
+	case 4:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 150, 70, 45, 45);
+		break;
+	case 5:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 150, 55, 45, 45);
+		break;
+	case 6:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 150, 40, 45, 45);
+		break;
+	case 7:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 150, 25, 45, 45);
+		break;
+	case 8:
+			RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 25, 45, 45);
+			break;
+
 	}
+	RenderTextOnScreen(meshList[GEO_TEXT], "Choose Weapon", Color(1, 1, 1), 7, 1, 50, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "BOMB", Color(1, 1, 1), 4, 35, 39.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "ARROW", Color(1, 1, 1), 4, 32.5, 30.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "CARD", Color(1, 1, 1), 4, 35, 21.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "MENU", Color(1, 1, 1), 4, 35, 12.5, false);
+	selectorIndex = Math::Clamp(selectorIndex, 0, 8);
+
 }
 
 void SceneBase::UpdateChoose(float& m_speed)
@@ -753,6 +810,69 @@ void SceneBase::UpdateChoose(float& m_speed)
 		break;
 	case 3:
 		menuType = M_MAIN;
+		break;
+	}
+}
+
+void SceneBase::UpdateMainMenu(float& m_speed)
+{
+	switch (selectorIndex)
+	{
+	case 0:
+		menuType = M_CHOOSE;
+		m_speed = 1;
+		break;
+	case 1:
+		Application::gameExit = true;
+		break;
+	case 2:
+		menuType = M_CONTROL;
+		break;
+	}
+}
+
+void SceneBase::UpdateControl(float& m_speed)
+{
+	switch (selectorIndex)
+	{
+	case 0:
+		menuType = M_MAIN;
+		m_speed = 1;
+		break;
+	}
+}
+
+void SceneBase::UpdateUpgrade(float& m_speed)
+{
+	switch (selectorIndex)
+	{
+	case 0:
+	    healthUpgrade = true;
+		break;
+	case 1:
+		damageUpgrade = true;
+		break;
+	case 2:
+		arrowChoose	= true;
+		break;
+	case 3:
+		bombChoose = true;
+		break;
+	case 4:
+		cardChoose = true;
+		break;
+	case 5:
+		molotovUpgrade = true;
+		break;
+	case 6:
+		firerateUpgrade = true;
+		break;
+	case 7:
+		ringUpgrade = true;
+		break;
+	case 8:
+		menuType = M_NONE;
+		m_speed = 1;
 		break;
 	}
 }

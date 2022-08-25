@@ -21,6 +21,8 @@ enum MENU_TYPE
 	M_BOMB,
 	M_ARROW,
 	M_CARD,
+	M_CONTROL,
+	M_UPGRADE,
 	M_TOTAL
 };
 class SceneBase : public Scene
@@ -147,6 +149,11 @@ public:
 	static bool bombChoose;
 	static bool arrowChoose;
 	static bool cardChoose;
+	static bool ringUpgrade;
+	static bool healthUpgrade;
+	static bool molotovUpgrade;
+	static bool firerateUpgrade;
+	static bool damageUpgrade;
 
 	SceneBase();
 	~SceneBase();
@@ -168,6 +175,10 @@ public:
 	void RenderCBomb();
 	void RenderCArrow();
 	void RenderCCard();
+	void RenderControl();
+	void RenderUpgrade();
+	void UpdateUpgrade(float& m_speed);
+	void UpdateControl(float& m_speed);
 	void UpdateCBomb(float& m_speed);
 	void UpdateCArrow(float& m_speed);
 	void UpdateCCard(float& m_speed);
