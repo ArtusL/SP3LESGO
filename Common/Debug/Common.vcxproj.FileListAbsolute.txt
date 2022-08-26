@@ -1,0 +1,2 @@
+C:\Users\artus\Documents\SpecialProjects\SP3LESGO\Debug\Common.pdb
+C:\Users\artus\Documents\SpecialProjects\SP3LESGO\Common\Debug\Common.pdb

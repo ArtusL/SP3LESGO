@@ -361,6 +361,23 @@ void SceneBase::Init()
 	meshList[GEO_SHOPBG] = MeshBuilder::GenerateQuad("main menu", Color(1, 1, 1), 1.f);
 	meshList[GEO_SHOPBG]->textureID = LoadTGA("Image//UI//Shop.tga");
 
+	meshList[GEO_MOVECONTROL] = MeshBuilder::GenerateQuad("main menu", Color(1, 1, 1), 1.f);
+	meshList[GEO_MOVECONTROL]->textureID = LoadTGA("Image//UI//movecontrol.tga");
+
+	meshList[GEO_MOUSECONTROL] = MeshBuilder::GenerateQuad("main menu", Color(1, 1, 1), 1.f);
+	meshList[GEO_MOUSECONTROL]->textureID = LoadTGA("Image//UI//mousecontrol.tga");
+
+	meshList[GEO_BOSSCONTROL] = MeshBuilder::GenerateQuad("main menu", Color(1, 1, 1), 1.f);
+	meshList[GEO_BOSSCONTROL]->textureID = LoadTGA("Image//UI//bosscontrol.tga");
+
+	meshList[GEO_WAVECONTROL] = MeshBuilder::GenerateQuad("main menu", Color(1, 1, 1), 1.f);
+	meshList[GEO_WAVECONTROL]->textureID = LoadTGA("Image//UI//controls.tga");
+
+	meshList[GEO_SHREKCONTROL] = MeshBuilder::GenerateQuad("main menu", Color(1, 1, 1), 1.f);
+	meshList[GEO_SHREKCONTROL]->textureID = LoadTGA("Image//UI//controlS.tga");
+
+	meshList[GEO_SHOPCONTROL] = MeshBuilder::GenerateQuad("main menu", Color(1, 1, 1), 1.f);
+	meshList[GEO_SHOPCONTROL]->textureID = LoadTGA("Image//UI//controls.tga");
 	// Boss Animation
 	meshList[GEO_BOSSATTACK] = MeshBuilder::GenerateSpriteAnimation("Boss Attack", 1, 12);
 	meshList[GEO_BOSSATTACK]->textureID = LoadTexture("Image//Nightborne_Attack.png", true);
@@ -622,7 +639,7 @@ void SceneBase::RenderMainMenu()
 	}
 
 	RenderTextOnScreen(meshList[GEO_TEXT], "JerryManDering's", Color(1, 1, 1), 6, 8, 48, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Adventure", Color(1, 1, 1), 6, 23, 35, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Adventure", Color(1, 1, 1), 6, 23, 42, false);
 	//RenderTextOnScreen(meshList[GEO_TEXT], "Controls", Color(1, 1, 1), 3.5, 31, 4, false);
 
 	//RenderTextOnScreen(meshList[GEO_TEXT], "GerryManDering's", Color(1, 1, 1), 7, 1, 45, false);
@@ -638,20 +655,79 @@ void SceneBase::RenderMainMenu()
 void SceneBase::RenderControl()
 {
 	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 50, 200, 105);
-
+	RenderMeshOnScreen(meshList[GEO_MOVECONTROL], 55, 60, 60, 36.25);
+	RenderMeshOnScreen(meshList[GEO_MOUSECONTROL], 140, 60, 60, 36.25);
 	//RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);
 	switch (selectorIndex)
 	{
 	case 0:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 169, 25, 35, 35);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 168, 25, 35, 35);
+		break;
+	case 1:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 25, 25, 35, 35);
 		break;
 	}
-	RenderTextOnScreen(meshList[GEO_TEXT], "Controls", Color(1, 1, 1), 7, 1, 45, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "MENU", Color(1, 1, 1), 4, 65, 12.5, false);
-	selectorIndex = Math::Clamp(selectorIndex, 0, 0);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Controls", Color(1, 1, 1), 5, 1, 50, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Use 'W' to move Up, 'A' to move Left", Color(1, 1, 1), 1, 10, 22.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "'S' to move Down,'D' to move Right", Color(1, 1, 1), 1, 10, 19.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "For some weapons, use your mouse to aim", Color(1, 1, 1), 1, 46, 22.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "and click to shoot", Color(1, 1, 1), 1, 46, 19.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "NEXT", Color(1, 1, 1), 4, 65, 12.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "MENU", Color(1, 1, 1), 4, 5, 12.5, false);
+	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
 
 }
+void SceneBase::RenderShopControl()
+{
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 50, 200, 105);
+	RenderMeshOnScreen(meshList[GEO_SHREKCONTROL], 55, 60, 60, 36.25);
+	RenderMeshOnScreen(meshList[GEO_SHOPCONTROL], 140, 60, 60, 36.25);
+	//RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);
+	switch (selectorIndex)
+	{
+	case 0:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 168, 25, 35, 35);
+		break;
+	case 1:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 25, 25, 35, 35);
+		break;
+	}
+	RenderTextOnScreen(meshList[GEO_TEXT], "About Shop", Color(1, 1, 1), 5, 1, 50, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "To shop and upgrade your Weapons, you will", Color(1, 1, 1), 1, 10, 22.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "need to find Shrek by following the arrow", Color(1, 1, 1), 1, 10, 20.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "till you meet him, then press 'E'", Color(1, 1, 1), 1, 10, 18.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Press the Up and down Arrow Keys to select", Color(1, 1, 1), 1, 46, 22.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Different weapons to Buy or Upgrade", Color(1, 1, 1), 1, 46, 19.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "NEXT", Color(1, 1, 1), 4, 65, 12.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "BACK", Color(1, 1, 1), 4, 5, 12.5, false);
+	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
 
+}
+void SceneBase::RenderBossControl()
+{
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 50, 200, 105);
+	RenderMeshOnScreen(meshList[GEO_WAVECONTROL], 55, 60, 60, 36.25);
+	RenderMeshOnScreen(meshList[GEO_BOSSCONTROL], 140, 60, 60, 36.25);
+	//RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);
+	switch (selectorIndex)
+	{
+	case 0:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 168, 25, 35, 35);
+		break;
+	case 1:
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 25, 25, 35, 35);
+		break;
+	}
+	RenderTextOnScreen(meshList[GEO_TEXT], "About Bosses", Color(1, 1, 1), 5, 1, 50, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Every wave will have a differnt collection", Color(1, 1, 1), 1, 10, 22.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Of Enemies and in increasing dificulty", Color(1, 1, 1), 1, 10, 19.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "An for some waves you may encounter", Color(1, 1, 1), 1, 46, 22.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Big Bad Bosses like the Nightborne", Color(1, 1, 1), 1, 46, 19.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "MENU", Color(1, 1, 1), 4, 65, 12.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "BACK", Color(1, 1, 1), 4, 5, 12.5, false);
+	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
+
+}
 void SceneBase::RenderCBomb()
 {
 	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 50, 200, 105);
@@ -672,6 +748,7 @@ void SceneBase::RenderCBomb()
 	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
 
 }
+
 void SceneBase::RenderCArrow()
 {
 	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 50, 200, 105);
@@ -835,6 +912,33 @@ void SceneBase::RenderUpgrade()
 
 }
 
+void SceneBase::UpdateShopControl(float& m_speed)
+{
+	switch (selectorIndex)
+	{
+	case 0:
+		menuType = M_BOSSCONTROL;
+		break;
+	case 1:
+		menuType = M_CONTROL;
+		break;
+	}
+}
+
+void SceneBase::UpdateBossControl(float& m_speed)
+{
+	switch (selectorIndex)
+	{
+	case 0:
+		menuType = M_MAIN;
+		break;
+	case 1:
+		menuType = M_SHOPCONTROL;
+		m_speed = 1;
+		break;
+	}
+}
+
 void SceneBase::UpdateChoose(float& m_speed)
 {
 	switch (selectorIndex)
@@ -876,6 +980,10 @@ void SceneBase::UpdateControl(float& m_speed)
 	switch (selectorIndex)
 	{
 	case 0:
+		menuType = M_SHOPCONTROL;
+		m_speed = 1;
+		break;
+	case 1:
 		menuType = M_MAIN;
 		m_speed = 1;
 		break;

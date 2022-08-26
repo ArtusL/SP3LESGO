@@ -23,6 +23,8 @@ enum MENU_TYPE
 	M_CARD,
 	M_CONTROL,
 	M_UPGRADE,
+	M_SHOPCONTROL,
+	M_BOSSCONTROL,
 	M_TOTAL
 };
 class SceneBase : public Scene
@@ -69,6 +71,12 @@ public:
 		GEO_GAMEOVER,
 		GEO_DEADBG,
 		GEO_SHOPBG,
+		GEO_MOVECONTROL,
+		GEO_MOUSECONTROL,
+		GEO_WAVECONTROL,
+		GEO_BOSSCONTROL,
+		GEO_SHREKCONTROL,
+		GEO_SHOPCONTROL,
 
 
 		GEO_BALL,
@@ -180,6 +188,10 @@ public:
 	void RenderCCard();
 	void RenderControl();
 	void RenderUpgrade();
+	void RenderBossControl();
+	void RenderShopControl();
+	void UpdateShopControl(float& m_speed);
+	void UpdateBossControl(float& m_speed);
 	void UpdateUpgrade(float& m_speed);
 	void UpdateControl(float& m_speed);
 	void UpdateCBomb(float& m_speed);

@@ -56,12 +56,16 @@ void Assignment1::Init()
 	}
 
 	//Exercise 2b: Initialize m_hp and m_score
+<<<<<<< Updated upstream
 	m_hp = 1;
+=======
+	m_hp = 85;
+>>>>>>> Stashed changes
 
 	m_money = 100;
 	m_objectCount = 0;
 
-	waveCount = 1;
+	waveCount = 10;
 
 	gravity = -4;
 	storystate = 1;
@@ -314,8 +318,13 @@ void Assignment1::RestartGame()
 			go->active = false;
 	}
 	//Exercise 2b: Initialize m_hp and m_score
+<<<<<<< Updated upstream
 	m_hp = 100;
 	m_money = 100;
+=======
+	m_hp = 85;
+	m_money = 10000;
+>>>>>>> Stashed changes
 	m_objectCount = 0;
 	waveCount = 1;
 	gravity = -4;
@@ -712,6 +721,12 @@ void Assignment1::UpdateMenu()
 			//cSoundController->StopSoundByID(13);
 
 			//cSoundController->PlaySoundByID(2);
+			break;
+		case M_BOSSCONTROL:
+			UpdateBossControl(m_speed);
+			break;
+		case M_SHOPCONTROL:
+			UpdateShopControl(m_speed);
 			break;
 		}
 	}
@@ -4186,6 +4201,17 @@ void Assignment1::Render()
 		break;
 	case M_GAMEOVER:
 		RenderGameOver();
+		{
+			std::ostringstream ss;
+			ss.str("");
+			ss << "Kills:" << killcount << " Enemies";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 25, false);
+
+			ss.str("");
+			ss << "Survived to Wave:" << waveCount;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 45, false);
+
+		}
 		break;
 	case M_CHOOSE:
 		RenderChoose();
@@ -4204,6 +4230,12 @@ void Assignment1::Render()
 		break;
 	case M_UPGRADE:
 		RenderUpgrade();
+		break;
+	case M_SHOPCONTROL:
+			RenderShopControl();
+			break;
+	case M_BOSSCONTROL:
+		RenderBossControl();
 		break;
 	}
 
