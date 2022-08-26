@@ -670,14 +670,6 @@ void Assignment1::UpdateMenu()
 		{
 		case M_MAIN:
 			UpdateMainMenu(m_speed);
-			//cSoundController->StopSoundByID(9);
-			//cSoundController->StopSoundByID(2);
-			//cSoundController->StopSoundByID(3);
-			//cSoundController->StopSoundByID(7);
-			//cSoundController->StopSoundByID(8);
-			//cSoundController->StopSoundByID(13);
-
-			//cSoundController->PlaySoundByID(1);
 
 			break;
 		case M_PAUSE:
@@ -727,6 +719,32 @@ void Assignment1::UpdateMenu()
 
 void Assignment1::Update(double dt)
 {
+	//main menu
+	if (menuType == M_MAIN)
+	{
+		cSoundController->StopSoundByID(9);
+		cSoundController->StopSoundByID(2);
+		cSoundController->StopSoundByID(3);
+		cSoundController->StopSoundByID(4);
+		cSoundController->StopSoundByID(7);
+		cSoundController->StopSoundByID(8);
+		cSoundController->StopSoundByID(13);
+
+		cSoundController->PlaySoundByID(1);
+	}
+	//shop
+	if (menuType == M_UPGRADE)
+	{
+		cSoundController->StopSoundByID(9);
+		cSoundController->StopSoundByID(1);
+		cSoundController->StopSoundByID(3);
+		cSoundController->StopSoundByID(4);
+		cSoundController->StopSoundByID(7);
+		cSoundController->StopSoundByID(8);
+		cSoundController->StopSoundByID(13);
+
+		cSoundController->PlaySoundByID(2);
+	}
 	if (keyDelay > 0)
 	{
 		keyDelay -= 1.0 * dt;
