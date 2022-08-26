@@ -200,7 +200,7 @@ void Assignment1::Init()
 					{
 
 						// Spawn Chest far away from each other
-						if (chestCount < 140)
+						if (obstacleIndex < chestCount)
 						{
 
 							if (go->type == GameObject::GO_CHEST)
@@ -412,6 +412,112 @@ void Assignment1::RestartGame()
 	hole->vel.SetZero();
 
 	//spawn and reset enemy station and turrets
+
+	// World map generation on game start
+	int obstacleCount = 150;
+	int chestCount = 10;
+
+	int obstacleIndex = 0;
+	float obstacleX, obstacleY;
+	while (obstacleIndex < 150)
+	{
+		obstacleX = Math::RandFloatMinMax(3, m_worldWidth - 3);
+		obstacleY = Math::RandFloatMinMax(3, m_worldHeight - 3);
+		if (obstacleIndex > 0)
+		{
+			// Checks for surrounding area to spawn safely in
+			for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+			{
+				GameObject* go = (GameObject*)*it;
+				if (go->type == GameObject::GO_CHEST ||
+					go->type == GameObject::GO_TREE)
+				{
+					// Prevent checking with itself
+					if (go->pos.x != obstacleX &&
+						go->pos.y != obstacleY)
+					{
+
+						// Spawn Chest far away from each other
+						if (obstacleIndex < chestCount)
+						{
+
+							if (go->type == GameObject::GO_CHEST)
+							{
+								if (go->pos.DistanceSquared(Vector3(obstacleX, obstacleY, 1)) < 34000.f &&
+									go->pos.DistanceSquared(Vector3(obstacleX, obstacleY, 1)) < 34000.f)
+								{
+									break;
+								}
+							}
+							else
+							{
+								if (go->pos.DistanceSquared(Vector3(obstacleX, obstacleY, 1)) < 400.0f &&
+									m_ship->pos.DistanceSquared(Vector3(obstacleX, obstacleY, 1)) < 400.0f)
+								{
+									break;
+								}
+							}
+						}
+						else
+						{
+							// Preventing spawning obstacle inside another obstacle or player
+							if (go->pos.DistanceSquared(Vector3(obstacleX, obstacleY, 1)) < 400.0f ||
+								m_ship->pos.DistanceSquared(Vector3(obstacleX, obstacleY, 1)) < 400.0f)
+							{
+								break;
+							}
+						}
+					}
+				}
+				// Position does not interfere with other objects, spawn successful
+				if (it + 1 >= m_goList.end())
+				{
+					GameObject* newObstacle = FetchGO();
+					if (obstacleIndex < chestCount)
+					{
+						newObstacle->type = GameObject::GO_CHEST;
+						newObstacle->pos.Set(obstacleX, obstacleY, 1);
+						newObstacle->scale.Set(10, 8, 1);
+					}
+					else
+					{
+						newObstacle->type = GameObject::GO_TREE;
+						newObstacle->pos.Set(obstacleX, obstacleY, 1);
+						newObstacle->scale.Set(14, 16, 1);
+					}
+					newObstacle->direction = 0;
+					newObstacle->vel = 0;
+					newObstacle->timer = 0;
+					newObstacle->hitboxSizeDivider = 3;
+					newObstacle->moneyDrop = 300;
+					obstacleIndex++;
+					break;
+				}
+			}
+		}
+		else
+		{
+			GameObject* newObstacle = FetchGO();
+			if (obstacleIndex < chestCount)
+			{
+				newObstacle->type = GameObject::GO_CHEST;
+				newObstacle->pos.Set(obstacleX, obstacleY, 1);
+				newObstacle->scale.Set(12, 12, 1);
+			}
+			else
+			{
+				newObstacle->type = GameObject::GO_TREE;
+				newObstacle->pos.Set(obstacleX, obstacleY, 1);
+				newObstacle->scale.Set(14, 16, 1);
+			}
+			newObstacle->direction = 0;
+			newObstacle->vel = 0;
+			newObstacle->hitboxSizeDivider = 3;
+			newObstacle->timer = 0;
+			newObstacle->moneyDrop = 300;
+			obstacleIndex++;
+		}
+	}
 }
 
 void Assignment1::SpawnWorm()
