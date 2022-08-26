@@ -56,12 +56,16 @@ void Assignment1::Init()
 	}
 
 	//Exercise 2b: Initialize m_hp and m_score
-	m_hp = 100;
+<<<<<<< Updated upstream
+	m_hp = 1;
+=======
+	m_hp = 85;
+>>>>>>> Stashed changes
 
-	m_money = 10000;
+	m_money = 100;
 	m_objectCount = 0;
 
-	waveCount = 1;
+	waveCount = 10;
 
 	gravity = -4;
 	storystate = 1;
@@ -164,7 +168,7 @@ void Assignment1::Init()
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Magic.ogg"), 6, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Slash.ogg"), 7, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Grunt.wav"), 8, true);
-	cSoundController->LoadSound(FileSystem::getPath("Sound\\Gameover.ogg"), 9, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\GameOver.ogg"), 9, true);
 
 	//shop purchase
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\PurchaseRing.ogg"), 10, true);
@@ -315,8 +319,13 @@ void Assignment1::RestartGame()
 			go->active = false;
 	}
 	//Exercise 2b: Initialize m_hp and m_score
+<<<<<<< Updated upstream
 	m_hp = 100;
+	m_money = 100;
+=======
+	m_hp = 85;
 	m_money = 10000;
+>>>>>>> Stashed changes
 	m_objectCount = 0;
 	waveCount = 1;
 	gravity = -4;
@@ -673,12 +682,21 @@ void Assignment1::UpdateMenu()
 		{
 		case M_MAIN:
 			UpdateMainMenu(m_speed);
+
 			break;
 		case M_PAUSE:
 			UpdatePauseMenu(m_speed);
 			break;
 		case M_GAMEOVER:
 			UpdateGameOver(m_speed);
+			//cSoundController->StopSoundByID(1);
+			//cSoundController->StopSoundByID(2);
+			//cSoundController->StopSoundByID(3);
+			//cSoundController->StopSoundByID(7);
+			//cSoundController->StopSoundByID(8);
+			//cSoundController->StopSoundByID(13);
+
+			//cSoundController->PlaySoundByID(9);
 			break;
 		case M_CHOOSE:
 			UpdateChoose(m_speed);
@@ -697,6 +715,21 @@ void Assignment1::UpdateMenu()
 			break;
 		case M_UPGRADE:
 			UpdateUpgrade(m_speed);
+
+			//cSoundController->StopSoundByID(1);
+			//cSoundController->StopSoundByID(9);
+			//cSoundController->StopSoundByID(3);
+			//cSoundController->StopSoundByID(7);
+			//cSoundController->StopSoundByID(8);
+			//cSoundController->StopSoundByID(13);
+
+			//cSoundController->PlaySoundByID(2);
+			break;
+		case M_BOSSCONTROL:
+			UpdateBossControl(m_speed);
+			break;
+		case M_SHOPCONTROL:
+			UpdateShopControl(m_speed);
 			break;
 		}
 	}
@@ -704,6 +737,32 @@ void Assignment1::UpdateMenu()
 
 void Assignment1::Update(double dt)
 {
+	//main menu
+	if (menuType == M_MAIN)
+	{
+		cSoundController->StopSoundByID(9);
+		cSoundController->StopSoundByID(2);
+		cSoundController->StopSoundByID(3);
+		cSoundController->StopSoundByID(4);
+		cSoundController->StopSoundByID(7);
+		cSoundController->StopSoundByID(8);
+		cSoundController->StopSoundByID(13);
+
+		cSoundController->PlaySoundByID(1);
+	}
+	//shop
+	if (menuType == M_UPGRADE)
+	{
+		cSoundController->StopSoundByID(9);
+		cSoundController->StopSoundByID(1);
+		cSoundController->StopSoundByID(3);
+		cSoundController->StopSoundByID(4);
+		cSoundController->StopSoundByID(7);
+		cSoundController->StopSoundByID(8);
+		cSoundController->StopSoundByID(13);
+
+		cSoundController->PlaySoundByID(2);
+	}
 	if (keyDelay > 0)
 	{
 		keyDelay -= 1.0 * dt;
@@ -4215,6 +4274,17 @@ void Assignment1::Render()
 		break;
 	case M_GAMEOVER:
 		RenderGameOver();
+		{
+			std::ostringstream ss;
+			ss.str("");
+			ss << "Kills:" << killcount << " Enemies";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 25, false);
+
+			ss.str("");
+			ss << "Survived to Wave:" << waveCount;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 45, false);
+
+		}
 		break;
 	case M_CHOOSE:
 		RenderChoose();
@@ -4557,6 +4627,12 @@ void Assignment1::Render()
 			}
 		
 		break;
+	case M_SHOPCONTROL:
+			RenderShopControl();
+			break;
+	case M_BOSSCONTROL:
+		RenderBossControl();
+		break;
 	}
 
 	if (menuType != M_NONE)
@@ -4810,6 +4886,15 @@ void Assignment1::Render()
 	else if (!isAlive && gameStart)
 	{
 		SceneBase::menuType = M_GAMEOVER;
+		cSoundController->StopSoundByID(1);
+		cSoundController->StopSoundByID(2);
+		cSoundController->StopSoundByID(3);
+		cSoundController->StopSoundByID(4);
+		cSoundController->StopSoundByID(7);
+		cSoundController->StopSoundByID(8);
+		cSoundController->StopSoundByID(13);
+
+		cSoundController->PlaySoundByID(9);
 	}
 }
 
