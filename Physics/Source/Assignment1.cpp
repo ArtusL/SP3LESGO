@@ -74,15 +74,15 @@ void Assignment1::Init()
 
 	shopactive = false;
 	fireRate = 5;
-	fireRateCost = 10;
-	damageUpCost = 10;
+	fireRateCost = 40;
+	damageUpCost = 50;
 	cardCost = 20;
 	ringCost = 250;
 	bombCost = 50;
 	molotovCost = 50;
 	arrowCost = 20;
 	flamingarrowCost = 1000;
-	healthRegenCost = 20;
+	healthRegenCost = 100;
 
 	tempSpawnCount = 0;
 	tempWormCount = 0;
@@ -112,9 +112,11 @@ void Assignment1::Init()
 	molotovAmount = 1;
 	arrowlvl = 0;
 	arrowRate = 0.5;
-	arrowAmount = 3;
+	arrowAmount = 6;
 	flamingarrowlvl = 0;
 	flamingarrowCost = 1000;
+	fireratelvl = 0;
+	damagelvl = 0;
 
 	doubleBullet = false;
 	tripleShot = false;
@@ -123,7 +125,6 @@ void Assignment1::Init()
 	arrowUse = false;
 	molotovUse = false;
 	cardUse = false;
-	upgradeScreen = false;
 	isAlive = true;
 	gameStart = false;
 	bossspawned = false;
@@ -330,15 +331,15 @@ void Assignment1::RestartGame()
 
 	shopactive = false;
 	fireRate = 5;
-	fireRateCost = 10;
-	damageUpCost = 10;
+	fireRateCost = 40;
+	damageUpCost = 50;
 	cardCost = 20;
 	ringCost = 250;
 	bombCost = 50;
 	molotovCost = 50;
 	arrowCost = 20;
 	flamingarrowCost = 1000;
-	healthRegenCost = 20;
+	healthRegenCost = 100;
 
 	tempSpawnCount = 0;
 	tempWormCount = 0;
@@ -367,9 +368,11 @@ void Assignment1::RestartGame()
 	molotovAmount = 1;
 	arrowlvl = 0;
 	arrowRate = 0.5;
-	arrowAmount = 3;
+	arrowAmount = 6;
 	flamingarrowlvl = 0;
 	flamingarrowCost = 1000;
+	fireratelvl = 0;
+	damagelvl = 0;
 
 	doubleBullet = false;
 	tripleShot = false;
@@ -379,11 +382,11 @@ void Assignment1::RestartGame()
 	arrowUse = false;
 	molotovUse = false;
 	cardUse = false;
-	upgradeScreen = false;
 	isAlive = true;
 	gameStart = false;
 	bossspawned = false;
 	bombChoose = false;
+	upgradescreen = false;
 	arrowChoose = false;
 	cardChoose = false;
 
@@ -773,12 +776,23 @@ void Assignment1::Update(double dt)
 		keyDelay = 0.3;
 		if (m_money >= arrowCost)
 		{
-			if (arrowCost < 30)
+
+			if (arrowlvl == 9 && molotovlvl == 9 && flamingarrowCost == 1000)
+			{
+				flamingarrowUse = true;
+				flamingarrowlvl++;
+				m_money -= flamingarrowCost;
+				flamingarrowCost += 1000;
+				cSoundController->PlaySoundByID(12);
+			}
+
+			else if (arrowCost < 30)
 			{
 				arrowUse = true;
 				arrowlvl++;
 			}
-			else
+
+			else if(arrowCost > 30)
 			{
 				if (arrowlvl <= 4)
 				{
@@ -792,14 +806,7 @@ void Assignment1::Update(double dt)
 				}
 			}
 
-			if (arrowlvl == 9 && molotovlvl == 9 && m_money >= flamingarrowCost)
-			{
-				flamingarrowUse = true;
-				cSoundController->StopSoundByID(10);
-				cSoundController->PlaySoundByID(10);
-			}
-
-			if (arrowlvl <= 9)
+			if (arrowlvl <= 8)
 			{
 				m_money -= arrowCost;
 				arrowCost += 25;
@@ -814,23 +821,23 @@ void Assignment1::Update(double dt)
 		keyDelay = 0.3;
 		if (m_money >= healthRegenCost)
 		{
-			if (healthRegenCost < 30)
+			if (healthRegenCost < 110)
 			{
 				healthRegen = true;
-				cSoundController->StopSoundByID(10);
-				cSoundController->PlaySoundByID(10);
+				regenlvl++;
 			}
 			else if (regenlvl <= 2)
 			{
 				healthRegenAmount++;
-				cSoundController->StopSoundByID(10);
-				cSoundController->PlaySoundByID(10);
+				regenlvl++;
 			}
 			
 			if (regenlvl <= 2)
 			{
 				m_money -= healthRegenCost;
-				healthRegenCost += 25;
+				healthRegenCost += 100;
+				cSoundController->StopSoundByID(10);
+				cSoundController->PlaySoundByID(10);
 			}
 		}
 		healthUpgrade = false;
@@ -897,6 +904,41 @@ void Assignment1::Update(double dt)
 
 	}
 	molotovUpgrade = false;
+	}
+
+	if (firerateUpgrade == true)
+	{
+		keyDelay = 0.3;
+		if (m_money >= fireRateCost)
+		{
+			if (fireratelvl <= 8)
+			{
+				fireRate += 0.5;
+				m_money -= fireRateCost;
+				fireRateCost += 50;
+				fireratelvl++;
+				cSoundController->StopSoundByID(10);
+				cSoundController->PlaySoundByID(10);
+			}
+		}
+		firerateUpgrade = false;
+	}
+	if (damageUpgrade == true)
+	{
+		keyDelay = 0.3;
+		if (m_money >= damageUpCost)
+		{
+			if (damagelvl <= 8)
+			{
+				m_money -= damageUpCost;
+				basicBulletDamage++;
+				damageUpCost += 50 * (damagelvl + 1);
+				damagelvl++;
+				cSoundController->StopSoundByID(10);
+				cSoundController->PlaySoundByID(10);
+			}
+		}
+		damageUpgrade = false;
 	}
 	SceneBase::Update(dt);
 	UpdateMenu();
@@ -969,128 +1011,7 @@ void Assignment1::Update(double dt)
 		}
 	}
 
-	// Player ship ugrade screen
-	if (upgradeScreen == true && gameStart)
-	{
-
-		cSoundController->StopSoundByID(1);
-		cSoundController->StopSoundByID(3);
-		cSoundController->StopSoundByID(4);
-		cSoundController->StopSoundByID(13);
-		//cSoundController->PlaySoundByID(2);
-
-			//if (Application::IsKeyPressed('I') && fireRateCost < 60)
-			//{
-			//	keyDelay = 0.3;
-			//	if (m_money >= fireRateCost)
-			//	{
-			//		fireRate += 1;
-			//		m_money -= fireRateCost;
-			//		fireRateCost += 10;
-			//		cSoundController->StopSoundByID(10);
-			//		cSoundController->PlaySoundByID(10);
-			//	}
-			//}
-			//if (Application::IsKeyPressed('O'))
-			//{
-			//	keyDelay = 0.3;
-			//	if (m_money >= damageUpCost)
-			//	{
-			//		m_money -= damageUpCost;
-			//		basicBulletDamage++;
-			//		damageUpCost += 15;
-			//		cSoundController->StopSoundByID(10);
-			//		cSoundController->PlaySoundByID(10);
-			//	}
-			//}
-
-			if (Application::IsKeyPressed('K'))
-			{
-				keyDelay = 0.3;
-				if (m_money >= ringCost)
-				{
-					if (ringCost < 300)
-					{
-						ringUse = true;
-
-						ringlvl++;
-					}
-					else
-					{
-						if (ringlvl <= 4)
-						{
-							ringAOE += 2.0;
-							ringlvl++;
-						}
-					}
-					if (ringlvl <= 4)
-					{
-						m_money -= ringCost;
-						ringCost += 50;
-					}
-					cSoundController->StopSoundByID(10);
-					cSoundController->PlaySoundByID(10);
-				}
-			}
-
-
-			if (Application::IsKeyPressed('B'))
-			{
-				keyDelay = 0.3;
-				if (m_money >= molotovCost)
-				{
-					if (molotovCost < 60)
-					{
-						molotovUse = true;
-						molotovlvl++;
-					}
-					else
-					{
-						if (molotovlvl <= 3)
-						{
-							molotovAmount++;
-							molotovlvl++;
-						}
-						else if (molotovlvl <= 8)
-						{
-							molotovRate += 0.15;
-							molotovlvl++;
-						}
-					}
-					if (molotovlvl <= 8)
-					{
-						m_money -= molotovCost;
-						molotovCost += 35;
-					}
-					cSoundController->StopSoundByID(10);
-					cSoundController->PlaySoundByID(10);
-				}
-			}
-
-			if (Application::IsKeyPressed('M') && flamingarrowCost <= 1000 && arrowlvl == 9 && molotovlvl == 9)
-			{
-				keyDelay = 0.3;
-				if (m_money >= flamingarrowCost)
-				{
-
-					flamingarrowUse = true;
-					flamingarrowlvl++;
-					m_money -= flamingarrowCost;
-					flamingarrowCost += 1000;
-
-					cSoundController->StopSoundByID(10);
-					cSoundController->PlaySoundByID(10);
-				}
-			}
-	
-		// Upgrade ship keys
-
-		//if (Application::IsKeyPressed('Q'))
-		//{
-		//	upgradeScreen = false;
-		//}
-	}
-	else if (gameStart && !upgradeScreen)
+	else if (gameStart && upgradescreen == false)
 	{
 
 		// Hero
@@ -2042,36 +1963,7 @@ void Assignment1::Update(double dt)
 
 					}
 				}
-
-				else if (go->type == GameObject::GO_TREE)
-				{
-					//Exercise 18: collision check between GO_BULLET and GO_ASTEROID
-					for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
-					{
-						GameObject* go2 = (GameObject*)*it2;
-						if (go2->active)
-						{
-
-							if (go2->type == GameObject::GO_GHOST ||
-								go2->type == GameObject::GO_FLAMEDEMON ||
-								go2->type == GameObject::GO_BDEMON ||
-								go2->type == GameObject::GO_NIGHTMARE ||
-								go2->type == GameObject::GO_ENEMYBULLET ||
-								go2->type == GameObject::GO_BOSS ||
-								go2->type == GameObject::GO_WORMHEAD ||
-								go2->type == GameObject::GO_WORMBODY1 ||
-								go2->type == GameObject::GO_WORMBODY2 ||
-								go2->type == GameObject::GO_WORMTAIL ||
-								go2->type == GameObject::GO_EXPLODER
-								)
-							{
-								HitEnemy(go, go2);
-							}
-
-						}
-
-					}
-				}
+			
 
 
 				//Exercise 16: unspawn bullets when they leave screen
@@ -2893,7 +2785,7 @@ void Assignment1::Collision(GameObject* go)
 		// Access upgrade screen
 		if (Application::IsKeyPressed('E') && go->type == GameObject::GO_SHOP)
 		{
-		/*	upgradeScreen = true;*/
+			upgradescreen = true;
 			menuType = M_UPGRADE;
 		}
 
@@ -2987,7 +2879,6 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 {
 	if (bullet->type == GameObject::GO_CARD || bullet->type == GameObject::GO_BOMB ||
 		bullet->type == GameObject::GO_BULLET || bullet->type == GameObject::GO_MOLOTOV ||
-		bullet->type == GameObject::GO_EXPLOSION || bullet->type == GameObject::GO_FIRE ||
 		bullet->type == GameObject::GO_ARROW || bullet->type == GameObject::GO_FLAMINGARROW ||
 		bullet->type == GameObject::GO_TREE)
 	{
@@ -2996,7 +2887,64 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 
 		if (dis < rad && target->type == GameObject::GO_TREE)
 		{
-			bullet->active = false;
+			if (bullet->type == GameObject::GO_CARD)
+			{
+				GameObject* explosion = FetchGO();
+				explosion->type = GameObject::GO_EXPLOSION;
+				explosion->pos = target->pos;
+				explosion->scale.Set(20, 20, 10);
+				explosion->vel = 0;
+				explosion->explosionScale = 0;
+				explosion->scaleDown = false;
+				explosionTimer = 0.1;
+				ExplosionSprite->PlayAnimation("Explode", 1, 1.0f);
+				bullet->active = false;
+			}
+
+			if (bullet->type == GameObject::GO_BOMB)
+			{
+				GameObject* explosion = FetchGO();
+				explosion->type = GameObject::GO_EXPLOSION;
+				explosion->pos = target->pos;
+				explosion->scale.Set(40, 40, 10);
+				explosion->vel = 0;
+				explosion->explosionScale = 0;
+				explosion->scaleDown = false;
+				explosionTimer = 0.1;
+				ExplosionSprite->PlayAnimation("Explode", 1, 1.0f);
+				bullet->active = false;
+			}
+
+			if (bullet->type == GameObject::GO_MOLOTOV)
+			{
+				GameObject* fire = FetchGO();
+				fire->type = GameObject::GO_FIRE;
+				fire->pos = target->pos;
+				fire->scale.Set(14, 14, 14);
+				fire->direction = Vector3(0, 1, 0);
+				fire->vel = 0;
+				fire->timer = 5;
+				FireSprite->PlayAnimation("Fire", 1, 1.0f);
+				bullet->active = false;
+			}
+
+			if (bullet->type == GameObject::GO_FLAMINGARROW)
+			{
+				GameObject* fire = FetchGO();
+				fire->type = GameObject::GO_FIRE;
+				fire->pos = target->pos;
+				fire->scale.Set(14, 14, 14);
+				fire->direction = Vector3(0, 1, 0);
+				fire->vel = 0;
+				fire->timer = 8;
+				fireTimer = 0.75;
+				FireSprite->PlayAnimation("Fire", 1, 1.0f);
+				bullet->active = false;
+			}
+			else
+			{
+				bullet->active = false;
+			}
 			return;
 		}
 
@@ -3069,77 +3017,6 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				FireSprite->PlayAnimation("Fire", 1, 1.0f);
 				bullet->active = false;
 			}
-
-
-			if (bullet->type == GameObject::GO_EXPLOSION)
-			{
-				if (explosionTimer == 0.1)
-				{
-					if (target->type == GameObject::GO_WORMBODY1 || target->type == GameObject::GO_WORMBODY2 || target->type == GameObject::GO_WORMHEAD || target->type == GameObject::GO_WORMTAIL)
-					{
-						int damageDealt = round(basicBulletDamage * Math::RandFloatMinMax(0.7, 1.5));
-						target->hp -= damageDealt;
-						displayDamage.push_back(damageDealt);
-						damageTextX.push_back((target->pos.x - camera.position.x + Math::RandFloatMinMax(-5, 5)) * 80 / (192 * (m_worldHeight / (4 * 100))));
-						damageTextY.push_back((target->pos.y - camera.position.y + Math::RandFloatMinMax(-5, 5)) * 65 / (100 * (m_worldHeight / (4 * 100))));
-						scaleText.push_back(0);
-						translateTextY.push_back(0);
-						damageTimer.push_back(elapsedTime);
-						damageEnemy.push_back(true);
-						/*	cSoundController->StopSoundByID(5);*/
-						cSoundController->PlaySoundByID(5);
-					}
-
-					else
-					{
-						int damageDealt = round(basicBulletDamage * 3 * Math::RandFloatMinMax(0.7, 1.5));
-						target->hp -= damageDealt;
-						displayDamage.push_back(damageDealt);
-						damageTextX.push_back((target->pos.x - camera.position.x + Math::RandFloatMinMax(-5, 5)) * 80 / (192 * (m_worldHeight / (4 * 100))));
-						damageTextY.push_back((target->pos.y - camera.position.y + Math::RandFloatMinMax(-5, 5)) * 65 / (100 * (m_worldHeight / (4 * 100))));
-						scaleText.push_back(0);
-						translateTextY.push_back(0);
-						damageTimer.push_back(elapsedTime);
-						damageEnemy.push_back(true);
-						/*	cSoundController->StopSoundByID(5);*/
-						cSoundController->PlaySoundByID(5);
-					}
-				}
-			}
-
-			if (bullet->type == GameObject::GO_FIRE)
-			{
-				if (fireTimer <= 0)
-				{
-					if (target->type == GameObject::GO_BOSS)
-					{
-						int damageDealt = round(basicBulletDamage * 2 * Math::RandFloatMinMax(0.7, 1.5));
-						target->hp -= damageDealt;
-						displayDamage.push_back(damageDealt);
-						damageTextX.push_back((target->pos.x - camera.position.x + Math::RandFloatMinMax(-5, 5)) * 80 / (192 * (m_worldHeight / (4 * 100))));
-						damageTextY.push_back((target->pos.y - camera.position.y + Math::RandFloatMinMax(-5, 5)) * 65 / (100 * (m_worldHeight / (4 * 100))));
-						scaleText.push_back(0);
-						translateTextY.push_back(0);
-						damageTimer.push_back(elapsedTime);
-						damageEnemy.push_back(true);
-						cSoundController->PlaySoundByID(5);
-					}
-					else
-					{
-						int damageDealt = round(basicBulletDamage * Math::RandFloatMinMax(0.7, 1.5));
-						target->hp -= damageDealt;
-						displayDamage.push_back(damageDealt);
-						damageTextX.push_back((target->pos.x - camera.position.x + Math::RandFloatMinMax(-5, 5)) * 80 / (192 * (m_worldHeight / (4 * 100))));
-						damageTextY.push_back((target->pos.y - camera.position.y + Math::RandFloatMinMax(-5, 5)) * 65 / (100 * (m_worldHeight / (4 * 100))));
-						scaleText.push_back(0);
-						translateTextY.push_back(0);
-						damageTimer.push_back(elapsedTime);
-						damageEnemy.push_back(true);
-					}
-					cSoundController->PlaySoundByID(14);
-				}
-			}
-
 
 			if (bullet->type == GameObject::GO_BULLET)
 			{
@@ -3328,7 +3205,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				m_objectCount--;
 				enemycount--;
 				// Money gained
-				if (target->type != GameObject::GO_ENEMYBULLET)
+				if (target->type != GameObject::GO_ENEMYBULLET && target->type != GameObject::GO_TREE)
 				{
 					// Drop  Item
 					if (target->type == GameObject::GO_NIGHTMARE)
@@ -3358,6 +3235,202 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 						go3->vel = 0;
 						go3->pos.Set(target->pos.x, target->pos.y, target->pos.z);
 						go3->scale.Set(9, 9, 1);
+						go3->enemyDamage = 0;
+						go3->hitboxSizeDivider = 3;
+
+					}
+					else if (random < 3)
+					{
+						float maxVel = 0.8;
+
+						GameObject* go3 = FetchGO();
+						go3->type = GameObject::GO_HEAL;
+						go3->vel = 0;
+						go3->pos.Set(target->pos.x, target->pos.y, target->pos.z);
+						go3->scale.Set(5, 5, 1);
+						go3->enemyDamage = -5;
+						go3->hitboxSizeDivider = 3;
+					}
+				}
+			}
+		}
+	}
+
+	else if( bullet->type == GameObject::GO_EXPLOSION || bullet->type == GameObject::GO_FIRE)
+	{
+		float dis = bullet->pos.DistanceSquared(target->pos);
+		float rad = (bullet->scale.x + target->scale.x / 4) * (bullet->scale.x + target->scale.x / 4);
+
+		if (dis < rad && target->type == GameObject::GO_TREE)
+		{
+			target->active = true;
+		}
+
+		if (dis < rad && target->type != GameObject::GO_ENEMYBULLET)
+		{
+			if (bullet->type != GameObject::GO_EXPLOSION)
+			{
+				target->isHit = true;
+			}
+
+			if (bullet->type == GameObject::GO_EXPLOSION)
+			{
+				if (explosionTimer == 0.1)
+				{
+					if (target->type == GameObject::GO_WORMBODY1 || target->type == GameObject::GO_WORMBODY2 || target->type == GameObject::GO_WORMHEAD || target->type == GameObject::GO_WORMTAIL)
+					{
+						int damageDealt = round(basicBulletDamage * Math::RandFloatMinMax(0.7, 1.5));
+						target->hp -= damageDealt;
+						displayDamage.push_back(damageDealt);
+						damageTextX.push_back((target->pos.x - camera.position.x + Math::RandFloatMinMax(-5, 5)) * 80 / (192 * (m_worldHeight / (4 * 100))));
+						damageTextY.push_back((target->pos.y - camera.position.y + Math::RandFloatMinMax(-5, 5)) * 65 / (100 * (m_worldHeight / (4 * 100))));
+						scaleText.push_back(0);
+						translateTextY.push_back(0);
+						damageTimer.push_back(elapsedTime);
+						damageEnemy.push_back(true);
+						/*	cSoundController->StopSoundByID(5);*/
+						cSoundController->PlaySoundByID(5);
+					}
+
+					else
+					{
+						int damageDealt = round(basicBulletDamage * 3 * Math::RandFloatMinMax(0.7, 1.5));
+						target->hp -= damageDealt;
+						displayDamage.push_back(damageDealt);
+						damageTextX.push_back((target->pos.x - camera.position.x + Math::RandFloatMinMax(-5, 5)) * 80 / (192 * (m_worldHeight / (4 * 100))));
+						damageTextY.push_back((target->pos.y - camera.position.y + Math::RandFloatMinMax(-5, 5)) * 65 / (100 * (m_worldHeight / (4 * 100))));
+						scaleText.push_back(0);
+						translateTextY.push_back(0);
+						damageTimer.push_back(elapsedTime);
+						damageEnemy.push_back(true);
+						/*	cSoundController->StopSoundByID(5);*/
+						cSoundController->PlaySoundByID(5);
+					}
+				}
+			}
+
+			if (bullet->type == GameObject::GO_FIRE)
+			{
+				if (fireTimer <= 0)
+				{
+					if (target->type == GameObject::GO_BOSS)
+					{
+						int damageDealt = round(basicBulletDamage * 2 * Math::RandFloatMinMax(0.7, 1.5));
+						target->hp -= damageDealt;
+						displayDamage.push_back(damageDealt);
+						damageTextX.push_back((target->pos.x - camera.position.x + Math::RandFloatMinMax(-5, 5)) * 80 / (192 * (m_worldHeight / (4 * 100))));
+						damageTextY.push_back((target->pos.y - camera.position.y + Math::RandFloatMinMax(-5, 5)) * 65 / (100 * (m_worldHeight / (4 * 100))));
+						scaleText.push_back(0);
+						translateTextY.push_back(0);
+						damageTimer.push_back(elapsedTime);
+						damageEnemy.push_back(true);
+						cSoundController->PlaySoundByID(5);
+					}
+					else
+					{
+						int damageDealt = round(basicBulletDamage * Math::RandFloatMinMax(0.7, 1.5));
+						target->hp -= damageDealt;
+						displayDamage.push_back(damageDealt);
+						damageTextX.push_back((target->pos.x - camera.position.x + Math::RandFloatMinMax(-5, 5)) * 80 / (192 * (m_worldHeight / (4 * 100))));
+						damageTextY.push_back((target->pos.y - camera.position.y + Math::RandFloatMinMax(-5, 5)) * 65 / (100 * (m_worldHeight / (4 * 100))));
+						scaleText.push_back(0);
+						translateTextY.push_back(0);
+						damageTimer.push_back(elapsedTime);
+						damageEnemy.push_back(true);
+					}
+					cSoundController->PlaySoundByID(14);
+				}
+			}
+
+			// Asteroid HP reaches 0
+			if (target->hp <= 0)
+			{
+				target->active = false;
+				m_objectCount--;
+				// Money gained
+				if (target->type != GameObject::GO_ENEMYBULLET && target->type != GameObject::GO_TREE)
+				{
+					if (target->type == GameObject::GO_BOSS)
+					{
+						bossspawned = false;
+					}
+					// Money gained
+					enemycount--;
+					killcount++;
+					m_money += 1 + bonusMoney;
+					if (target->type == GameObject::GO_NIGHTMARE)
+					{
+						for (int i = 0; i < 4; ++i)
+						{
+							GameObject* go = FetchGO();
+							go->type = GameObject::GO_GHOST;
+							go->hp = round(1 * hpFactor);
+							go->scale.Set(10, 10, 1);
+							go->pos.Set(target->pos.x + Math::RandFloatMinMax(-10, 10), target->pos.y + Math::RandFloatMinMax(-10, 10), go->pos.z);
+							go->hitboxSizeDivider = 3.5;
+							go->enemyDamage = 2;
+							go->angle = 0;
+							go->maxHP = go->hp;
+						}
+					}
+
+					if (target->type == GameObject::GO_BOSS)
+					{
+						tempSpawnCount--;
+					}
+
+					//*** Worm Segment seperation code*********************************
+					if (target->type == GameObject::GO_WORMHEAD)
+					{
+						if (target->nextNode != nullptr)
+						{
+							target->nextNode->type = GameObject::GO_WORMHEAD;
+							target->nextNode->prevNode = nullptr;
+							target->prevNode = nullptr;
+							target->nextNode->enemyDamage = 35;
+							target->nextNode->hitboxSizeDivider = 1.8;
+						}
+					}
+					else if (target->type == GameObject::GO_WORMBODY1 || target->type == GameObject::GO_WORMBODY2)
+					{
+						if (target->nextNode != nullptr)
+						{
+							target->nextNode->type = GameObject::GO_WORMHEAD;
+							target->nextNode->prevNode = nullptr;
+							target->nextNode->timer = 10;
+							target->nextNode->enemyDamage = 35;
+							target->nextNode->hitboxSizeDivider = 1.8;
+						}
+
+						if (target->prevNode != nullptr)
+						{
+							target->prevNode->type = GameObject::GO_WORMTAIL;
+							target->prevNode->nextNode = nullptr;
+							target->prevNode->enemyDamage = 20;
+						}
+					}
+					else if (target->type == GameObject::GO_WORMTAIL)
+					{
+						if (target->prevNode != nullptr)
+						{
+							target->prevNode->type = GameObject::GO_WORMTAIL;
+							target->prevNode->nextNode = nullptr;
+							target->prevNode->enemyDamage = 20;
+						}
+					}
+
+
+					// Drop  Item
+					int random = rand() % 18;
+					if (random == 0)
+					{
+						float maxVel = 0.8;
+
+						GameObject* go3 = FetchGO();
+						go3->type = GameObject::GO_TRIPLESHOT;
+						go3->vel = 0;
+						go3->pos.Set(target->pos.x, target->pos.y, 8);
+						go3->scale.Set(7, 7, 1);
 						go3->enemyDamage = 0;
 						go3->hitboxSizeDivider = 3;
 
@@ -4131,7 +4204,7 @@ void Assignment1::RenderGO(GameObject* go)
 void Assignment1::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	std::ostringstream ss;
 	switch (menuType)
 	{
 	case M_MAIN:
@@ -4160,6 +4233,329 @@ void Assignment1::Render()
 		break;
 	case M_UPGRADE:
 		RenderUpgrade();
+		cSoundController->StopSoundByID(3);
+		cSoundController->StopSoundByID(4);
+		cSoundController->StopSoundByID(13);
+		cSoundController->PlaySoundByID(2);
+		if (fireratelvl < 9)
+		{
+
+			ss.str("");
+			ss << "LVL" << fireratelvl << " Fire Rate Up";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 9.5, 22, false);
+
+			ss.str("");
+			ss << "$" << fireRateCost;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 33.5, 22, false);
+
+		}
+		else
+		{
+			ss.str("");
+			ss << "LVL" << fireratelvl << " Fire Rate Up";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 9.5, 22, false);
+
+			ss.str("");
+			ss << "$SOLD";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 33.5, 22, false);
+		}
+
+		if (damagelvl < 9)
+		{
+			ss.str("");
+			ss << "LVL" << damagelvl << " Damage Up";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 9.5, 31, false);
+
+			ss.str("");
+			ss << "$" << damageUpCost;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 33.5, 31, false);
+
+		}
+		else
+		{
+			ss.str("");
+			ss << "LVL" << damagelvl << " Damage Up";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 9.5, 31, false);
+
+			ss.str("");
+			ss << "$SOLD";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 33.5, 31, false);
+
+		}
+
+		if (healthRegenCost < 110)
+		{
+			ss.str("");
+			ss << "LVL" << regenlvl << " Health regen";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 9.5, 40.5, false);
+
+			ss.str("");
+			ss << "$" << healthRegenCost;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 33.5, 40.5, false);
+		}
+		else
+		{
+
+			if (regenlvl >= 9)
+			{
+				ss.str("");
+				ss << "LVL" << regenlvl << " Regen amount";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 9.5, 40.5, false);
+
+				ss.str("");
+				ss << "$SOLD";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 33.5, 40.5, false);
+
+			}
+			else
+			{
+				ss.str("");
+				ss << "LVL" << regenlvl << " Regen amount";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 9.5, 40.5, false);
+
+				ss.str("");
+				ss << "$" << healthRegenCost;
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 33.5, 40.5, false);
+			}
+		}
+
+
+		if (cardCost < 25)
+		{
+			ss.str("");
+			ss << "LVL" << cardlvl << " Card";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 47.5, 40.5, false);
+
+			ss.str("");
+			ss << "$" << cardCost;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 71, 40.5, false);
+		}
+		else
+		{
+
+			if (cardlvl >= 9)
+			{
+				ss.str("");
+				ss << "LVL" << cardlvl << " Card FireRate";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 47.5, 40.5, false);
+
+				ss.str("");
+				ss << "$SOLD";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 71, 40.5, false);
+
+			}
+			else
+			{
+				ss.str("");
+				ss << "LVL" << cardlvl << " Card FireRate";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 47.5, 40.5, false);
+
+				ss.str("");
+				ss << "$" << cardCost;
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 71, 40.5, false);
+			}
+		}
+
+		if (ringCost < 275)
+		{
+
+			ss.str("");
+			ss << "LVL" << ringlvl << " Protection";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 47.5, 13, false);
+
+			ss.str("");
+			ss << "$" << ringCost;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 71, 13, false);
+		}
+		else
+		{
+			if (ringlvl >= 5)
+			{
+
+				ss.str("");
+				ss << "LVL" << ringlvl << " Protection Range";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 47.5, 13, false);
+
+				ss.str("");
+				ss << "$SOLD";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 71, 13, false);
+			}
+			else
+			{
+
+
+				ss.str("");
+				ss << "LVL" << ringlvl << " Protection Range";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 47.5, 13, false);
+
+				ss.str("");
+				ss << "$" << ringCost;
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 71, 13, false);
+			}
+		}
+
+			if (bombCost < 55)
+			{
+
+				ss.str("");
+				ss << "LVL" << bomblvl << " Lobing Bomb";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 47.5, 22, false);
+
+				ss.str("");
+				ss << "$" << bombCost;
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 71, 22, false);
+			}
+			else
+			{
+				if (bomblvl >= 9)
+				{
+
+					ss.str("");
+					ss << "LVL" << bomblvl << " Bomb Fire Rate";
+					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 47.5, 22, false);
+
+					ss.str("");
+					ss << "$SOLD";
+					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 71, 22, false);
+
+				}
+
+				else
+				{
+					ss.str("");
+					ss << "LVL" << bomblvl << " Bomb Fire Rate";
+					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 47.5, 22, false);
+
+					ss.str("");
+					ss << "$" << bombCost;
+					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 71, 22, false);
+				}
+
+			}
+
+			if (molotovCost < 55)
+			{
+
+				ss.str("");
+				ss << "LVL" << molotovlvl << " Molotov cocktail";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 47.5, 31, false);
+
+				ss.str("");
+				ss << "$" << molotovCost;
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 71, 31, false);
+			}
+			else
+			{
+
+				if (molotovlvl <= 3)
+				{
+
+					ss.str("");
+					ss << "LVL" << molotovlvl << " Add Molotov";
+					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 47.5, 31, false);
+
+					ss.str("");
+					ss << "$" << molotovCost;
+					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 71, 31, false);
+				}
+
+				else if (molotovlvl <= 8 && molotovlvl >= 4)
+				{
+					ss.str("");
+					ss << "LVL" << molotovlvl << " Molotov FireRate";
+					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.55, 47.5, 31, false);
+
+					ss.str("");
+					ss << "$" << molotovCost;
+					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.55, 71, 31, false);
+				}
+				else
+				{
+					ss.str("");
+					ss << "LVL" << molotovlvl << " Molotov FireRate";
+					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.55, 47.5, 31, false);
+
+					ss.str("");
+					ss << "$SOLD" ;
+					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.55, 71, 31, false);
+				}
+
+			}
+
+			if (arrowCost < 30)
+			{
+
+				ss.str("");
+				ss << "LVL" << arrowlvl << " Arrow Shot";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 9.5, 13, false);
+
+				ss.str("");
+				ss << "$" << arrowCost;
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 33.5, 13, false);
+			}
+			else
+			{
+
+				if (arrowlvl <= 3)
+				{
+					ss.str("");
+					ss << "LVL" << arrowlvl << " Add Arrows";
+					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 9.5, 13, false);
+
+					ss.str("");
+					ss << "$" << arrowCost;
+					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 33.5, 13, false);
+				}
+
+				else if (arrowlvl <= 8 && arrowlvl >= 4)
+				{
+					ss.str("");
+					ss << "LVL" << arrowlvl << "  Arrow Fire Rate";
+					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 9.5, 13, false);
+
+					ss.str("");
+					ss << "$" << arrowCost;
+					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 33.5, 13, false);
+				}
+
+				else if (arrowlvl == 9 && molotovlvl == 9 && flamingarrowlvl == 0)
+				{
+
+					ss.str("");
+					ss << "LVL" << flamingarrowlvl << "  Flaming Arrows";
+					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 9.5, 13, false);
+
+					ss.str("");
+					ss << "$" << flamingarrowCost;
+					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 33.5, 13, false);
+				}
+
+				else if (arrowlvl == 9 && molotovlvl == 9 && flamingarrowlvl == 1)
+				{
+					ss.str("");
+					ss << "LVL" << flamingarrowlvl << "  Flaming Arrows";
+					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 9.5, 13, false);
+
+					ss.str("");
+					ss << "$SOLD";
+					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 33.5, 13, false);
+
+				}
+
+				else
+				{
+
+					ss.str("");
+					ss << "LVL" << arrowlvl << "  Arrow Fire Rate";
+					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 9.5, 13, false);
+
+					ss.str("");
+					ss << "$SOLD";
+					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 33.5, 13, false);
+				}
+
+			}
+		
 		break;
 	}
 
@@ -4198,32 +4594,32 @@ void Assignment1::Render()
 
 
 
-	if (upgradeScreen)
-	{
-		/*modelStack.PushMatrix();
-		modelStack.Translate(70 + camera.position.x, 50 + camera.position.y, 10);
-		modelStack.Scale(120, 100, 1);
-		RenderMesh(meshList[GEO_UPGRADESCREEN], false);
-		modelStack.PopMatrix();*/
+	//if (upgradescreen)
+	//{
+	//	/*modelStack.PushMatrix();
+	//	modelStack.Translate(70 + camera.position.x, 50 + camera.position.y, 10);
+	//	modelStack.Scale(120, 100, 1);
+	//	RenderMesh(meshList[GEO_UPGRADESCREEN], false);
+	//	modelStack.PopMatrix();*/
 
-		modelStack.PushMatrix();
-		modelStack.Translate(40 + camera.position.x, 51 + camera.position.y, 11);
-		modelStack.Scale(5, 5, 1);
-		RenderMesh(meshList[GEO_CARDS], false);
-		modelStack.PopMatrix();
+	//	modelStack.PushMatrix();
+	//	modelStack.Translate(40 + camera.position.x, 51 + camera.position.y, 11);
+	//	modelStack.Scale(5, 5, 1);
+	//	RenderMesh(meshList[GEO_CARDS], false);
+	//	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(40 + camera.position.x, 43 + camera.position.y, 11);
-		modelStack.Scale(5, 5, 1);
-		RenderMesh(meshList[GEO_RING], false);
-		modelStack.PopMatrix();
+	//	modelStack.PushMatrix();
+	//	modelStack.Translate(40 + camera.position.x, 43 + camera.position.y, 11);
+	//	modelStack.Scale(5, 5, 1);
+	//	RenderMesh(meshList[GEO_RING], false);
+	//	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(40 + camera.position.x, 35 + camera.position.y, 11);
-		modelStack.Scale(5, 5, 1);
-		RenderMesh(meshList[GEO_BOMB], false);
-		modelStack.PopMatrix();
-	}
+	//	modelStack.PushMatrix();
+	//	modelStack.Translate(40 + camera.position.x, 35 + camera.position.y, 11);
+	//	modelStack.Scale(5, 5, 1);
+	//	RenderMesh(meshList[GEO_BOMB], false);
+	//	modelStack.PopMatrix();
+	//}
 
 
 	if (isAlive)
@@ -4255,7 +4651,7 @@ void Assignment1::Render()
 	//On screen text
 
 	//Exercise 5a: Render m_hp, m_score
-	std::ostringstream ss;
+
 
 	//Exercise 5b: Render position, velocity & mass of ship
 
@@ -4264,181 +4660,6 @@ void Assignment1::Render()
 	//RenderTextOnScreen(meshList[GEO_TEXT], "Asteroid", Color(0, 1, 0), 20, 0, 0);
 
 	// Upgrade information
-	if (upgradeScreen)
-	{
-		// Upgrade information
-
-		RenderMeshOnScreen(meshList[GEO_UPGRADESCREEN], 95.5, 50, 200, 100);
-		ss.str("");
-		ss << "UPGRADE MENU";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 30, 50, false);
-
-		ss.str("");
-		ss << "-------------------------------";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 47, false);
-
-		if (fireRateCost < 60)
-		{
-			ss.str("");
-			ss << "[I]  Fire Rate Up:$" << fireRateCost;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 45, false);
-
-		}
-		else
-		{
-			ss.str("");
-			ss << "[I]  Fire Rate Up:SOLD";
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 45, false);
-
-		}
-		ss.str("");
-		ss << "[O]  Damage Up:$" << damageUpCost;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 40, false);
-
-		ss.str("");
-		ss << "[P]  Health Regen:$" << healthRegenCost;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 35, false);
-
-		if (cardCost < 25)
-		{
-			ss.str("");
-			ss << "[J]  Homing Card:$" << cardCost << " LVL" << cardlvl;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 30, false);
-		}
-		else
-		{
-			ss.str("");
-			ss << "[J]  Card Fire Rate:$" << cardCost << " LVL" << cardlvl;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 30, false);
-		}
-
-		if (ringCost < 275)
-		{
-			ss.str("");
-			ss << "[K]  Protection:$" << ringCost << " LVL" << ringlvl;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 25, false);
-		}
-		else
-		{
-			if (ringlvl >= 5)
-			{
-				ss.str("");
-				ss << "[K]  Protection Range:SOLD " << "LVL" << ringlvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 25, false);
-			}
-			else
-			{
-				ss.str("");
-				ss << "[K]  Protection Range:$" << ringCost << " LVL" << ringlvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 25, false);
-			}
-		}
-
-		if (bombCost < 55)
-		{
-			ss.str("");
-			ss << "[L]  Lobing Bomb:$" << bombCost << " LVL" << bomblvl;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 20, false);
-		}
-		else
-		{
-			if (bomblvl >= 9)
-			{
-				ss.str("");
-				ss << "[L]  Bomb Fire Rate:SOLD" << " LVL" << bomblvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 20, false);
-			}
-
-			else
-			{
-				ss.str("");
-				ss << "[L]  Bomb Fire Rate:$" << bombCost << " LVL" << bomblvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 20, false);
-			}
-
-		}
-
-		if (molotovCost < 55)
-		{
-			ss.str("");
-			ss << "[B]  Molotov cocktail:$" << molotovCost << " LVL" << molotovlvl;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 15, false);
-		}
-		else
-		{
-
-			if (molotovlvl <= 3)
-			{
-				ss.str("");
-				ss << "[B]  Add Molotov:$" << molotovCost << " LVL" << molotovlvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 15, false);
-			}
-
-			else if (molotovlvl <= 8 && molotovlvl >= 4)
-			{
-				ss.str("");
-				ss << "[B]  Molotov Fire Rate:$" << molotovCost << " LVL" << molotovlvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 15, false);
-			}
-
-
-			else
-			{
-
-				ss.str("");
-				ss << "[B]  Molotov Fire Rate:SOLD" << " LVL" << molotovlvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 15, false);
-			}
-
-		}
-
-		if (arrowCost < 30)
-		{
-			ss.str("");
-			ss << "[N]  Arrow shot:$" << arrowCost << " LVL" << arrowlvl;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10, false);
-		}
-		else
-		{
-
-			if (arrowlvl <= 3)
-			{
-				ss.str("");
-				ss << "[N]  Add Arrows:$" << arrowCost << " LVL" << arrowlvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10, false);
-			}
-
-			else if (arrowlvl <= 8 && arrowlvl >= 4)
-			{
-				ss.str("");
-				ss << "[N]  Arrow Fire Rate:$" << arrowCost << " LVL" << arrowlvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10, false);
-			}
-
-			else if (arrowlvl == 9 && molotovlvl == 9 && flamingarrowlvl == 0)
-			{
-				ss.str("");
-				ss << "[M]  Flaming Arrows:$" << flamingarrowCost << " LVL" << flamingarrowlvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10, false);
-			}
-
-			else if (arrowlvl == 9 && molotovlvl == 9 && flamingarrowlvl == 1)
-			{
-				ss.str("");
-				ss << "[M]  Flaming Arrows:SOLD" << " LVL" << flamingarrowlvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10, false);
-			}
-
-			else
-			{
-
-				ss.str("");
-				ss << "[N]  arrow Fire Rate:SOLD" << " LVL" << arrowlvl;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 10, false);
-			}
-
-		}
-	}
 	if (!gameStart)
 	{
 
@@ -4484,7 +4705,7 @@ void Assignment1::Render()
 
 		}
 	}
-	if (isAlive && !upgradeScreen && gameStart)
+	if (isAlive && upgradescreen == false && gameStart)
 	{
 
 		for (int it = 0; it != damageTimer.size(); ++it)

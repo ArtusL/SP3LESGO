@@ -112,6 +112,8 @@ protected:
 	int flamingarrowCost;
 	int flamingarrowlvl;
 	int healthRegenCost;
+	int damagelvl;
+	int fireratelvl;
 	int basicBulletDamage;
 	int healthRegenAmount;
 	int regenlvl;
@@ -139,7 +141,6 @@ protected:
 	double molotovRate;
 	double bombRate;
 	double arrowRate;
-	double flamingarrowRate;
 	double keyDelay;
 	double elapsedTime;
 	double waveTimer;
@@ -162,7 +163,6 @@ protected:
 	bool doubleBullet;
 	bool tripleShot;
 	bool isAlive;
-	bool upgradeScreen;
 	bool ChooseScreen;
 	bool gameStart;
 	bool heroFacingLeft;

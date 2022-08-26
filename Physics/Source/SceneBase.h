@@ -157,6 +157,7 @@ public:
 	static bool molotovUpgrade;
 	static bool firerateUpgrade;
 	static bool damageUpgrade;
+	static bool upgradescreen;
 
 	SceneBase();
 	~SceneBase();

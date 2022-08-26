@@ -17,6 +17,7 @@ bool SceneBase::cardChoose = false;
 bool SceneBase::damageUpgrade = false;
 bool SceneBase::healthUpgrade = false;
 bool SceneBase::molotovUpgrade = false;
+bool SceneBase::upgradescreen = false;
 bool SceneBase::ringUpgrade = false;
 bool SceneBase::firerateUpgrade = false;
 //extern int bomblvl;
@@ -743,7 +744,7 @@ void SceneBase::RenderChoose()
 
 void SceneBase::RenderGameOver()
 {
-	RenderMeshOnScreen(meshList[GEO_DEADBG], 96, 55, 200, 110);
+	RenderMeshOnScreen(meshList[GEO_DEADBG], 96, 49.5, 200, 103);
 
 	/*RenderMeshOnScreen(meshList[GEO_GAMEOVER], 96, 25, 45, 45);*/
 	switch (selectorIndex)
@@ -758,16 +759,16 @@ void SceneBase::RenderGameOver()
 		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 12, 45, 45);
 		break;
 	}
-	RenderTextOnScreen(meshList[GEO_TEXT], "Gameover", Color(1, 1, 1), 7, 23, 35, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Restart", Color(1, 1, 1), 4, 31, 20.5, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Menu", Color(1, 1, 1), 4, 35, 13.5, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Quit", Color(1, 1, 1), 4, 35, 6, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Gameover", Color(1, 1, 1), 7, 22, 32, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Restart", Color(1, 1, 1), 3, 33, 22, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Menu", Color(1, 1, 1), 3, 35, 13.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Quit", Color(1, 1, 1), 3, 35, 5, false);
 	selectorIndex = Math::Clamp(selectorIndex, 0, 2);
 
 }
 void SceneBase::RenderPauseMenu()
 {
-	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 50, 200, 105);
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
 
 	switch (selectorIndex)
 	{
@@ -779,61 +780,52 @@ void SceneBase::RenderPauseMenu()
 		break;
 	}
 	RenderTextOnScreen(meshList[GEO_TEXT], "PAUSE", Color(1, 1, 1), 7, 29, 35, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Resume", Color(1, 1, 1), 4, 32, 21.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Resume", Color(1, 1, 1), 4, 31, 20.5, false);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Menu", Color(1, 1, 1), 4, 35, 13.5, false);
 	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
 }
 
 void SceneBase::RenderUpgrade()
 {
-	RenderMeshOnScreen(meshList[GEO_SHOPBG], 96, 55, 200, 110);
+	RenderMeshOnScreen(meshList[GEO_SHOPBG], 96, 49.2, 200, 103);
 	switch (selectorIndex)
 	{
 	case 0:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 50, 70, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 50, 70, 60, 45);
 		break;
 	case 1:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 50, 55, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 50, 55, 60, 45);
 		break;
 	case 2:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 50, 40, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 50, 40, 60, 45);
 		break;
 	case 3:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 50, 25, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 50, 25, 60, 45);
 		break;
 	case 4:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 150, 70, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 141.5, 70, 60, 45);
 		break;
 	case 5:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 150, 55, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 141.5, 55, 60, 45);
 		break;
 	case 6:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 150, 40, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 141.5, 40, 60, 45);
 		break;
 	case 7:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 150, 25, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 141.5, 25, 60, 45);
 		break;
 	case 8:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 15, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 94, 15, 60, 45);
 		break;
 
 	}
 	std::ostringstream ss;
-	RenderTextOnScreen(meshList[GEO_TEXT], "SHOP", Color(1, 1, 1), 7, 30, 50, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Regen", Color(1, 1, 1), 4, 10, 39.5, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Damage Up", Color(1, 1, 1), 4, 10, 30.5, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Fire rate", Color(1, 1, 1), 4, 10, 21.5, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Arrows", Color(1, 1, 1), 4, 10, 12.5, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Cards", Color(1, 1, 1), 4, 55, 39.5, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Molotov", Color(1, 1, 1), 4, 55, 30.5, false);
-	//ss.str("");
-	//ss << "bomb lvl:" << bomblvl;
-	RenderTextOnScreen(meshList[GEO_TEXT], "Bombs", Color(1, 1, 1), 4, 55, 21.5, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Rings", Color(1, 1, 1), 4, 55, 12.5, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "MENU", Color(1, 1, 1), 4, 35, 6, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "SHOP", Color(1, 1, 1), 7, 30, 48, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Exit Shop", Color(1, 1, 1), 3, 30, 6, false);
 	selectorIndex = Math::Clamp(selectorIndex, 0, 8);
 
 }
+
 
 void SceneBase::UpdateChoose(float& m_speed)
 {
@@ -912,6 +904,7 @@ void SceneBase::UpdateUpgrade(float& m_speed)
 		break;
 	case 8:
 		menuType = M_NONE;
+		upgradescreen = false;
 		m_speed = 1;
 		break;
 	}
@@ -979,7 +972,6 @@ void SceneBase::UpdateGameOver(float& m_speed)
 		break;
 	case 1:
 		selectorIndex = 0;
-		menuType = M_CHOOSE;
 		resetGame = true;
 		break;
 	case 2:
