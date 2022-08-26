@@ -56,9 +56,9 @@ void Assignment1::Init()
 	}
 
 	//Exercise 2b: Initialize m_hp and m_score
-	m_hp = 100;
+	m_hp = 1;
 
-	m_money = 10000;
+	m_money = 100;
 	m_objectCount = 0;
 
 	waveCount = 1;
@@ -163,7 +163,7 @@ void Assignment1::Init()
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Magic.ogg"), 6, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Slash.ogg"), 7, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Grunt.wav"), 8, true);
-	cSoundController->LoadSound(FileSystem::getPath("Sound\\Gameover.ogg"), 9, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\GameOver.ogg"), 9, true);
 
 	//shop purchase
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\PurchaseRing.ogg"), 10, true);
@@ -315,7 +315,7 @@ void Assignment1::RestartGame()
 	}
 	//Exercise 2b: Initialize m_hp and m_score
 	m_hp = 100;
-	m_money = 10000;
+	m_money = 100;
 	m_objectCount = 0;
 	waveCount = 1;
 	gravity = -4;
@@ -670,12 +670,29 @@ void Assignment1::UpdateMenu()
 		{
 		case M_MAIN:
 			UpdateMainMenu(m_speed);
+			//cSoundController->StopSoundByID(9);
+			//cSoundController->StopSoundByID(2);
+			//cSoundController->StopSoundByID(3);
+			//cSoundController->StopSoundByID(7);
+			//cSoundController->StopSoundByID(8);
+			//cSoundController->StopSoundByID(13);
+
+			//cSoundController->PlaySoundByID(1);
+
 			break;
 		case M_PAUSE:
 			UpdatePauseMenu(m_speed);
 			break;
 		case M_GAMEOVER:
 			UpdateGameOver(m_speed);
+			//cSoundController->StopSoundByID(1);
+			//cSoundController->StopSoundByID(2);
+			//cSoundController->StopSoundByID(3);
+			//cSoundController->StopSoundByID(7);
+			//cSoundController->StopSoundByID(8);
+			//cSoundController->StopSoundByID(13);
+
+			//cSoundController->PlaySoundByID(9);
 			break;
 		case M_CHOOSE:
 			UpdateChoose(m_speed);
@@ -694,6 +711,15 @@ void Assignment1::UpdateMenu()
 			break;
 		case M_UPGRADE:
 			UpdateUpgrade(m_speed);
+
+			//cSoundController->StopSoundByID(1);
+			//cSoundController->StopSoundByID(9);
+			//cSoundController->StopSoundByID(3);
+			//cSoundController->StopSoundByID(7);
+			//cSoundController->StopSoundByID(8);
+			//cSoundController->StopSoundByID(13);
+
+			//cSoundController->PlaySoundByID(2);
 			break;
 		}
 	}
@@ -4589,6 +4615,15 @@ void Assignment1::Render()
 	else if (!isAlive && gameStart)
 	{
 		SceneBase::menuType = M_GAMEOVER;
+		cSoundController->StopSoundByID(1);
+		cSoundController->StopSoundByID(2);
+		cSoundController->StopSoundByID(3);
+		cSoundController->StopSoundByID(4);
+		cSoundController->StopSoundByID(7);
+		cSoundController->StopSoundByID(8);
+		cSoundController->StopSoundByID(13);
+
+		cSoundController->PlaySoundByID(9);
 	}
 }
 
