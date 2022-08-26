@@ -75,6 +75,7 @@ void Assignment1::Init()
 	ringauraTimer = 0;
 	explosionTimer = 0;
 
+	shoppointer = 0;
 	shopactive = false;
 	fireRate = 5;
 	fireRateCost = 40;
@@ -149,6 +150,7 @@ void Assignment1::Init()
 	m_ship->maxHP = m_hp;
 	m_ship->mass = 0.1f;
 	m_ship->prevEnemyBullet = 0;
+
 
 	// Attract powerups
 	GameObject* hole = FetchGO();
@@ -337,6 +339,7 @@ void Assignment1::RestartGame()
 	explosionTimer = 0;
 	chestTimer = 0;
 
+	shoppointer = 0;
 	shopactive = false;
 	fireRate = 5;
 	fireRateCost = 40;
@@ -2163,12 +2166,14 @@ void Assignment1::Update(double dt)
 		}
 
 
-		if (shopactive == true)
+		if (shopactive == true && shoppointer < 1)
 		{
 			GameObject* go = FetchGO();
 			go->type = GameObject::GO_SHOP_POINTER;
 			go->scale.Set(10, 10, 10);
-			go->vel.SetZero();
+			go->pos = m_ship->pos;
+			go->pos.y = m_ship->pos.y - 10;
+			shoppointer++;
 		}
 
 
@@ -2553,7 +2558,10 @@ void Assignment1::Update(double dt)
 					// Move towards player
 					enemy->direction = m_ship->pos - Vector3(enemy->pos.x, enemy->pos.y, enemy->pos.z);
 					enemy->direction = enemy->direction.Normalized();
-					enemy->vel = (enemy->direction * 40);
+					shopposx = enemy->pos.x;
+					shopposy = enemy->pos.y;
+					shopposz = enemy->pos.z;
+					//enemy->vel = (enemy->direction * 40);
 				}
 				else if (enemy->type == GameObject::GO_BDEMON)
 				{
@@ -3860,7 +3868,10 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PushMatrix();
 		go->pos = m_ship->pos;
 		go->pos.y = m_ship->pos.y - 10;
+		go->angle = atan2(shopposy - go->pos.y, shopposx - go->pos.x);
+		go->angle = (go->angle / Math::PI) * 180.0 - 90.0f;
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Rotate(go->angle, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_SHREK_POINTER], false);
 		modelStack.PopMatrix();

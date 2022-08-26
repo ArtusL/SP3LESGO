@@ -94,6 +94,7 @@ protected:
 	int m_money;
 	float moneyFactor;
 	double fireRate;
+	int shoppointer;
 	int fireRateCost;
 	int damageUpCost;
 	int cardCost;
@@ -177,6 +178,9 @@ protected:
 	float spawnrate;
 	float killcount;
 	float enemycount;
+	float shopposx;
+	float shopposy;
+	float shopposz;
 
 	int shootCount;
 	int bossState;
