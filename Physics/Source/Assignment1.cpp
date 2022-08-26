@@ -131,7 +131,7 @@ void Assignment1::Init()
 	movementLastPressed = ' ';
 
 	asteroidCount = 0;
-	maxEnemyCount = 20;
+	maxEnemyCount = 12;
 
 
 	//Exercise 2c: Construct m_ship, set active, type, scale and pos
@@ -391,7 +391,7 @@ void Assignment1::RestartGame()
 	movementLastPressed = ' ';
 
 	asteroidCount = 0;
-	maxEnemyCount = 20;
+	maxEnemyCount = 12;
 
 
 	//Exercise 2c: Construct m_ship, set active, type, scale and pos
@@ -1292,7 +1292,7 @@ void Assignment1::Update(double dt)
 			waveCount++;
 			if (waveCount < 20)
 			{
-				hpFactor += 0.4;
+				hpFactor += 0.2;
 				moneyFactor += 0.35;
 				bonusMoney++;
 				maxEnemyCount += 4;
@@ -1300,7 +1300,7 @@ void Assignment1::Update(double dt)
 			else if (waveCount > 20)
 			{
 				WormMax = 4;
-				maxEnemyCount = 120;
+				maxEnemyCount = 100;
 				moneyFactor = 6;
 				hpFactor += 1;
 				spawnrate = 0.5;
@@ -1323,7 +1323,7 @@ void Assignment1::Update(double dt)
 				if (waveCount <= 2)
 				{
 					go->type = GameObject::GO_GHOST;
-					go->hp = round(2 * hpFactor);
+					go->hp = round(1 * hpFactor);
 					go->scale.Set(10, 10, 10);
 					go->hitboxSizeDivider = 3.5;
 					go->enemyDamage = 2;
@@ -1334,10 +1334,10 @@ void Assignment1::Update(double dt)
 					for (int i = 0; i < 35; ++i)
 					{
 						go->type = GameObject::GO_GHOST;
-						go->hp = round(1 * hpFactor);
-						go->scale.Set(12, 12, 12);
+						go->hp = round(2 * hpFactor);
+						go->scale.Set(14, 14, 14);
 						go->hitboxSizeDivider = 3.5;
-						go->enemyDamage = 4;
+						go->enemyDamage = 5;
 					}
 				}
 				//wave 4
@@ -1346,7 +1346,7 @@ void Assignment1::Update(double dt)
 					if (randomEnemy <= 5)
 					{
 						go->type = GameObject::GO_BDEMON;
-						go->hp = round(10 * hpFactor);
+						go->hp = round(5 * hpFactor);
 						go->scale.Set(14, 14, 10);
 						go->prevEnemyBullet = 0.0;
 						go->hitboxSizeDivider = 3;
@@ -1355,10 +1355,10 @@ void Assignment1::Update(double dt)
 					else
 					{
 						go->type = GameObject::GO_GHOST;
-						go->hp = round(1 * hpFactor);
+						go->hp = round(2 * hpFactor);
 						go->scale.Set(10, 10, 10);
 						go->hitboxSizeDivider = 3.5;
-						go->enemyDamage = 2;
+						go->enemyDamage = 4;
 					}
 				}
 				//special wave 5
@@ -1368,7 +1368,7 @@ void Assignment1::Update(double dt)
 					{
 
 						go->type = GameObject::GO_BDEMON;
-						go->hp = round(8 * hpFactor);
+						go->hp = round(5 * hpFactor);
 						go->scale.Set(14, 14, 10);
 						go->prevEnemyBullet = 0.0;
 						go->hitboxSizeDivider = 3;
@@ -1386,7 +1386,7 @@ void Assignment1::Update(double dt)
 					{
 						go->type = GameObject::GO_FLAMEDEMON;
 						go->scale.Set(15, 15, 10);
-						go->hp = round(8 * hpFactor);
+						go->hp = round(3 * hpFactor);
 						go->maxHP = go->hp;
 						go->prevEnemyBullet = elapsedTime;
 						go->speedFactor = 1;
@@ -1409,7 +1409,7 @@ void Assignment1::Update(double dt)
 					if (randomEnemy <= 5)
 					{
 						go->type = GameObject::GO_BDEMON;
-						go->hp = round(9 * hpFactor);
+						go->hp = round(6 * hpFactor);
 						go->scale.Set(14, 14, 10);
 						go->prevEnemyBullet = 0.0;
 						go->hitboxSizeDivider = 3;
@@ -1419,7 +1419,7 @@ void Assignment1::Update(double dt)
 					else if (5 < randomEnemy && randomEnemy <= 10)
 					{
 						go->type = GameObject::GO_NIGHTMARE;
-						go->hp = round(11 * hpFactor);
+						go->hp = round(10 * hpFactor);
 						go->scale.Set(20, 18, 10);
 						go->hitboxSizeDivider = 4.5;
 						go->enemyDamage = 10;
@@ -1428,7 +1428,7 @@ void Assignment1::Update(double dt)
 					{
 						go->type = GameObject::GO_FLAMEDEMON;
 						go->scale.Set(15, 15, 10);
-						go->hp = round(8 * hpFactor);
+						go->hp = round(3 * hpFactor);
 						go->maxHP = go->hp;
 						go->prevEnemyBullet = elapsedTime;
 						go->speedFactor = 1;
@@ -1438,7 +1438,7 @@ void Assignment1::Update(double dt)
 					else if (25 < randomEnemy && randomEnemy <= (40 + waveCount * 1.2))
 					{
 						go->type = GameObject::GO_EXPLODER;
-						go->hp = round(5 * hpFactor);
+						go->hp = round(2 * hpFactor);
 						go->scale.Set(15, 15, 1);
 						go->hitboxSizeDivider = 4.5;
 						go->enemyDamage = 15;
@@ -1462,7 +1462,7 @@ void Assignment1::Update(double dt)
 
 						go->type = GameObject::GO_EXPLODER;
 						go->hp = round(1 * hpFactor);
-						go->scale.Set(14, 14, 10);
+						go->scale.Set(20, 20, 10);
 						go->prevEnemyBullet = 0.0;
 						go->hitboxSizeDivider = 3;
 						go->enemyDamage = 15;
@@ -1471,8 +1471,8 @@ void Assignment1::Update(double dt)
 					else if (35 < randomEnemy && randomEnemy <= 50)
 					{
 						go->type = GameObject::GO_FLAMEDEMON;
-						go->scale.Set(15, 15, 10);
-						go->hp = round(8 * hpFactor);
+						go->scale.Set(10, 10, 10);
+						go->hp = round(4 * hpFactor);
 						go->maxHP = go->hp;
 						go->prevEnemyBullet = elapsedTime;
 						go->speedFactor = 1;
@@ -1487,20 +1487,17 @@ void Assignment1::Update(double dt)
 						go->hitboxSizeDivider = 3.5;
 						go->enemyDamage = 2;
 					}
-
 				}
 				else if (10 < waveCount <= 20)
 				{
 					if (randomEnemy <= 10)
 					{
-
 						go->type = GameObject::GO_EXPLODER;
 						go->hp = round(1 * hpFactor);
 						go->scale.Set(16, 16, 10);
 						go->prevEnemyBullet = 0.0;
 						go->hitboxSizeDivider = 3;
 						go->enemyDamage = 25;
-
 					}
 					else if (10 < randomEnemy && randomEnemy <= 30)
 					{
@@ -1567,7 +1564,7 @@ void Assignment1::Update(double dt)
 					else if (20 < randomEnemy <= 25)
 					{
 						go->type = GameObject::GO_BDEMON;
-						go->hp = round(12 * hpFactor);
+						go->hp = round(8 * hpFactor);
 						go->scale.Set(10, 10, 10);
 						go->prevEnemyBullet = 0.0;
 						go->hitboxSizeDivider = 3;
@@ -1577,29 +1574,29 @@ void Assignment1::Update(double dt)
 					else if (25 < randomEnemy && randomEnemy <= 35)
 					{
 						go->type = GameObject::GO_NIGHTMARE;
-						go->hp = round(15 * hpFactor);
+						go->hp = round(20 * hpFactor);
 						go->scale.Set(20, 18, 10);
 						go->hitboxSizeDivider = 4.5;
 						go->enemyDamage = 20;
 					}
-					else if (36 < randomEnemy <= 38)
+					else if (36 < randomEnemy <= 42)
 					{
 						go->type = GameObject::GO_GHOST;
 						go->hp = round(4000 * hpFactor);
-						go->scale.Set(25, 25, 25);
-						go->hitboxSizeDivider = 3.5;
+						go->scale.Set(35, 35, 35);
+						go->hitboxSizeDivider = 3;
 						go->enemyDamage = 50;
 					}
-					else if (38 < randomEnemy <= 40)
+					else if (42 < randomEnemy <= 44)
 					{
 						SpawnBoss();
 						SpawnWorm();
 					}
-					else if (40 < randomEnemy <= 42)
+					else if (44 < randomEnemy <= 48)
 					{
 						SpawnWorm();
 					}
-					else if (42 < randomEnemy <= 48)
+					else if (48 < randomEnemy <= 54)
 					{
 						go->type = GameObject::GO_FLAMEDEMON;
 						go->scale.Set(45, 45, 10);
@@ -1610,7 +1607,7 @@ void Assignment1::Update(double dt)
 						go->hitboxSizeDivider = 2.8;
 						go->enemyDamage = 35;
 					}
-					else if (48 < randomEnemy <= 58)
+					else if (54 < randomEnemy <= 58)
 					{
 
 						go->type = GameObject::GO_EXPLODER;
@@ -1623,7 +1620,7 @@ void Assignment1::Update(double dt)
 					else
 					{
 						go->type = GameObject::GO_GHOST;
-						go->hp = round(1 * hpFactor);
+						go->hp = round(2 * hpFactor);
 						go->scale.Set(15, 15, 15);
 						go->hitboxSizeDivider = 3.5;
 						go->enemyDamage = 4;
@@ -4556,6 +4553,10 @@ void Assignment1::Render()
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 1.2, 75, 58, false);
 
 		ss.str("");
+		ss << "EC:" << enemycount;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 1.2, 0, 48, false);
+
+		ss.str("");
 		ss << "$: " << m_money;
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 6, 3.6, false);
 
@@ -4568,13 +4569,6 @@ void Assignment1::Render()
 		ss << "FPS: " << fps;
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.2, 0, 58, false);
 
-		//RenderTextOnScreen(meshList[GEO_TEXT], "Asteroid", Color(0, 1, 0), 20, 0, 0);
-
-
-		//// Time Display
-		//ss.str("");
-		//ss << "Time: " << trunc(elapsedTime);
-		//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 55, 55);
 
 		// Wave Count Display
 		ss.str("");
@@ -4591,45 +4585,10 @@ void Assignment1::Render()
 		{
 			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 3.5, 33, 55, false);
 		}
-
-		//if (waveCount != 3,5,7,10)
-		//{
-		//	
-		//}
-		//else if (waveCount == 3, 5, 7, 10)
-		//{
-
-		//}
-
-
-
-
-		// For Debugging
-		//************************************************************************************************************************************
-
-		//ss.str("");
-		//ss.precision(5);
-		//ss << "FPS: " << fps;
-		//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 0, false);
-
-		//ss.str("");
-		//ss.precision(5);
-		//ss << "Object: " << m_objectCount;
-		//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 0, false);
-
-		/*ss.str("");
-		ss << "Gain: " << trunc(4 * moneyFactor);
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 55, 40);*/
 	}
 	else if (!isAlive && gameStart)
 	{
 		SceneBase::menuType = M_GAMEOVER;
-		/*ss.str("");
-		ss << "GAME OVER";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 5, 20, 40);
-		ss.str("");
-		ss << "Died at wave " << waveCount;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 20, 30);*/
 	}
 }
 
