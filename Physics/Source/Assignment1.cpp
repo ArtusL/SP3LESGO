@@ -56,11 +56,10 @@ void Assignment1::Init()
 	}
 
 	//Exercise 2b: Initialize m_hp and m_score
-<<<<<<< Updated upstream
 	m_hp = 1;
-=======
+
 	m_hp = 85;
->>>>>>> Stashed changes
+
 
 	m_money = 100;
 	m_objectCount = 0;
@@ -319,13 +318,13 @@ void Assignment1::RestartGame()
 			go->active = false;
 	}
 	//Exercise 2b: Initialize m_hp and m_score
-<<<<<<< Updated upstream
+
 	m_hp = 100;
 	m_money = 100;
-=======
+
 	m_hp = 85;
 	m_money = 10000;
->>>>>>> Stashed changes
+
 	m_objectCount = 0;
 	waveCount = 1;
 	gravity = -4;
@@ -689,14 +688,14 @@ void Assignment1::UpdateMenu()
 			break;
 		case M_GAMEOVER:
 			UpdateGameOver(m_speed);
-			//cSoundController->StopSoundByID(1);
-			//cSoundController->StopSoundByID(2);
-			//cSoundController->StopSoundByID(3);
-			//cSoundController->StopSoundByID(7);
-			//cSoundController->StopSoundByID(8);
-			//cSoundController->StopSoundByID(13);
+			cSoundController->StopSoundByID(1);
+			cSoundController->StopSoundByID(2);
+			cSoundController->StopSoundByID(3);
+			cSoundController->StopSoundByID(7);
+			cSoundController->StopSoundByID(8);
+			cSoundController->StopSoundByID(13);
 
-			//cSoundController->PlaySoundByID(9);
+			cSoundController->PlaySoundByID(9);
 			break;
 		case M_CHOOSE:
 			UpdateChoose(m_speed);
@@ -716,14 +715,14 @@ void Assignment1::UpdateMenu()
 		case M_UPGRADE:
 			UpdateUpgrade(m_speed);
 
-			//cSoundController->StopSoundByID(1);
-			//cSoundController->StopSoundByID(9);
-			//cSoundController->StopSoundByID(3);
-			//cSoundController->StopSoundByID(7);
-			//cSoundController->StopSoundByID(8);
-			//cSoundController->StopSoundByID(13);
+			cSoundController->StopSoundByID(1);
+			cSoundController->StopSoundByID(9);
+			cSoundController->StopSoundByID(3);
+			cSoundController->StopSoundByID(7);
+			cSoundController->StopSoundByID(8);
+			cSoundController->StopSoundByID(13);
 
-			//cSoundController->PlaySoundByID(2);
+			cSoundController->PlaySoundByID(2);
 			break;
 		case M_BOSSCONTROL:
 			UpdateBossControl(m_speed);
@@ -1606,6 +1605,7 @@ void Assignment1::Update(double dt)
 						go->enemyDamage = 4;
 					}
 				}
+
 				if (randomEnemy < 100 && waveCount >= 1 && shopactive == false)
 				{
 					go->type = GameObject::GO_SHOP;
@@ -1615,6 +1615,7 @@ void Assignment1::Update(double dt)
 					go->enemyDamage = 0;
 					shopactive = true;
 				}
+
 				if (waveCount == 10 || waveCount == 15)
 				{
 					SpawnWorm();
@@ -1685,112 +1686,6 @@ void Assignment1::Update(double dt)
 		{
 			tempSpawnCount--;
 		}
-
-
-		// ****************************** Manual Spawning ***************************************88
-
-
-		// BOSS
-		if (Application::IsKeyPressed('V') && tempSpawnCount < 1 && bossspawned == false)
-		{
-			GameObject* go = FetchGO();
-			go->type = GameObject::GO_BOSS;
-			go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
-			go->vel.Set(Math::RandFloatMinMax(-20, 20), Math::RandFloatMinMax(-20, 20), 0);
-			go->scale.Set(30, 30, 1);
-			go->hp = 10000;
-			go->maxHP = go->hp;
-			go->prevEnemyBullet = elapsedTime;
-			go->speedFactor = 1;
-			go->hitboxSizeDivider = 8;
-			go->enemyDamage = 25;
-			go->facingLeft = true;
-			tempSpawnCount++;
-			enemycount++;
-
-			bossspawned = true;
-		}
-
-
-		// WORM ENEMY
-		if (Application::IsKeyPressed('C') && tempSpawnCount < 1)
-		{
-			for (int i = 0; i < 5; ++i)
-			{
-
-
-				GameObject* prevBody;
-				int segmentCount = 30;
-				for (int i = 0; i < segmentCount; i++)
-				{
-					GameObject* go = FetchGO();
-					if (i == 0)
-					{
-						go->type = GameObject::GO_WORMHEAD;
-						go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
-						go->scale.Set(10, 10, 1);
-						go->vel.Set(2, 2, 0);
-						go->timer = 10;
-
-						go->enemyDamage = 35;
-
-						go->prevNode = nullptr;
-						go->nextNode = nullptr;
-						go->hitboxSizeDivider = 1.8;
-					}
-					else if (i == segmentCount - 1)
-					{
-						go->type = GameObject::GO_WORMTAIL;
-						go->pos = prevBody->pos;
-						go->scale.Set(10, 10, 1);
-						go->vel.Set(0, 0, 0);
-
-						go->enemyDamage = 20;
-
-						go->prevNode = prevBody;
-						go->prevNode->nextNode = go;
-						go->nextNode = nullptr;
-						go->hitboxSizeDivider = 3;
-					}
-					else
-					{
-
-						if (prevBody->type == GameObject::GO_WORMHEAD ||
-							prevBody->type == GameObject::GO_WORMBODY2)
-						{
-							go->type = GameObject::GO_WORMBODY1;
-						}
-						else
-						{
-							go->type = GameObject::GO_WORMBODY2;
-						}
-
-						go->pos = prevBody->pos;
-						go->vel.Set(0, 0, 0);
-						go->scale.Set(10, 10, 1);
-
-						go->enemyDamage = 20;
-
-						go->prevNode = prevBody;
-						go->prevNode->nextNode = go;
-						go->nextNode = nullptr;
-						go->hitboxSizeDivider = 3;
-					}
-					go->hp = 70;
-					go->maxHP = go->hp;
-					go->prevEnemyBullet = elapsedTime;
-					go->speedFactor = 1;
-
-
-					go->facingLeft = true;
-					go->reachTarget = true;
-					prevBody = go;
-				}
-			}
-			tempWormCount++;
-		}
-
-
 		// Attack with Primary Weapon
 		if (Application::IsMousePressed(0))
 		{
@@ -2265,6 +2160,15 @@ void Assignment1::Update(double dt)
 					}
 				}
 			}
+		}
+
+
+		if (shopactive == true)
+		{
+			GameObject* go = FetchGO();
+			go->type = GameObject::GO_SHOP_POINTER;
+			go->scale.Set(10, 10, 10);
+			go->vel.SetZero();
 		}
 
 
@@ -3952,7 +3856,15 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.PopMatrix();
 		break;
 
-
+	case GameObject::GO_SHOP_POINTER:
+		modelStack.PushMatrix();
+		go->pos = m_ship->pos;
+		go->pos.y = m_ship->pos.y - 10;
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_SHREK_POINTER], false);
+		modelStack.PopMatrix();
+		break;
 
 	case GameObject::GO_BOSS:
 

@@ -12,9 +12,6 @@ struct GameObject
 		GO_CUBE,
 
 		// Enemy types
-		GO_ASTEROID,
-		GO_BIGASTEROID,
-		GO_ENEMYSHIP,
 		GO_BOSS,
 		GO_BOSSHEALTH,
 
@@ -32,11 +29,11 @@ struct GameObject
 
 		GO_BLACKHOLE,
 		GO_WHITEHOLE,
-
 		GO_SHIP,
 
 		GO_HERO,
 		GO_SHOP,
+		GO_SHOP_POINTER,
 		GO_HEAL,
 		GO_CHEST,
 		GO_CHEST_PARTICLE,
@@ -55,7 +52,6 @@ struct GameObject
 		GO_BOMB,
 		GO_MOLOTOV,
 		GO_FIRE,
-		GO_SHOPARROW,
 		GO_ARROW,
 		GO_FLAMINGARROW,
 		GO_TRIPLESHOT,

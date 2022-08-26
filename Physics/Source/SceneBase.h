@@ -147,6 +147,8 @@ public:
 		//Shrek and animations
 		GEO_SHREK,
 		GEO_SHREK_LEFT,
+		GEO_SHREK_POINTER,
+
 		// story photos
 		GEO_MAFIASHREK,
 		GEO_EVIL,
