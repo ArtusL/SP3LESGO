@@ -605,7 +605,7 @@ void SceneBase::Render()
 
 void SceneBase::RenderMainMenu()
 {
-	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 50, 200, 105);
 
 	//RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);
 	switch (selectorIndex)
@@ -620,24 +620,24 @@ void SceneBase::RenderMainMenu()
 		RenderMeshOnScreen(meshList[GEO_SELECTOR], 97, 25, 45, 45);
 		break;
 	}
-<<<<<<< Updated upstream
-	RenderTextOnScreen(meshList[GEO_TEXT], "JerryManDering's", Color(1, 1, 1), 7, 1, 45, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Adventure", Color(1, 1, 1), 7, 23, 35, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Controls", Color(1, 1, 1), 3.5, 31, 4, false);
-=======
-	RenderTextOnScreen(meshList[GEO_TEXT], "GerryManDering's", Color(1, 1, 1), 7, 1, 45, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Dungeon", Color(1, 1, 1), 7, 23, 35, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "PLAY", Color(1, 1, 1), 3.5, 35, 25, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Controls", Color(1, 1, 1), 3.5, 31, 18, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Quit", Color(1, 1, 1), 3.5, 35, 11, false);
->>>>>>> Stashed changes
+
+	RenderTextOnScreen(meshList[GEO_TEXT], "JerryManDering's", Color(1, 1, 1), 6, 8, 48, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Adventure", Color(1, 1, 1), 6, 23, 35, false);
+	//RenderTextOnScreen(meshList[GEO_TEXT], "Controls", Color(1, 1, 1), 3.5, 31, 4, false);
+
+	//RenderTextOnScreen(meshList[GEO_TEXT], "GerryManDering's", Color(1, 1, 1), 7, 1, 45, false);
+	//RenderTextOnScreen(meshList[GEO_TEXT], "Dungeon", Color(1, 1, 1), 7, 23, 35, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "PLAY", Color(1, 1, 1), 3.5, 35, 28, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Controls", Color(1, 1, 1), 3.5, 31, 20, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Quit", Color(1, 1, 1), 3.5, 35, 12, false);
+
 	selectorIndex = Math::Clamp(selectorIndex, 0, 2);
 
 }
 
 void SceneBase::RenderControl()
 {
-	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 50, 200, 105);
 
 	//RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);
 	switch (selectorIndex)
@@ -654,8 +654,8 @@ void SceneBase::RenderControl()
 
 void SceneBase::RenderCBomb()
 {
-	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
-	RenderMeshOnScreen(meshList[GEO_BOMB], 96, 60, 15, 15);
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 50, 200, 105);
+	RenderMeshOnScreen(meshList[GEO_BOMB], 96, 60, 13, 13);
 	//RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);
 	switch (selectorIndex)
 	{
@@ -666,15 +666,15 @@ void SceneBase::RenderCBomb()
 		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 26, 45, 45);
 		break;
 	}
-	RenderTextOnScreen(meshList[GEO_TEXT], "BOMBS", Color(1, 1, 1), 7, 25, 45, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "LeTs GO", Color(1, 1, 1), 4, 31, 20.5, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "NAH", Color(1, 1, 1), 4, 35, 13.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "BOMBS", Color(1, 1, 1), 5, 32, 45, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Lets GO", Color(1, 1, 1), 3, 33, 22, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "NAH", Color(1, 1, 1), 3, 37, 13.5, false);
 	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
 
 }
 void SceneBase::RenderCArrow()
 {
-	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 50, 200, 105);
 	RenderMeshOnScreen(meshList[GEO_ARROW], 96, 60, 15, 15);
 	//RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);
 	switch (selectorIndex)
@@ -686,15 +686,15 @@ void SceneBase::RenderCArrow()
 		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 26, 45, 45);
 		break;
 	}
-	RenderTextOnScreen(meshList[GEO_TEXT], "ARROW", Color(1, 1, 1), 7, 28, 45, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Lets GO", Color(1, 1, 1), 4, 31, 20.5, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "NAH", Color(1, 1, 1), 4, 35, 13.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "ARROW", Color(1, 1, 1), 5, 32, 45, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Lets GO", Color(1, 1, 1), 3, 33, 22, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "NAH", Color(1, 1, 1), 3, 37, 13.5, false);
 	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
 
 }
 void SceneBase::RenderCCard()
 {
-	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 50, 200, 105);
 	RenderMeshOnScreen(meshList[GEO_CARDS], 96, 60, 15, 15);
 	/*RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);*/
 	switch (selectorIndex)
@@ -706,15 +706,15 @@ void SceneBase::RenderCCard()
 		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 26, 45, 45);
 		break;
 	}
-	RenderTextOnScreen(meshList[GEO_TEXT], "CARD", Color(1, 1, 1), 7, 31, 45, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "LeTs GO", Color(1, 1, 1), 4, 31, 20.5, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "NAH", Color(1, 1, 1), 4, 35, 13.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "CARD", Color(1, 1, 1), 5, 33, 45, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Lets GO", Color(1, 1, 1), 3, 33, 22, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "NAH", Color(1, 1, 1), 3, 37, 13.5, false);
 	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
 
 }
 void SceneBase::RenderChoose()
 {
-	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 50, 200, 105);
 
 	/*RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);*/
 	switch (selectorIndex)
@@ -732,7 +732,7 @@ void SceneBase::RenderChoose()
 		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 25, 45, 45);
 		break;
 	}
-	RenderTextOnScreen(meshList[GEO_TEXT], "Choose Weapon", Color(1, 1, 1), 7, 1, 50, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Choose Weapon", Color(1, 1, 1), 5, 18, 50, false);
 	RenderTextOnScreen(meshList[GEO_TEXT], "BOMB", Color(1, 1, 1), 4, 35, 39.5, false);
 	RenderTextOnScreen(meshList[GEO_TEXT], "ARROW", Color(1, 1, 1), 4, 32.5, 30.5, false);
 	RenderTextOnScreen(meshList[GEO_TEXT], "CARD", Color(1, 1, 1), 4, 35, 21.5, false);
@@ -767,7 +767,7 @@ void SceneBase::RenderGameOver()
 }
 void SceneBase::RenderPauseMenu()
 {
-	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 50, 200, 105);
 
 	switch (selectorIndex)
 	{
@@ -779,7 +779,7 @@ void SceneBase::RenderPauseMenu()
 		break;
 	}
 	RenderTextOnScreen(meshList[GEO_TEXT], "PAUSE", Color(1, 1, 1), 7, 29, 35, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Resume", Color(1, 1, 1), 4, 31, 20.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Resume", Color(1, 1, 1), 4, 32, 21.5, false);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Menu", Color(1, 1, 1), 4, 35, 13.5, false);
 	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
 }

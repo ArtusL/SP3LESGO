@@ -56,7 +56,7 @@ void Assignment1::Init()
 	}
 
 	//Exercise 2b: Initialize m_hp and m_score
-	m_hp = 1;
+	m_hp = 100;
 
 	m_money = 10000;
 	m_objectCount = 0;
@@ -87,8 +87,9 @@ void Assignment1::Init()
 	tempSpawnCount = 0;
 	tempWormCount = 0;
 	WormMax = 2;
-	spawnrate = 0.8;
+	spawnrate = 1;
 	killcount = 0;
+	enemycount = 0;
 
 	shootCount = 0;
 	bossState = 0;
@@ -342,8 +343,9 @@ void Assignment1::RestartGame()
 	tempSpawnCount = 0;
 	tempWormCount = 0;
 	WormMax = 2;
-	spawnrate = 0.8;
+	spawnrate = 1;
 	killcount = 0;
+	enemycount = 0;
 
 	shootCount = 0;
 	bossState = 0;
@@ -615,6 +617,7 @@ void Assignment1::SpawnBoss()
 		go->enemyDamage = 25;
 		go->facingLeft = true;
 		tempSpawnCount++;
+		enemycount++;
 
 		bossspawned = true;
 	}
@@ -1300,7 +1303,7 @@ void Assignment1::Update(double dt)
 				maxEnemyCount = 120;
 				moneyFactor = 6;
 				hpFactor += 1;
-				spawnrate = 0.4;
+				spawnrate = 0.5;
 			}
 			waveTimer = elapsedTime;
 		}
@@ -1308,9 +1311,10 @@ void Assignment1::Update(double dt)
 
 		// Randomised enemy spawns
 		diff = elapsedTime - prevElapsedAsteroid;
-		if (diff > spawnrate/* && tempSpawnCount < 1*/)
+		//only spawn if current object count is less than enemy cap
+		if (diff > spawnrate &&  enemycount < maxEnemyCount)
 		{
-			for (int i = 0; i < 3; ++i)
+			for (int i = 0; i < 2; ++i)
 			{
 				GameObject* go = FetchGO();
 				int randomEnemy = rand() % 100;
@@ -1690,7 +1694,9 @@ void Assignment1::Update(double dt)
 				go->direction.Set(0.1, 0.1, 0.1);
 				go->vel = go->direction;
 				prevElapsedAsteroid = elapsedTime;
-				//m_objectCount++;
+				enemycount++;
+		
+				cout << "" << enemycount << endl;
 			}
 		}
 		//allow worm to spawn again
@@ -1723,6 +1729,7 @@ void Assignment1::Update(double dt)
 			go->enemyDamage = 25;
 			go->facingLeft = true;
 			tempSpawnCount++;
+			enemycount++;
 
 			bossspawned = true;
 		}
@@ -3141,6 +3148,8 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 			{
 				int damageDealt = round(basicBulletDamage * Math::RandFloatMinMax(0.7, 1.5));
 				target->hp -= damageDealt;
+				cSoundController->StopSoundByID(7);
+				cSoundController->PlaySoundByID(7);
 				bullet->active = false;
 
 				displayDamage.push_back(damageDealt);
@@ -3150,8 +3159,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				translateTextY.push_back(0);
 				damageTimer.push_back(elapsedTime);
 				damageEnemy.push_back(true);
-				cSoundController->StopSoundByID(7);
-				cSoundController->PlaySoundByID(7);
+
 
 			}
 
@@ -3204,10 +3212,9 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 					bossspawned = false;
 				}
 				// Money gained
+				enemycount--;
 				killcount++;
 				m_money += 1 + bonusMoney;
-
-				m_objectCount--;
 				if (target->type == GameObject::GO_NIGHTMARE)
 				{
 					for (int i = 0; i < 4; ++i)
@@ -3322,12 +3329,11 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 			{
 				target->active = false;
 				m_objectCount--;
+				enemycount--;
 				// Money gained
 				if (target->type != GameObject::GO_ENEMYBULLET)
 				{
 					// Drop  Item
-
-					m_objectCount--;
 					if (target->type == GameObject::GO_NIGHTMARE)
 					{
 						for (int i = 0; i < 4; ++i)
@@ -4574,14 +4580,14 @@ void Assignment1::Render()
 		ss.str("");
 		ss << "Wave:" << waveCount;
 
-		if (waveCount != 6 && waveCount != 10 && waveCount != 13
-			&& waveCount != 15 && waveCount != 18 && waveCount != 20)
+		if (waveCount != 5 && waveCount != 10 && waveCount != 15
+			&& waveCount != 20 && waveCount != 25 && waveCount >! 25)
 		{
 			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.5, 0), 2.5, 35, 57, false);
 		}
 		//Put Emphasis On Special Waves
-		else if (waveCount == 6 || waveCount == 10 || waveCount == 13
-			|| waveCount == 15 || waveCount == 18 || waveCount == 20)
+		else if (waveCount == 5 || waveCount == 10 || waveCount == 15
+			|| waveCount == 20 || waveCount == 25 || waveCount > 25)
 		{
 			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 3.5, 33, 55, false);
 		}

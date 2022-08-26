@@ -176,7 +176,7 @@ protected:
 
 	float spawnrate;
 	float killcount;
-
+	float enemycount;
 
 	int shootCount;
 	int bossState;
