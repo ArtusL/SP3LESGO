@@ -134,6 +134,9 @@ void SceneBase::Init()
 	meshList[GEO_EVIL] = MeshBuilder::GenerateQuad("evil", Color(1, 1, 1), 1.f);
 	meshList[GEO_EVIL]->textureID = LoadTGA("Image//Forces_of_evil.tga");
 
+	meshList[GEO_PLAYER] = MeshBuilder::GenerateQuad("player", Color(1, 1, 1), 1.f);
+	meshList[GEO_PLAYER]->textureID = LoadTGA("Image//playerpicture.tga");
+
 	// Health Bar
 	meshList[GEO_GREENHEALTH] = MeshBuilder::GenerateQuad("green health", Color(0, 1, 0), 1.f);
 	meshList[GEO_REDHEALTH] = MeshBuilder::GenerateQuad("red health", Color(1, 0, 0), 1.f);

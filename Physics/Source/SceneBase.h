@@ -155,6 +155,7 @@ public:
 		// story photos
 		GEO_MAFIASHREK,
 		GEO_EVIL,
+		GEO_PLAYER,
 
 		NUM_GEOMETRY,
 	};

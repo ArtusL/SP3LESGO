@@ -4706,12 +4706,12 @@ void Assignment1::Render()
 			RenderMeshOnScreen(meshList[GEO_EVIL], 97.5, 65, 120, 60);
 
 			ss.str("");
-			ss << "Aku has send out his forces to try and takeover our memes,";
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.75, 4, 15, false);
+			ss << "Long ago in a distant land, I Aku the shape shifting master of darkness";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.5, 4, 15, false);
 
 			ss.str("");
-			ss << "it's up to you to stop him!";
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.75, 4, 12, false);
+			ss << "unleashed an unspeakable evil,";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.5, 4, 12, false);
 			ss.str("");
 			ss << "Press [SPACEBAR] to continue";
 			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 0.75, 65, 1, false);
@@ -4720,24 +4720,39 @@ void Assignment1::Render()
 		case 2:
 
 			RenderMeshOnScreen(meshList[GEO_CUBE], 100, 65, 100, 70);
-			RenderMeshOnScreen(meshList[GEO_MAFIASHREK], 97.5, 65, 120, 60);
+			RenderMeshOnScreen(meshList[GEO_PLAYER], 97.5, 65, 120, 60);
 
 			ss.str("");
-			ss << "Your first destination is the swamp, find shrek and protect";
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.75, 4, 15, false);
+			ss << "but a foolish knight with a heart of gold stepped forth to oppose me!";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.5, 4, 15, false);
 
-			ss.str("him with some weaponry and equipment he will sell to you");
-			ss << "";
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.75, 4, 12, false);
 			ss.str("");
 			ss << "Press [SPACEBAR] to continue";
 			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 0.75, 65, 1, false);
 			break;
 
 		case 3:
-			gameStart = true;
+			RenderMeshOnScreen(meshList[GEO_CUBE], 100, 65, 100, 70);
+			RenderMeshOnScreen(meshList[GEO_MAFIASHREK], 97.5, 65, 120, 60);
 
-		}
+			ss.str("");
+			ss << "The foolish knight first starts with the swamp where shrek resides,";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.5, 4, 15, false);
+
+			ss.str("");
+			ss << "defending it together with him from my forces of evil.";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.5, 4, 12, false);
+
+			ss.str("");
+			ss << "Press [SPACEBAR] to continue";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 0.75, 65, 1, false);
+			break;
+
+		case 4:
+
+			gameStart = true;
+			break;
+		}		
 	}
 	if (isAlive && upgradescreen == false && gameStart)
 	{
