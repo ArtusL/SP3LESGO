@@ -56,15 +56,11 @@ void Assignment1::Init()
 	}
 
 	//Exercise 2b: Initialize m_hp and m_score
-	m_hp = 1;
-
-	m_hp = 85;
-
+	m_hp = 100;
 
 	m_money = 100;
-	m_objectCount = 0;
 
-	waveCount = 10;
+	waveCount = 1;
 
 	gravity = -4;
 	storystate = 1;
@@ -78,15 +74,15 @@ void Assignment1::Init()
 	shoppointer = 0;
 	shopactive = false;
 	fireRate = 5;
-	fireRateCost = 40;
-	damageUpCost = 50;
-	cardCost = 20;
+	fireRateCost = 100;
+	damageUpCost = 500;
+	cardCost = 100;
 	ringCost = 250;
-	bombCost = 50;
+	bombCost = 100;
 	molotovCost = 50;
-	arrowCost = 20;
+	arrowCost = 90;
 	flamingarrowCost = 1000;
-	healthRegenCost = 100;
+	healthRegenCost = 400;
 
 	tempSpawnCount = 0;
 	tempWormCount = 0;
@@ -324,10 +320,6 @@ void Assignment1::RestartGame()
 	m_hp = 100;
 	m_money = 100;
 
-	m_hp = 85;
-	m_money = 10000;
-
-	m_objectCount = 0;
 	waveCount = 1;
 	gravity = -4;
 	storystate = 1;
@@ -342,15 +334,15 @@ void Assignment1::RestartGame()
 	shoppointer = 0;
 	shopactive = false;
 	fireRate = 5;
-	fireRateCost = 40;
-	damageUpCost = 50;
-	cardCost = 20;
+	fireRateCost = 100;
+	damageUpCost = 500;
+	cardCost = 100;
 	ringCost = 250;
-	bombCost = 50;
+	bombCost = 100;
 	molotovCost = 50;
-	arrowCost = 20;
+	arrowCost = 90;
 	flamingarrowCost = 1000;
-	healthRegenCost = 100;
+	healthRegenCost = 400;
 
 	tempSpawnCount = 0;
 	tempWormCount = 0;
@@ -691,14 +683,6 @@ void Assignment1::UpdateMenu()
 			break;
 		case M_GAMEOVER:
 			UpdateGameOver(m_speed);
-			cSoundController->StopSoundByID(1);
-			cSoundController->StopSoundByID(2);
-			cSoundController->StopSoundByID(3);
-			cSoundController->StopSoundByID(7);
-			cSoundController->StopSoundByID(8);
-			cSoundController->StopSoundByID(13);
-
-			cSoundController->PlaySoundByID(9);
 			break;
 		case M_CHOOSE:
 			UpdateChoose(m_speed);
@@ -717,15 +701,6 @@ void Assignment1::UpdateMenu()
 			break;
 		case M_UPGRADE:
 			UpdateUpgrade(m_speed);
-
-			cSoundController->StopSoundByID(1);
-			cSoundController->StopSoundByID(9);
-			cSoundController->StopSoundByID(3);
-			cSoundController->StopSoundByID(7);
-			cSoundController->StopSoundByID(8);
-			cSoundController->StopSoundByID(13);
-
-			cSoundController->PlaySoundByID(2);
 			break;
 		case M_BOSSCONTROL:
 			UpdateBossControl(m_speed);
@@ -774,7 +749,7 @@ void Assignment1::Update(double dt)
 		keyDelay = 0.3;
 		if (m_money >= bombCost)
 		{
-			if (bombCost < 60)
+			if (bombCost < 110)
 			{
 				bomblvl++;
 				bombUse = true;
@@ -792,7 +767,7 @@ void Assignment1::Update(double dt)
 			if (bomblvl <= 8)
 			{
 				m_money -= bombCost;
-				bombCost += 30;
+				bombCost += 55;
 				cSoundController->StopSoundByID(10);
 				cSoundController->PlaySoundByID(10);
 			}
@@ -806,7 +781,7 @@ void Assignment1::Update(double dt)
 		keyDelay = 0.3;
 		if (m_money >= cardCost)
 		{
-			if (cardCost < 30)
+			if (cardCost < 110)
 			{
 				cardlvl++;
 				cardUse = true;
@@ -825,7 +800,7 @@ void Assignment1::Update(double dt)
 			if (cardlvl <= 8)
 			{
 				m_money -= cardCost;
-				cardCost += 15;
+				cardCost += 50;
 				cSoundController->StopSoundByID(10);
 				cSoundController->PlaySoundByID(10);
 			}
@@ -847,7 +822,7 @@ void Assignment1::Update(double dt)
 				cSoundController->PlaySoundByID(12);
 			}
 
-			else if (arrowCost < 30)
+			else if (arrowCost < 100)
 			{
 				arrowUse = true;
 				arrowlvl++;
@@ -870,7 +845,7 @@ void Assignment1::Update(double dt)
 			if (arrowlvl <= 8)
 			{
 				m_money -= arrowCost;
-				arrowCost += 25;
+				arrowCost += 50;
 				cSoundController->StopSoundByID(10);
 				cSoundController->PlaySoundByID(10);
 			}
@@ -882,7 +857,7 @@ void Assignment1::Update(double dt)
 		keyDelay = 0.3;
 		if (m_money >= healthRegenCost)
 		{
-			if (healthRegenCost < 110)
+			if (healthRegenCost < 410)
 			{
 				healthRegen = true;
 				regenlvl++;
@@ -896,7 +871,7 @@ void Assignment1::Update(double dt)
 			if (regenlvl <= 2)
 			{
 				m_money -= healthRegenCost;
-				healthRegenCost += 100;
+				healthRegenCost += 500;
 				cSoundController->StopSoundByID(10);
 				cSoundController->PlaySoundByID(10);
 			}
@@ -925,7 +900,7 @@ void Assignment1::Update(double dt)
 		if (ringlvl <= 4)
 		{
 			m_money -= ringCost;
-			ringCost += 50;
+			ringCost += 150;
 			cSoundController->StopSoundByID(10);
 			cSoundController->PlaySoundByID(10);
 		}
@@ -976,7 +951,7 @@ void Assignment1::Update(double dt)
 			{
 				fireRate += 0.5;
 				m_money -= fireRateCost;
-				fireRateCost += 50;
+				fireRateCost += 400;
 				fireratelvl++;
 				cSoundController->StopSoundByID(10);
 				cSoundController->PlaySoundByID(10);
@@ -993,7 +968,7 @@ void Assignment1::Update(double dt)
 			{
 				m_money -= damageUpCost;
 				basicBulletDamage++;
-				damageUpCost += 50 * (damagelvl + 1);
+				damageUpCost += 200 * (damagelvl + 1);
 				damagelvl++;
 				cSoundController->StopSoundByID(10);
 				cSoundController->PlaySoundByID(10);
@@ -1276,7 +1251,7 @@ void Assignment1::Update(double dt)
 			{
 				hpFactor += 0.2;
 				moneyFactor += 0.35;
-				bonusMoney++;
+				bonusMoney += 0.5;
 				maxEnemyCount += 4;
 			}
 			else if (waveCount > 20)
@@ -1760,8 +1735,6 @@ void Assignment1::Update(double dt)
 					go->direction = go->direction.Normalized();
 					go->vel = -(go->direction * BULLET_SPEED * 1.5);
 					go->angle = m_ship->angle;
-
-					m_objectCount++;
 				}
 				prevElapsedBullet = elapsedTime;
 			}
@@ -1980,7 +1953,7 @@ void Assignment1::Update(double dt)
 						|| go->pos.y < camera.position.y)
 					{
 						go->active = false;
-						m_objectCount--;
+		
 					}
 				}
 
@@ -2062,7 +2035,6 @@ void Assignment1::Update(double dt)
 				go->scale.Set(6.0f, 4.0f, 4.0f);
 				go->angle = m_ship->angle;
 				go->hitboxSizeDivider = 3;
-				m_objectCount++;
 
 				prevElapsedCard = elapsedTime;
 			}
@@ -2081,7 +2053,6 @@ void Assignment1::Update(double dt)
 				go->angle = m_ship->angle;
 				go->hitboxSizeDivider = 3;
 				prevElapsedBomb = elapsedTime;
-				m_objectCount++;
 			}
 		}
 		cout << ringUse << endl;
@@ -2115,7 +2086,6 @@ void Assignment1::Update(double dt)
 						go->scale.Set(6.0f, 6.0f, 6.0f);
 						go->angle = m_ship->angle + 45;
 						prevElapsedArrow = elapsedTime;
-						m_objectCount++;
 					}
 				}
 			}
@@ -2137,7 +2107,6 @@ void Assignment1::Update(double dt)
 					go->scale.Set(6.0f, 6.0f, 6.0f);
 					go->angle = m_ship->angle + 45;
 					prevElapsedArrow = elapsedTime;
-					m_objectCount++;
 				}
 			}
 		}
@@ -2159,7 +2128,6 @@ void Assignment1::Update(double dt)
 						go->angle = m_ship->angle;
 						go->hitboxSizeDivider = 3;
 						prevElapsedMolotov = elapsedTime;
-						m_objectCount++;
 					}
 				}
 			}
@@ -2714,10 +2682,7 @@ void Assignment1::Update(double dt)
 		{
 			isAlive = false;
 		}
-		/*if (m_ship->hp <= 0)
-		{
-			SceneBase::menuType = M_GAMEOVER;
-		}*/
+
 		if (SceneBase::restartGame)
 		{
 			RestartGame();
@@ -2781,7 +2746,6 @@ void Assignment1::Collision(GameObject* go)
 			go->type == GameObject::GO_EXPLODER
 			)
 		{
-			m_objectCount--;
 			go->active = false;
 		}
 
@@ -3050,16 +3014,17 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 			// Asteroid HP reaches 0
 			if (target->hp <= 0)
 			{
-				target->active = false;
-				m_objectCount--;
+
 				if (target->type == GameObject::GO_BOSS)
 				{
 					bossspawned = false;
 				}
+
 				// Money gained
 				enemycount--;
 				killcount++;
 				m_money += 1 + bonusMoney;
+				target->active = false;
 				if (target->type == GameObject::GO_NIGHTMARE)
 				{
 					for (int i = 0; i < 4; ++i)
@@ -3173,7 +3138,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 			if (target->hp <= 0)
 			{
 				target->active = false;
-				m_objectCount--;
+
 				enemycount--;
 				// Money gained
 				if (target->type != GameObject::GO_ENEMYBULLET && target->type != GameObject::GO_TREE)
@@ -3317,7 +3282,6 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 			if (target->hp <= 0)
 			{
 				target->active = false;
-				m_objectCount--;
 				// Money gained
 				if (target->type != GameObject::GO_ENEMYBULLET && target->type != GameObject::GO_TREE)
 				{
@@ -4198,14 +4162,25 @@ void Assignment1::Render()
 	case M_GAMEOVER:
 		RenderGameOver();
 		{
+			cSoundController->StopSoundByID(1);
+			cSoundController->StopSoundByID(2);
+			cSoundController->StopSoundByID(3);
+			cSoundController->StopSoundByID(4);
+			cSoundController->StopSoundByID(7);
+			cSoundController->StopSoundByID(8);
+			cSoundController->StopSoundByID(13);
+
+			RenderMeshOnScreen(meshList[GEO_HEALTHBACK], 25, 85, 35, 12);
+			RenderMeshOnScreen(meshList[GEO_WAVEBORDER], 25, 93, 35, 12);
+
 			std::ostringstream ss;
 			ss.str("");
-			ss << "Kills:" << killcount << " Enemies";
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 25, false);
+			ss << "Kills:" << killcount;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 1.5, 5, 50, false);
 
 			ss.str("");
-			ss << "Survived to Wave:" << waveCount;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 11, 45, false);
+			ss << "Wave:" << waveCount;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.5, 5, 55, false);
 
 		}
 		break;
@@ -4230,6 +4205,14 @@ void Assignment1::Render()
 		cSoundController->StopSoundByID(4);
 		cSoundController->StopSoundByID(13);
 		cSoundController->PlaySoundByID(2);
+
+		RenderMeshOnScreen(meshList[GEO_INFOBORDER], 150, 85, 40, 10);
+		ss.str("");
+		ss << "$:" << m_money;
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 0), 2, 55, 50, false);
+
+
+
 		if (fireratelvl < 9)
 		{
 
@@ -4593,32 +4576,7 @@ void Assignment1::Render()
 
 
 
-	//if (upgradescreen)
-	//{
-	//	/*modelStack.PushMatrix();
-	//	modelStack.Translate(70 + camera.position.x, 50 + camera.position.y, 10);
-	//	modelStack.Scale(120, 100, 1);
-	//	RenderMesh(meshList[GEO_UPGRADESCREEN], false);
-	//	modelStack.PopMatrix();*/
 
-	//	modelStack.PushMatrix();
-	//	modelStack.Translate(40 + camera.position.x, 51 + camera.position.y, 11);
-	//	modelStack.Scale(5, 5, 1);
-	//	RenderMesh(meshList[GEO_CARDS], false);
-	//	modelStack.PopMatrix();
-
-	//	modelStack.PushMatrix();
-	//	modelStack.Translate(40 + camera.position.x, 43 + camera.position.y, 11);
-	//	modelStack.Scale(5, 5, 1);
-	//	RenderMesh(meshList[GEO_RING], false);
-	//	modelStack.PopMatrix();
-
-	//	modelStack.PushMatrix();
-	//	modelStack.Translate(40 + camera.position.x, 35 + camera.position.y, 11);
-	//	modelStack.Scale(5, 5, 1);
-	//	RenderMesh(meshList[GEO_BOMB], false);
-	//	modelStack.PopMatrix();
-	//}
 
 
 	if (isAlive)
@@ -4644,19 +4602,6 @@ void Assignment1::Render()
 	}
 
 
-
-
-
-	//On screen text
-
-	//Exercise 5a: Render m_hp, m_score
-
-
-	//Exercise 5b: Render position, velocity & mass of ship
-
-
-
-	//RenderTextOnScreen(meshList[GEO_TEXT], "Asteroid", Color(0, 1, 0), 20, 0, 0);
 
 	// Upgrade information
 	if (!gameStart)
@@ -4772,9 +4717,9 @@ void Assignment1::Render()
 		ss << "" << killcount;
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 1.2, 75, 58, false);
 
-		ss.str("");
-		ss << "EC:" << enemycount;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 1.2, 0, 48, false);
+		//ss.str("");
+		//ss << "EC:" << enemycount;
+		//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 1.2, 0, 48, false);
 
 		ss.str("");
 		ss << "$: " << m_money;
@@ -4784,10 +4729,10 @@ void Assignment1::Render()
 		ss << m_ship->hp;
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 27, 7.4, false);
 
-		ss.str("");
-		ss.precision(5);
-		ss << "FPS: " << fps;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.2, 0, 58, false);
+		//ss.str("");
+		//ss.precision(5);
+		//ss << "FPS: " << fps;
+		//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.2, 0, 58, false);
 
 
 		// Wave Count Display
@@ -4809,16 +4754,10 @@ void Assignment1::Render()
 	else if (!isAlive && gameStart)
 	{
 		SceneBase::menuType = M_GAMEOVER;
-		cSoundController->StopSoundByID(1);
-		cSoundController->StopSoundByID(2);
-		cSoundController->StopSoundByID(3);
-		cSoundController->StopSoundByID(4);
-		cSoundController->StopSoundByID(7);
-		cSoundController->StopSoundByID(8);
-		cSoundController->StopSoundByID(13);
-
 		cSoundController->PlaySoundByID(9);
 	}
+
+
 }
 
 

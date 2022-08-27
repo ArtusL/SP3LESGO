@@ -192,6 +192,9 @@ void SceneBase::Init()
 	meshList[GEO_HEALTHBORDER] = MeshBuilder::GenerateQuad("hpborder", Color(1, 1, 1), 1.f);
 	meshList[GEO_HEALTHBORDER]->textureID = LoadTGA("Image//HpBorder.tga");
 
+	meshList[GEO_WAVEBORDER] = MeshBuilder::GenerateQuad("waveborder", Color(1, 1, 1), 1.f);
+	meshList[GEO_WAVEBORDER]->textureID = LoadTGA("Image//BorderWave.tga");
+
 	meshList[GEO_HEROICON] = MeshBuilder::GenerateQuad("Icon", Color(1, 1, 1), 1.f);
 	meshList[GEO_HEROICON]->textureID = LoadTGA("Image//HeroIcon.tga");
 
@@ -644,10 +647,6 @@ void SceneBase::RenderMainMenu()
 
 	RenderTextOnScreen(meshList[GEO_TEXT], "JerryManDering's", Color(1, 1, 1), 6, 8, 48, false);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Adventure", Color(1, 1, 1), 6, 23, 35, false);
-	//RenderTextOnScreen(meshList[GEO_TEXT], "Controls", Color(1, 1, 1), 3.5, 31, 4, false);
-
-	//RenderTextOnScreen(meshList[GEO_TEXT], "GerryManDering's", Color(1, 1, 1), 7, 1, 45, false);
-	//RenderTextOnScreen(meshList[GEO_TEXT], "Dungeon", Color(1, 1, 1), 7, 23, 35, false);
 	RenderTextOnScreen(meshList[GEO_TEXT], "PLAY", Color(1, 1, 1), 3.5, 35, 28, false);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Controls", Color(1, 1, 1), 3.5, 31, 20, false);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Quit", Color(1, 1, 1), 3.5, 35, 12, false);
