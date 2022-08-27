@@ -860,8 +860,8 @@ void SceneBase::RenderPauseMenu()
 		break;
 	}
 	RenderTextOnScreen(meshList[GEO_TEXT], "PAUSE", Color(1, 1, 1), 7, 29, 35, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Resume", Color(1, 1, 1), 4, 31, 20.5, false);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Menu", Color(1, 1, 1), 4, 35, 13.5, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Resume", Color(1, 1, 1), 4, 32, 22, false);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Menu", Color(1, 1, 1), 4, 35, 13, false);
 	selectorIndex = Math::Clamp(selectorIndex, 0, 1);
 }
 

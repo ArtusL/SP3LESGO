@@ -881,7 +881,7 @@ void Assignment1::Update(double dt)
 				arrowlvl++;
 			}
 
-			else if(arrowCost > 30)
+			else if (arrowCost > 30)
 			{
 				if (arrowlvl <= 4)
 				{
@@ -920,7 +920,7 @@ void Assignment1::Update(double dt)
 				healthRegenAmount++;
 				regenlvl++;
 			}
-			
+
 			if (regenlvl <= 2)
 			{
 				m_money -= healthRegenCost;
@@ -933,66 +933,66 @@ void Assignment1::Update(double dt)
 	}
 	else if (ringUpgrade == true)
 	{
-	keyDelay = 0.3;
-	if (m_money >= ringCost)
-	{
-		if (ringCost < 300)
+		keyDelay = 0.3;
+		if (m_money >= ringCost)
 		{
-			ringUse = true;
-
-			ringlvl++;
-		}
-		else
-		{
-			if (ringlvl <= 4)
+			if (ringCost < 300)
 			{
-				ringAOE += 2.0;
+				ringUse = true;
+
 				ringlvl++;
 			}
+			else
+			{
+				if (ringlvl <= 4)
+				{
+					ringAOE += 2.0;
+					ringlvl++;
+				}
+			}
+			if (ringlvl <= 4)
+			{
+				m_money -= ringCost;
+				ringCost += 150;
+				cSoundController->StopSoundByID(10);
+				cSoundController->PlaySoundByID(10);
+			}
+			ringUpgrade = false;
 		}
-		if (ringlvl <= 4)
-		{
-			m_money -= ringCost;
-			ringCost += 150;
-			cSoundController->StopSoundByID(10);
-			cSoundController->PlaySoundByID(10);
-		}
-		ringUpgrade = false;
-	}
 	}
 	else if (molotovUpgrade == true)
 	{
-	keyDelay = 0.3;
-	if (m_money >= molotovCost)
-	{
-		if (molotovCost < 60)
+		keyDelay = 0.3;
+		if (m_money >= molotovCost)
 		{
-			molotovUse = true;
-			molotovlvl++;
-		}
-		else
-		{
-			if (molotovlvl <= 3)
+			if (molotovCost < 60)
 			{
-				molotovAmount++;
+				molotovUse = true;
 				molotovlvl++;
 			}
-			else if (molotovlvl <= 8)
+			else
 			{
-				molotovRate += 0.15;
-				molotovlvl++;
+				if (molotovlvl <= 3)
+				{
+					molotovAmount++;
+					molotovlvl++;
+				}
+				else if (molotovlvl <= 8)
+				{
+					molotovRate += 0.15;
+					molotovlvl++;
+				}
 			}
-		}
-		if (molotovlvl <= 8)
-		{
-			m_money -= molotovCost;
-			molotovCost += 35;
-			cSoundController->StopSoundByID(10);
-			cSoundController->PlaySoundByID(10);
-		}
+			if (molotovlvl <= 8)
+			{
+				m_money -= molotovCost;
+				molotovCost += 35;
+				cSoundController->StopSoundByID(10);
+				cSoundController->PlaySoundByID(10);
+			}
 
-	}
-	molotovUpgrade = false;
+		}
+		molotovUpgrade = false;
 	}
 
 	if (firerateUpgrade == true)
@@ -1324,7 +1324,7 @@ void Assignment1::Update(double dt)
 		// Randomised enemy spawns
 		diff = elapsedTime - prevElapsedAsteroid;
 		//only spawn if current object count is less than enemy cap
-		if (diff > spawnrate &&  enemycount < maxEnemyCount)
+		if (diff > spawnrate && enemycount < maxEnemyCount)
 		{
 			for (int i = 0; i < 2; ++i)
 			{
@@ -1639,7 +1639,7 @@ void Assignment1::Update(double dt)
 					}
 				}
 
-				if (randomEnemy < 100 && waveCount >= 1 && shopactive == false)
+				if (randomEnemy < 100 && waveCount >= 4 && shopactive == false)
 				{
 					go->type = GameObject::GO_SHOP;
 					go->scale.Set(10, 10, 1);
@@ -1663,6 +1663,25 @@ void Assignment1::Update(double dt)
 
 				// Spawning from edge of world
 				int random = rand() % 4;
+
+				if (go->type == GameObject::GO_SHOP)
+				{
+					switch (random)
+					{
+					case 0:
+						go->pos.Set(m_worldWidth - 15, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+						break;
+					case 1:
+						go->pos.Set(0 + 15, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+						break;
+					case 2:
+						go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), m_worldHeight - 15, go->pos.z);
+						break;
+					case 3:
+						go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), 0 + 15, go->pos.z);
+						break;
+					}
+				}
 				if (0 < waveCount <= 10 || waveCount > 20)
 				{
 					// Spawning outside camera
@@ -1683,7 +1702,7 @@ void Assignment1::Update(double dt)
 
 					}
 				}
-				else if (11 <= waveCount && waveCount < 20)
+				else if (11 <= waveCount < 20)
 				{
 					//map spawn
 					switch (random)
@@ -1702,11 +1721,11 @@ void Assignment1::Update(double dt)
 						break;
 					}
 				}
-/*				go->direction.Set(0.1, 0.1, 0);
-				go->vel = go->direction*/;
+				/*				go->direction.Set(0.1, 0.1, 0);
+								go->vel = go->direction*/;
 				prevElapsedAsteroid = elapsedTime;
 				enemycount++;
-		
+
 				cout << "" << enemycount << endl;
 			}
 		}
@@ -1948,7 +1967,7 @@ void Assignment1::Update(double dt)
 
 					}
 				}
-			
+
 
 
 				//Exercise 16: unspawn bullets when they leave screen
@@ -2008,7 +2027,7 @@ void Assignment1::Update(double dt)
 						|| go->pos.y < camera.position.y)
 					{
 						go->active = false;
-		
+
 					}
 				}
 
@@ -2584,6 +2603,7 @@ void Assignment1::Update(double dt)
 					shopposx = enemy->pos.x;
 					shopposy = enemy->pos.y;
 					shopposz = enemy->pos.z;
+					cout << enemy->pos << endl;
 					//enemy->vel = (enemy->direction * 40);
 				}
 				else if (enemy->type == GameObject::GO_BDEMON)
@@ -3248,7 +3268,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 		}
 	}
 
-	else if( bullet->type == GameObject::GO_EXPLOSION || bullet->type == GameObject::GO_FIRE)
+	else if (bullet->type == GameObject::GO_EXPLOSION || bullet->type == GameObject::GO_FIRE)
 	{
 		float dis = bullet->pos.DistanceSquared(target->pos);
 		float rad = (bullet->scale.x + target->scale.x / 4) * (bullet->scale.x + target->scale.x / 4);
@@ -4426,172 +4446,172 @@ void Assignment1::Render()
 			}
 		}
 
-			if (bombCost < 55)
+		if (bombCost < 55)
+		{
+
+			ss.str("");
+			ss << "LVL" << bomblvl << " Lobing Bomb";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 47.5, 22, false);
+
+			ss.str("");
+			ss << "$" << bombCost;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 71, 22, false);
+		}
+		else
+		{
+			if (bomblvl >= 9)
 			{
 
 				ss.str("");
-				ss << "LVL" << bomblvl << " Lobing Bomb";
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 47.5, 22, false);
+				ss << "LVL" << bomblvl << " Bomb Fire Rate";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 47.5, 22, false);
+
+				ss.str("");
+				ss << "$SOLD";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 71, 22, false);
+
+			}
+
+			else
+			{
+				ss.str("");
+				ss << "LVL" << bomblvl << " Bomb Fire Rate";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 47.5, 22, false);
 
 				ss.str("");
 				ss << "$" << bombCost;
-				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 71, 22, false);
-			}
-			else
-			{
-				if (bomblvl >= 9)
-				{
-
-					ss.str("");
-					ss << "LVL" << bomblvl << " Bomb Fire Rate";
-					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 47.5, 22, false);
-
-					ss.str("");
-					ss << "$SOLD";
-					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 71, 22, false);
-
-				}
-
-				else
-				{
-					ss.str("");
-					ss << "LVL" << bomblvl << " Bomb Fire Rate";
-					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 47.5, 22, false);
-
-					ss.str("");
-					ss << "$" << bombCost;
-					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 71, 22, false);
-				}
-
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 71, 22, false);
 			}
 
-			if (molotovCost < 55)
+		}
+
+		if (molotovCost < 55)
+		{
+
+			ss.str("");
+			ss << "LVL" << molotovlvl << " Molotov cocktail";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 47.5, 31, false);
+
+			ss.str("");
+			ss << "$" << molotovCost;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 71, 31, false);
+		}
+		else
+		{
+
+			if (molotovlvl <= 3)
 			{
 
 				ss.str("");
-				ss << "LVL" << molotovlvl << " Molotov cocktail";
+				ss << "LVL" << molotovlvl << " Add Molotov";
 				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 47.5, 31, false);
 
 				ss.str("");
 				ss << "$" << molotovCost;
 				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 71, 31, false);
 			}
-			else
+
+			else if (molotovlvl <= 8 && molotovlvl >= 4)
 			{
-
-				if (molotovlvl <= 3)
-				{
-
-					ss.str("");
-					ss << "LVL" << molotovlvl << " Add Molotov";
-					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 47.5, 31, false);
-
-					ss.str("");
-					ss << "$" << molotovCost;
-					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 71, 31, false);
-				}
-
-				else if (molotovlvl <= 8 && molotovlvl >= 4)
-				{
-					ss.str("");
-					ss << "LVL" << molotovlvl << " Molotov FireRate";
-					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.55, 47.5, 31, false);
-
-					ss.str("");
-					ss << "$" << molotovCost;
-					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.55, 71, 31, false);
-				}
-				else
-				{
-					ss.str("");
-					ss << "LVL" << molotovlvl << " Molotov FireRate";
-					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.55, 47.5, 31, false);
-
-					ss.str("");
-					ss << "$SOLD" ;
-					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.55, 71, 31, false);
-				}
-
-			}
-
-			if (arrowCost < 30)
-			{
+				ss.str("");
+				ss << "LVL" << molotovlvl << " Molotov FireRate";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.55, 47.5, 31, false);
 
 				ss.str("");
-				ss << "LVL" << arrowlvl << " Arrow Shot";
+				ss << "$" << molotovCost;
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.55, 71, 31, false);
+			}
+			else
+			{
+				ss.str("");
+				ss << "LVL" << molotovlvl << " Molotov FireRate";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.55, 47.5, 31, false);
+
+				ss.str("");
+				ss << "$SOLD";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.55, 71, 31, false);
+			}
+
+		}
+
+		if (arrowCost < 30)
+		{
+
+			ss.str("");
+			ss << "LVL" << arrowlvl << " Arrow Shot";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 9.5, 13, false);
+
+			ss.str("");
+			ss << "$" << arrowCost;
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 33.5, 13, false);
+		}
+		else
+		{
+
+			if (arrowlvl <= 3)
+			{
+				ss.str("");
+				ss << "LVL" << arrowlvl << " Add Arrows";
 				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 9.5, 13, false);
 
 				ss.str("");
 				ss << "$" << arrowCost;
 				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 33.5, 13, false);
 			}
+
+			else if (arrowlvl <= 8 && arrowlvl >= 4)
+			{
+				ss.str("");
+				ss << "LVL" << arrowlvl << "  Arrow Fire Rate";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 9.5, 13, false);
+
+				ss.str("");
+				ss << "$" << arrowCost;
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 33.5, 13, false);
+			}
+
+			else if (arrowlvl == 9 && molotovlvl == 9 && flamingarrowlvl == 0)
+			{
+
+				ss.str("");
+				ss << "LVL" << flamingarrowlvl << "  Flaming Arrows";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 9.5, 13, false);
+
+				ss.str("");
+				ss << "$" << flamingarrowCost;
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 33.5, 13, false);
+			}
+
+			else if (arrowlvl == 9 && molotovlvl == 9 && flamingarrowlvl == 1)
+			{
+				ss.str("");
+				ss << "LVL" << flamingarrowlvl << "  Flaming Arrows";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 9.5, 13, false);
+
+				ss.str("");
+				ss << "$SOLD";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 33.5, 13, false);
+
+			}
+
 			else
 			{
 
-				if (arrowlvl <= 3)
-				{
-					ss.str("");
-					ss << "LVL" << arrowlvl << " Add Arrows";
-					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 9.5, 13, false);
+				ss.str("");
+				ss << "LVL" << arrowlvl << "  Arrow Fire Rate";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 9.5, 13, false);
 
-					ss.str("");
-					ss << "$" << arrowCost;
-					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 33.5, 13, false);
-				}
-
-				else if (arrowlvl <= 8 && arrowlvl >= 4)
-				{
-					ss.str("");
-					ss << "LVL" << arrowlvl << "  Arrow Fire Rate";
-					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 9.5, 13, false);
-
-					ss.str("");
-					ss << "$" << arrowCost;
-					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 33.5, 13, false);
-				}
-
-				else if (arrowlvl == 9 && molotovlvl == 9 && flamingarrowlvl == 0)
-				{
-
-					ss.str("");
-					ss << "LVL" << flamingarrowlvl << "  Flaming Arrows";
-					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 9.5, 13, false);
-
-					ss.str("");
-					ss << "$" << flamingarrowCost;
-					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 33.5, 13, false);
-				}
-
-				else if (arrowlvl == 9 && molotovlvl == 9 && flamingarrowlvl == 1)
-				{
-					ss.str("");
-					ss << "LVL" << flamingarrowlvl << "  Flaming Arrows";
-					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 9.5, 13, false);
-
-					ss.str("");
-					ss << "$SOLD";
-					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 33.5, 13, false);
-
-				}
-
-				else
-				{
-
-					ss.str("");
-					ss << "LVL" << arrowlvl << "  Arrow Fire Rate";
-					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 9.5, 13, false);
-
-					ss.str("");
-					ss << "$SOLD";
-					RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 33.5, 13, false);
-				}
-
+				ss.str("");
+				ss << "$SOLD";
+				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 33.5, 13, false);
 			}
-		
+
+		}
+
 		break;
 	case M_SHOPCONTROL:
-			RenderShopControl();
-			break;
+		RenderShopControl();
+		break;
 	case M_BOSSCONTROL:
 		RenderBossControl();
 		break;
@@ -4796,7 +4816,7 @@ void Assignment1::Render()
 		ss << "Wave:" << waveCount;
 
 		if (waveCount != 5 && waveCount != 10 && waveCount != 15
-			&& waveCount != 20 && waveCount != 25 && waveCount >! 25)
+			&& waveCount != 20 && waveCount != 25 && waveCount > !25)
 		{
 			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0.5, 0), 2.5, 35, 57, false);
 		}
@@ -4839,4 +4859,3 @@ static Vector3 RotateVector(const Vector3& vec, float radian)
 	return Vector3(vec.x * cos(radian) + vec.y * -sin(radian),
 		vec.x * sin(radian) + vec.y * cos(radian), 0.f);
 }
-
