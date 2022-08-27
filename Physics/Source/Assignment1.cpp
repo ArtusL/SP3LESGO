@@ -56,7 +56,7 @@ void Assignment1::Init()
 	}
 
 	//Exercise 2b: Initialize m_hp and m_score
-	m_hp = 100;
+	m_hp = 1;
 
 	m_money = 100;
 
@@ -181,6 +181,8 @@ void Assignment1::Init()
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\hey.wav"), 17, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\bye-bye.wav"), 18, true);
 
+	// Death sound
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\screaming-2.wav"), 19, true);
 
 	// World map generation on game start
 	int obstacleCount = 150;
@@ -380,6 +382,7 @@ void Assignment1::RestartGame()
 	flamingarrowCost = 1000;
 	fireratelvl = 0;
 	damagelvl = 0;
+	gameOverTimer = 0;
 
 	doubleBullet = false;
 	tripleShot = false;
@@ -1043,7 +1046,10 @@ void Assignment1::Update(double dt)
 
 	SceneBase::Update(dt);
 	elapsedTime += dt;
-	cSoundController->PlaySoundByID(1);
+	if (isAlive == true)
+	{
+		cSoundController->PlaySoundByID(1);
+	}
 	//Calculating aspect ratio
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
@@ -1102,7 +1108,7 @@ void Assignment1::Update(double dt)
 		}
 	}
 
-	else if (gameStart && upgradescreen == false)
+	else if (gameStart && upgradescreen == false && isAlive == true)
 	{
 
 		// Hero
@@ -1169,7 +1175,7 @@ void Assignment1::Update(double dt)
 		ExploderSpriteLeft->Update(dt);
 
 
-		if (bossspawned == false)
+		if (bossspawned == false && isAlive == true)
 		{
 			cSoundController->StopSoundByID(1);
 			cSoundController->StopSoundByID(2);
@@ -1178,7 +1184,7 @@ void Assignment1::Update(double dt)
 
 			cSoundController->PlaySoundByID(4);
 		}
-		else if (bossspawned == true)
+		else if (bossspawned == true && isAlive == true)
 		{
 			cSoundController->StopSoundByID(1);
 			cSoundController->StopSoundByID(2);
@@ -2753,10 +2759,20 @@ void Assignment1::Update(double dt)
 		}
 
 		// If health reaches zero
-		if (m_ship->hp <= 0)
+		if (m_ship->hp <= 0 && isAlive == true)
 		{
 			isAlive = false;
+			gameOverTimer = 3;
+			cSoundController->StopSoundByID(1);
+			cSoundController->StopSoundByID(2);
+			cSoundController->StopSoundByID(3);
+			cSoundController->StopSoundByID(4);
+			cSoundController->StopSoundByID(7);
+			cSoundController->StopSoundByID(8);
+			cSoundController->StopSoundByID(13);
+			cSoundController->PlaySoundByID(19);
 		}
+
 
 		if (SceneBase::restartGame)
 		{
@@ -2772,6 +2788,17 @@ void Assignment1::Update(double dt)
 			SceneBase::resetGame = false;
 			SceneBase::menuType = M_MAIN;
 			SceneManager::activeScene = S_ASSIGNMENT1;
+		}
+	}
+	else if (isAlive == false)
+	{
+		if (gameOverTimer > 0)
+		{
+			gameOverTimer -= 1 * dt;
+
+			HeroSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERODEATH]);
+			HeroSprite->PlayAnimation("Death", 0, 2.0f);
+			HeroSprite->Update(dt);
 		}
 	}
 }
@@ -3498,62 +3525,72 @@ void Assignment1::RenderGO(GameObject* go)
 
 		if (Application::IsMousePressed(0))
 		{
-			// Attack Animations
-			if (worldPosX < m_ship->pos.x)
+			if (isAlive)
 			{
-				modelStack.PushMatrix();
-				modelStack.Rotate(180, 0, 0, 1);
-				modelStack.Scale(3, 1, 1);
-				RenderMesh(meshList[GEO_HEROATTACK_LEFT], true);
-				modelStack.PopMatrix();
-			}
-			else
-			{
-				modelStack.PushMatrix();
-				modelStack.Scale(3, 1, 1);
-				RenderMesh(meshList[GEO_HEROATTACK], true);
-				modelStack.PopMatrix();
+				// Attack Animations
+				if (worldPosX < m_ship->pos.x)
+				{
+					modelStack.PushMatrix();
+					modelStack.Rotate(180, 0, 0, 1);
+					modelStack.Scale(3, 1, 1);
+					RenderMesh(meshList[GEO_HEROATTACK_LEFT], true);
+					modelStack.PopMatrix();
+				}
+				else
+				{
+					modelStack.PushMatrix();
+					modelStack.Scale(3, 1, 1);
+					RenderMesh(meshList[GEO_HEROATTACK], true);
+					modelStack.PopMatrix();
+				}
 			}
 		}
 		else
 		{
 			// Running Animations
-			if (Application::IsKeyPressed('W') ||
-				Application::IsKeyPressed('A') ||
-				Application::IsKeyPressed('S') ||
-				Application::IsKeyPressed('D'))
+			if (isAlive)
 			{
-				// Idle Animations
-				if (heroFacingLeft == true)
+				if (Application::IsKeyPressed('W') ||
+					Application::IsKeyPressed('A') ||
+					Application::IsKeyPressed('S') ||
+					Application::IsKeyPressed('D'))
 				{
-					modelStack.PushMatrix();
-					modelStack.Rotate(180, 0, 0, 1);
-					modelStack.Scale(2, 1, 1);
-					RenderMesh(meshList[GEO_HERORUN_LEFT], true);
-					modelStack.PopMatrix();
+					// Idle Animations
+					if (heroFacingLeft == true)
+					{
+						modelStack.PushMatrix();
+						modelStack.Rotate(180, 0, 0, 1);
+						modelStack.Scale(2, 1, 1);
+						RenderMesh(meshList[GEO_HERORUN_LEFT], true);
+						modelStack.PopMatrix();
+					}
+					else
+					{
+						modelStack.PushMatrix();
+						modelStack.Scale(2, 1, 1);
+						RenderMesh(meshList[GEO_HERORUN], true);
+						modelStack.PopMatrix();
+					}
 				}
 				else
 				{
-					modelStack.PushMatrix();
-					modelStack.Scale(2, 1, 1);
-					RenderMesh(meshList[GEO_HERORUN], true);
-					modelStack.PopMatrix();
+					// Idle Animations
+					if (heroFacingLeft == true)
+					{
+						modelStack.PushMatrix();
+						modelStack.Rotate(180, 0, 0, 1);
+						RenderMesh(meshList[GEO_HERO_LEFT], true);
+						modelStack.PopMatrix();
+					}
+					else
+					{
+						RenderMesh(meshList[GEO_HERO], true);
+					}
 				}
 			}
 			else
 			{
-				// Idle Animations
-				if (heroFacingLeft == true)
-				{
-					modelStack.PushMatrix();
-					modelStack.Rotate(180, 0, 0, 1);
-					RenderMesh(meshList[GEO_HERO_LEFT], true);
-					modelStack.PopMatrix();
-				}
-				else
-				{
-					RenderMesh(meshList[GEO_HERO], true);
-				}
+				RenderMesh(meshList[GEO_HERODEATH], true);
 			}
 		}
 
@@ -4654,29 +4691,23 @@ void Assignment1::Render()
 
 
 
-
-	if (isAlive)
+	for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
-
-		for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+		GameObject* go = (GameObject*)*it;
+		if (go->active)
 		{
-			GameObject* go = (GameObject*)*it;
-			if (go->active)
+			if (go->pos.x < m_ship->pos.x + (m_ship->pos.x - camera.position.x)
+				&& go->pos.x > camera.position.x
+				&& go->pos.y < m_ship->pos.y + (m_ship->pos.y - camera.position.y)
+				&& go->pos.y > camera.position.y)
 			{
-				if (go->pos.x < m_ship->pos.x + (m_ship->pos.x - camera.position.x)
-					&& go->pos.x > camera.position.x
-					&& go->pos.y < m_ship->pos.y + (m_ship->pos.y - camera.position.y)
-					&& go->pos.y > camera.position.y)
-				{
-					RenderGO(go);
-				}
+				RenderGO(go);
 			}
 		}
-
-
-		RenderGO(m_ship);
 	}
 
+
+	RenderGO(m_ship);
 
 
 	// Upgrade information
@@ -4827,7 +4858,7 @@ void Assignment1::Render()
 			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 3.5, 33, 55, false);
 		}
 	}
-	else if (!isAlive && gameStart)
+	else if (!isAlive && gameStart && gameOverTimer <= 0)
 	{
 		SceneBase::menuType = M_GAMEOVER;
 		cSoundController->PlaySoundByID(9);

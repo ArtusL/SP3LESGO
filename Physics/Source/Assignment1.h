@@ -151,6 +151,7 @@ protected:
 	double ringauraTimer;
 	double iFrames;
 	double chestTimer;
+	double gameOverTimer;
 
 	bool shopactive;
 	bool cardUse;

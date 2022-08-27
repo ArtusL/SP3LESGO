@@ -179,6 +179,12 @@ void SceneBase::Init()
 	SpriteAnimation* saRunLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERORUN_LEFT]);
 	saRunLeft->AddAnimation("Run", 0, 12);
 
+	meshList[GEO_HERODEATH] = MeshBuilder::GenerateSpriteAnimation("Hero Death", 1, 3);
+	meshList[GEO_HERODEATH]->textureID = LoadTexture("Image//HeroDeath.png", true);
+	meshList[GEO_HERODEATH]->material.kAmbient.Set(1.f, 1.f, 1.f);
+	SpriteAnimation* saDeath = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERODEATH]);
+	saDeath->AddAnimation("Death", 0, 3);
+
 	//Special Health
 	meshList[GEO_PLAYERHEALTH] = MeshBuilder::GenerateQuad("health", Color(1, 1, 1), 1.f);
 	meshList[GEO_PLAYERHEALTH]->textureID = LoadTGA("Image//HpBar.tga");

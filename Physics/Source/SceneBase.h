@@ -146,6 +146,7 @@ public:
 		GEO_HEROATTACK_LEFT,
 		GEO_HERORUN,
 		GEO_HERORUN_LEFT,
+		GEO_HERODEATH,
 		//Shrek and animations
 		GEO_SHREK,
 		GEO_SHREK_LEFT,
