@@ -56,7 +56,7 @@ void Assignment1::Init()
 	}
 
 	//Exercise 2b: Initialize m_hp and m_score
-	m_hp = 1;
+	m_hp = 100;
 
 	m_money = 100;
 
@@ -75,14 +75,14 @@ void Assignment1::Init()
 	shopactive = false;
 	fireRate = 5;
 	fireRateCost = 100;
-	damageUpCost = 500;
+	damageUpCost = 300;
 	cardCost = 100;
-	ringCost = 250;
+	ringCost = 200;
 	bombCost = 100;
 	molotovCost = 50;
 	arrowCost = 90;
 	flamingarrowCost = 1000;
-	healthRegenCost = 400;
+	healthRegenCost = 250;
 
 	tempSpawnCount = 0;
 	tempWormCount = 0;
@@ -341,14 +341,14 @@ void Assignment1::RestartGame()
 	shopactive = false;
 	fireRate = 5;
 	fireRateCost = 100;
-	damageUpCost = 500;
+	damageUpCost = 300;
 	cardCost = 100;
-	ringCost = 250;
+	ringCost = 200;
 	bombCost = 100;
 	molotovCost = 50;
 	arrowCost = 90;
 	flamingarrowCost = 1000;
-	healthRegenCost = 400;
+	healthRegenCost = 250;
 
 	tempSpawnCount = 0;
 	tempWormCount = 0;
@@ -913,7 +913,7 @@ void Assignment1::Update(double dt)
 		keyDelay = 0.3;
 		if (m_money >= healthRegenCost)
 		{
-			if (healthRegenCost < 410)
+			if (healthRegenCost < 400)
 			{
 				healthRegen = true;
 				regenlvl++;
@@ -927,7 +927,7 @@ void Assignment1::Update(double dt)
 			if (regenlvl <= 2)
 			{
 				m_money -= healthRegenCost;
-				healthRegenCost += 500;
+				healthRegenCost += 300;
 				cSoundController->StopSoundByID(10);
 				cSoundController->PlaySoundByID(10);
 			}
@@ -1312,7 +1312,7 @@ void Assignment1::Update(double dt)
 			{
 				hpFactor += 0.2;
 				moneyFactor += 0.35;
-				bonusMoney += 0.5;
+				bonusMoney ++;
 				maxEnemyCount += 4;
 			}
 			else if (waveCount > 20)
@@ -1860,20 +1860,8 @@ void Assignment1::Update(double dt)
 		{
 			m_ship->vel.Normalize() *= MAX_SPEED;
 		}
-
-		//float angleInRadians = std::atan2(m_ship->vel.y, m_ship->vel.x);
-		//float angleInDegrees = (angleInRadians / Math::PI) * 180.0 - 90.0f;
-		//m_ship->angle = angleInDegrees;
-
 		m_ship->vel += acceleration * dt * shipSpeed;
 		m_ship->pos += m_ship->vel * dt * shipSpeed;
-
-		//float angularAcceleration = m_torque.z / m_ship->momentOfInertia;
-		//m_ship->angularVelocity += angularAcceleration * dt * m_speed;
-		//m_ship->angularVelocity = Math::Clamp(m_ship->angularVelocity, -MAX_ROTATION_SPEED, MAX_ROTATION_SPEED);
-		//m_ship->direction = RotateVector(m_ship->direction, m_ship->angle * dt * shipSpeed);
-		//std::cout << m_ship->direction << std::endl;
-		//m_ship->angle = Math::RadianToDegree(atan2(m_ship->direction.y, m_ship->direction.x));
 
 
 		// Bound player within screen
