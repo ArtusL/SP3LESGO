@@ -1688,7 +1688,7 @@ void Assignment1::Update(double dt)
 						break;
 					}
 				}
-				if (0 < waveCount <= 10 || waveCount > 20)
+				else if (0 < waveCount <= 10 || waveCount > 20)
 				{
 					// Spawning outside camera
 					switch (random)
