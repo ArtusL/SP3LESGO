@@ -1729,6 +1729,7 @@ void Assignment1::Update(double dt)
 				}
 				/*				go->direction.Set(0.1, 0.1, 0);
 								go->vel = go->direction*/;
+				go->vel = 0;
 				prevElapsedAsteroid = elapsedTime;
 				enemycount++;
 
@@ -2604,12 +2605,11 @@ void Assignment1::Update(double dt)
 				else if (enemy->type == GameObject::GO_SHOP)
 				{
 					// Move towards player
-					enemy->direction = m_ship->pos - Vector3(enemy->pos.x, enemy->pos.y, enemy->pos.z);
-					enemy->direction = enemy->direction.Normalized();
+					//enemy->direction = m_ship->pos - Vector3(enemy->pos.x, enemy->pos.y, enemy->pos.z);
+					//enemy->direction = enemy->direction.Normalized();
 					shopposx = enemy->pos.x;
 					shopposy = enemy->pos.y;
 					shopposz = enemy->pos.z;
-					cout << enemy->pos << endl;
 					//enemy->vel = (enemy->direction * 40);
 				}
 				else if (enemy->type == GameObject::GO_BDEMON)
@@ -3590,7 +3590,10 @@ void Assignment1::RenderGO(GameObject* go)
 			}
 			else
 			{
+				modelStack.PushMatrix();
+				modelStack.Scale(1.5, 1, 1);
 				RenderMesh(meshList[GEO_HERODEATH], true);
+				modelStack.PopMatrix();
 			}
 		}
 
