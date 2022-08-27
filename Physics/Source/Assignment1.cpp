@@ -177,6 +177,10 @@ void Assignment1::Init()
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Punch.ogg"), 15, true);
 	cSoundController->LoadSound(FileSystem::getPath("Sound\\Coins.ogg"), 16, true);
 
+	// Shrek sfx
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\hey.wav"), 17, true);
+	cSoundController->LoadSound(FileSystem::getPath("Sound\\bye-bye.wav"), 18, true);
+
 
 	// World map generation on game start
 	int obstacleCount = 150;
@@ -743,6 +747,12 @@ void Assignment1::UpdateMenu()
 			UpdateControl(m_speed);
 			break;
 		case M_UPGRADE:
+
+			// Shop leaving sfx
+			if (selectorIndex == 8 && menuType == M_UPGRADE)
+			{
+				cSoundController->PlaySoundByID(18);
+			}
 			UpdateUpgrade(m_speed);
 			break;
 		case M_BOSSCONTROL:
@@ -1019,6 +1029,8 @@ void Assignment1::Update(double dt)
 		}
 		damageUpgrade = false;
 	}
+
+
 	SceneBase::Update(dt);
 	UpdateMenu();
 	deltaTime = dt;
@@ -2766,6 +2778,7 @@ void Assignment1::Collision(GameObject* go)
 		{
 			upgradescreen = true;
 			menuType = M_UPGRADE;
+			cSoundController->PlaySoundByID(17);
 		}
 
 		if (go->type == GameObject::GO_EXPLODER)
@@ -3068,7 +3081,6 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				killcount++;
 				m_money += 1 + bonusMoney;
 				target->active = false;
-				target->isHit = false;
 				if (target->type == GameObject::GO_NIGHTMARE)
 				{
 					for (int i = 0; i < 4; ++i)
@@ -3182,7 +3194,6 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 			if (target->hp <= 0)
 			{
 				target->active = false;
-				target->isHit = false;
 
 				enemycount--;
 				// Money gained
