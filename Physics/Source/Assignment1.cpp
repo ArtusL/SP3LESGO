@@ -659,11 +659,56 @@ void Assignment1::UpdateMenu()
 	if (Application::IsKeyReleased(VK_ESCAPE))
 		SceneBase::menuType = M_PAUSE;
 
-	if (Application::IsKeyReleased(VK_DOWN))
+	std::cout << selectorIndex << std::endl;
 
-		selectorIndex++;
-	else if (Application::IsKeyReleased(VK_UP))
-		selectorIndex--;
+	// For shop
+	if (menuType == M_UPGRADE && selectorIndex != 8)
+	{
+		if (Application::IsKeyReleased(VK_LEFT) && selectorIndex - 4 >= 0)
+			selectorIndex -= 4;
+		if (Application::IsKeyReleased(VK_RIGHT) && selectorIndex + 4 <= 7)
+			selectorIndex += 4;
+
+		// Exit shop option
+
+		if (Application::IsKeyReleased(VK_DOWN))
+		{
+			if (selectorIndex == 3)
+			{
+				selectorIndex = 8;
+			}
+			else
+			{
+				selectorIndex++;
+			}
+		}
+		else if (Application::IsKeyReleased(VK_UP))
+		{
+			if (selectorIndex != 4)
+			{
+				selectorIndex--;
+			}
+		}
+		//	selectorIndex--;
+		//if (Application::IsKeyReleased(VK_DOWN) && selectorIndex == 3)
+		//	selectorIndex = 8;
+		//else if (Application::IsKeyReleased(VK_UP) && selectorIndex != 4)
+		//	selectorIndex++;
+		//else if (Application::IsKeyReleased(VK_DOWN) && selectorIndex == 7)
+		//	selectorIndex = 8;
+		//else if (Application::IsKeyReleased(VK_DOWN))
+		//	selectorIndex++;
+	}
+	// Other menu types
+	else
+	{
+		if (Application::IsKeyReleased(VK_DOWN))
+			selectorIndex++;
+		else if (Application::IsKeyReleased(VK_UP))
+			selectorIndex--;
+	}
+
+
 
 	//if (Application::IsKeyReleased(VK_RIGHT))
 	//	colourIndex++;
@@ -1281,7 +1326,7 @@ void Assignment1::Update(double dt)
 				{
 					go->type = GameObject::GO_GHOST;
 					go->hp = round(1 * hpFactor);
-					go->scale.Set(10, 10, 10);
+					go->scale.Set(10, 10, 1);
 					go->hitboxSizeDivider = 3.5;
 					go->enemyDamage = 2;
 				}
@@ -1292,7 +1337,7 @@ void Assignment1::Update(double dt)
 					{
 						go->type = GameObject::GO_GHOST;
 						go->hp = round(2 * hpFactor);
-						go->scale.Set(14, 14, 14);
+						go->scale.Set(14, 14, 1);
 						go->hitboxSizeDivider = 3.5;
 						go->enemyDamage = 5;
 					}
@@ -1304,7 +1349,7 @@ void Assignment1::Update(double dt)
 					{
 						go->type = GameObject::GO_BDEMON;
 						go->hp = round(5 * hpFactor);
-						go->scale.Set(14, 14, 10);
+						go->scale.Set(14, 14, 1);
 						go->prevEnemyBullet = 0.0;
 						go->hitboxSizeDivider = 3;
 						go->enemyDamage = 5;
@@ -1313,7 +1358,7 @@ void Assignment1::Update(double dt)
 					{
 						go->type = GameObject::GO_GHOST;
 						go->hp = round(2 * hpFactor);
-						go->scale.Set(10, 10, 10);
+						go->scale.Set(10, 10, 1);
 						go->hitboxSizeDivider = 3.5;
 						go->enemyDamage = 4;
 					}
@@ -1326,7 +1371,7 @@ void Assignment1::Update(double dt)
 
 						go->type = GameObject::GO_BDEMON;
 						go->hp = round(5 * hpFactor);
-						go->scale.Set(14, 14, 10);
+						go->scale.Set(14, 14, 1);
 						go->prevEnemyBullet = 0.0;
 						go->hitboxSizeDivider = 3;
 						go->enemyDamage = 5;
@@ -1335,14 +1380,14 @@ void Assignment1::Update(double dt)
 					{
 						go->type = GameObject::GO_NIGHTMARE;
 						go->hp = round(10 * hpFactor);
-						go->scale.Set(20, 18, 10);
+						go->scale.Set(20, 18, 1);
 						go->hitboxSizeDivider = 4.5;
 						go->enemyDamage = 10;
 					}
 					else if (15 < randomEnemy && randomEnemy <= 45)
 					{
 						go->type = GameObject::GO_FLAMEDEMON;
-						go->scale.Set(15, 15, 10);
+						go->scale.Set(15, 15, 1);
 						go->hp = round(3 * hpFactor);
 						go->maxHP = go->hp;
 						go->prevEnemyBullet = elapsedTime;
@@ -1354,7 +1399,7 @@ void Assignment1::Update(double dt)
 					{
 						go->type = GameObject::GO_GHOST;
 						go->hp = round(2 * hpFactor);
-						go->scale.Set(10, 10, 10);
+						go->scale.Set(10, 10, 1);
 						go->hitboxSizeDivider = 3.5;
 						go->enemyDamage = 2;
 					}
@@ -1367,7 +1412,7 @@ void Assignment1::Update(double dt)
 					{
 						go->type = GameObject::GO_BDEMON;
 						go->hp = round(6 * hpFactor);
-						go->scale.Set(14, 14, 10);
+						go->scale.Set(14, 14, 1);
 						go->prevEnemyBullet = 0.0;
 						go->hitboxSizeDivider = 3;
 						go->enemyDamage = 5;
@@ -1377,14 +1422,14 @@ void Assignment1::Update(double dt)
 					{
 						go->type = GameObject::GO_NIGHTMARE;
 						go->hp = round(10 * hpFactor);
-						go->scale.Set(20, 18, 10);
+						go->scale.Set(20, 18, 1);
 						go->hitboxSizeDivider = 4.5;
 						go->enemyDamage = 10;
 					}
 					else if (10 < randomEnemy && randomEnemy <= 25)
 					{
 						go->type = GameObject::GO_FLAMEDEMON;
-						go->scale.Set(15, 15, 10);
+						go->scale.Set(15, 15, 1);
 						go->hp = round(3 * hpFactor);
 						go->maxHP = go->hp;
 						go->prevEnemyBullet = elapsedTime;
@@ -1406,7 +1451,7 @@ void Assignment1::Update(double dt)
 					{
 						go->type = GameObject::GO_GHOST;
 						go->hp = round(1 * hpFactor);
-						go->scale.Set(15, 15, 15);
+						go->scale.Set(15, 15, 1);
 						go->hitboxSizeDivider = 3.5;
 						go->enemyDamage = 2;
 					}
@@ -1419,7 +1464,7 @@ void Assignment1::Update(double dt)
 
 						go->type = GameObject::GO_EXPLODER;
 						go->hp = round(1 * hpFactor);
-						go->scale.Set(20, 20, 10);
+						go->scale.Set(20, 20, 1);
 						go->prevEnemyBullet = 0.0;
 						go->hitboxSizeDivider = 3;
 						go->enemyDamage = 15;
@@ -1428,7 +1473,7 @@ void Assignment1::Update(double dt)
 					else if (35 < randomEnemy && randomEnemy <= 50)
 					{
 						go->type = GameObject::GO_FLAMEDEMON;
-						go->scale.Set(10, 10, 10);
+						go->scale.Set(10, 10, 1);
 						go->hp = round(4 * hpFactor);
 						go->maxHP = go->hp;
 						go->prevEnemyBullet = elapsedTime;
@@ -1440,7 +1485,7 @@ void Assignment1::Update(double dt)
 					{
 						go->type = GameObject::GO_GHOST;
 						go->hp = round(1 * hpFactor);
-						go->scale.Set(15, 15, 15);
+						go->scale.Set(15, 15, 1);
 						go->hitboxSizeDivider = 3.5;
 						go->enemyDamage = 2;
 					}
@@ -1451,7 +1496,7 @@ void Assignment1::Update(double dt)
 					{
 						go->type = GameObject::GO_EXPLODER;
 						go->hp = round(1 * hpFactor);
-						go->scale.Set(16, 16, 10);
+						go->scale.Set(16, 16, 1);
 						go->prevEnemyBullet = 0.0;
 						go->hitboxSizeDivider = 3;
 						go->enemyDamage = 25;
@@ -1459,7 +1504,7 @@ void Assignment1::Update(double dt)
 					else if (10 < randomEnemy && randomEnemy <= 30)
 					{
 						go->type = GameObject::GO_FLAMEDEMON;
-						go->scale.Set(25, 25, 10);
+						go->scale.Set(25, 25, 1);
 						go->hp = round(8 * hpFactor);
 						go->maxHP = go->hp;
 						go->prevEnemyBullet = elapsedTime;
@@ -1471,7 +1516,7 @@ void Assignment1::Update(double dt)
 					{
 						go->type = GameObject::GO_BDEMON;
 						go->hp = round(12 * hpFactor);
-						go->scale.Set(10, 10, 10);
+						go->scale.Set(10, 10, 1);
 						go->prevEnemyBullet = 0.0;
 						go->hitboxSizeDivider = 3;
 						go->enemyDamage = 15;
@@ -1481,7 +1526,7 @@ void Assignment1::Update(double dt)
 					{
 						go->type = GameObject::GO_NIGHTMARE;
 						go->hp = round(15 * hpFactor);
-						go->scale.Set(20, 18, 10);
+						go->scale.Set(20, 18, 1);
 						go->hitboxSizeDivider = 4.5;
 						go->enemyDamage = 20;
 					}
@@ -1489,7 +1534,7 @@ void Assignment1::Update(double dt)
 					{
 						go->type = GameObject::GO_GHOST;
 						go->hp = round(1 * hpFactor);
-						go->scale.Set(15, 15, 15);
+						go->scale.Set(15, 15, 1);
 						go->hitboxSizeDivider = 3.5;
 						go->enemyDamage = 4;
 					}
@@ -1501,7 +1546,7 @@ void Assignment1::Update(double dt)
 
 						go->type = GameObject::GO_EXPLODER;
 						go->hp = round(1 * hpFactor);
-						go->scale.Set(16, 16, 10);
+						go->scale.Set(16, 16, 1);
 						go->prevEnemyBullet = 0.0;
 						go->hitboxSizeDivider = 3;
 						go->enemyDamage = 25;
@@ -1510,7 +1555,7 @@ void Assignment1::Update(double dt)
 					else if (10 < randomEnemy && randomEnemy <= 20)
 					{
 						go->type = GameObject::GO_FLAMEDEMON;
-						go->scale.Set(25, 25, 10);
+						go->scale.Set(25, 25, 1);
 						go->hp = round(8 * hpFactor);
 						go->maxHP = go->hp;
 						go->prevEnemyBullet = elapsedTime;
@@ -1522,7 +1567,7 @@ void Assignment1::Update(double dt)
 					{
 						go->type = GameObject::GO_BDEMON;
 						go->hp = round(8 * hpFactor);
-						go->scale.Set(10, 10, 10);
+						go->scale.Set(10, 10, 1);
 						go->prevEnemyBullet = 0.0;
 						go->hitboxSizeDivider = 3;
 						go->enemyDamage = 15;
@@ -1532,7 +1577,7 @@ void Assignment1::Update(double dt)
 					{
 						go->type = GameObject::GO_NIGHTMARE;
 						go->hp = round(20 * hpFactor);
-						go->scale.Set(20, 18, 10);
+						go->scale.Set(20, 18, 1);
 						go->hitboxSizeDivider = 4.5;
 						go->enemyDamage = 20;
 					}
@@ -1540,7 +1585,7 @@ void Assignment1::Update(double dt)
 					{
 						go->type = GameObject::GO_GHOST;
 						go->hp = round(4000 * hpFactor);
-						go->scale.Set(35, 35, 35);
+						go->scale.Set(35, 35, 1);
 						go->hitboxSizeDivider = 3;
 						go->enemyDamage = 50;
 					}
@@ -1556,7 +1601,7 @@ void Assignment1::Update(double dt)
 					else if (48 < randomEnemy <= 54)
 					{
 						go->type = GameObject::GO_FLAMEDEMON;
-						go->scale.Set(45, 45, 10);
+						go->scale.Set(45, 45, 1);
 						go->hp = round(500);
 						go->maxHP = go->hp;
 						go->prevEnemyBullet = elapsedTime;
@@ -1569,7 +1614,7 @@ void Assignment1::Update(double dt)
 
 						go->type = GameObject::GO_EXPLODER;
 						go->hp = round(1 * hpFactor);
-						go->scale.Set(25, 25, 10);
+						go->scale.Set(25, 25, 1);
 						go->prevEnemyBullet = 0.0;
 						go->hitboxSizeDivider = 3;
 						go->enemyDamage = 55;
@@ -1578,7 +1623,7 @@ void Assignment1::Update(double dt)
 					{
 						go->type = GameObject::GO_GHOST;
 						go->hp = round(2 * hpFactor);
-						go->scale.Set(15, 15, 15);
+						go->scale.Set(15, 15, 1);
 						go->hitboxSizeDivider = 3.5;
 						go->enemyDamage = 4;
 					}
@@ -1587,7 +1632,7 @@ void Assignment1::Update(double dt)
 				if (randomEnemy < 100 && waveCount >= 1 && shopactive == false)
 				{
 					go->type = GameObject::GO_SHOP;
-					go->scale.Set(10, 10, 10);
+					go->scale.Set(10, 10, 1);
 					go->prevEnemyBullet = elapsedTime;
 					go->hitboxSizeDivider = 0.75;
 					go->enemyDamage = 0;
@@ -1647,7 +1692,7 @@ void Assignment1::Update(double dt)
 						break;
 					}
 				}
-				go->direction.Set(0.1, 0.1, 0.1);
+				go->direction.Set(0.1, 0.1, 0);
 				go->vel = go->direction;
 				prevElapsedAsteroid = elapsedTime;
 				enemycount++;
@@ -3552,7 +3597,7 @@ void Assignment1::RenderGO(GameObject* go)
 	case GameObject::GO_BDEMON:
 
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 
 		// Rotate to player
 		modelStack.PushMatrix();
@@ -3602,7 +3647,7 @@ void Assignment1::RenderGO(GameObject* go)
 	case GameObject::GO_FLAMEDEMON:
 
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 
 		// Rotate to player
 		modelStack.PushMatrix();
@@ -3738,7 +3783,7 @@ void Assignment1::RenderGO(GameObject* go)
 	case GameObject::GO_WORMTAIL:
 
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
 
 		meshList[GEO_WORMHEAD]->material.kAmbient.Set(renderColor, renderColor, renderColor);
 		meshList[GEO_WORMBODY1]->material.kAmbient.Set(renderColor, renderColor, renderColor);
