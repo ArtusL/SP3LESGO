@@ -80,7 +80,7 @@ void Assignment1::Init()
 	ringCost = 200;
 	bombCost = 100;
 	molotovCost = 50;
-	arrowCost = 90;
+	arrowCost = 100;
 	flamingarrowCost = 1000;
 	healthRegenCost = 250;
 
@@ -346,7 +346,7 @@ void Assignment1::RestartGame()
 	ringCost = 200;
 	bombCost = 100;
 	molotovCost = 50;
-	arrowCost = 90;
+	arrowCost = 100;
 	flamingarrowCost = 1000;
 	healthRegenCost = 250;
 
@@ -4512,7 +4512,7 @@ void Assignment1::Render()
 
 			ss.str("");
 			ss << "LVL" << molotovlvl << " Molotov cocktail";
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.8, 47.5, 31, false);
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 47.5, 31, false);
 
 			ss.str("");
 			ss << "$" << molotovCost;
@@ -4584,7 +4584,7 @@ void Assignment1::Render()
 			else if (arrowlvl <= 8 && arrowlvl >= 4)
 			{
 				ss.str("");
-				ss << "LVL" << arrowlvl << "  Arrow Fire Rate";
+				ss << "LVL" << arrowlvl << " Arrow Fire Rate";
 				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 9.5, 13, false);
 
 				ss.str("");
@@ -4596,7 +4596,7 @@ void Assignment1::Render()
 			{
 
 				ss.str("");
-				ss << "LVL" << flamingarrowlvl << "  Flaming Arrows";
+				ss << "LVL" << flamingarrowlvl << " Flaming Arrows";
 				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 9.5, 13, false);
 
 				ss.str("");
@@ -4607,7 +4607,7 @@ void Assignment1::Render()
 			else if (arrowlvl == 9 && molotovlvl == 9 && flamingarrowlvl == 1)
 			{
 				ss.str("");
-				ss << "LVL" << flamingarrowlvl << "  Flaming Arrows";
+				ss << "LVL" << flamingarrowlvl << " Flaming Arrows";
 				RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 9.5, 13, false);
 
 				ss.str("");
