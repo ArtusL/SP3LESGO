@@ -58,7 +58,7 @@ void Assignment1::Init()
 	//Exercise 2b: Initialize m_hp and m_score
 	m_hp = 100;
 
-	m_money = 10000;
+	m_money = 100;
 
 	waveCount = 1;
 
@@ -80,7 +80,7 @@ void Assignment1::Init()
 	ringCost = 200;
 	bombCost = 100;
 	molotovCost = 50;
-	arrowCost = 90;
+	arrowCost = 100;
 	flamingarrowCost = 1000;
 	healthRegenCost = 250;
 
@@ -346,7 +346,7 @@ void Assignment1::RestartGame()
 	ringCost = 200;
 	bombCost = 100;
 	molotovCost = 50;
-	arrowCost = 90;
+	arrowCost = 100;
 	flamingarrowCost = 1000;
 	healthRegenCost = 250;
 
