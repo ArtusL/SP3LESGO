@@ -197,7 +197,7 @@ void Assignment1::Init()
 		if (obstacleIndex > 0)
 		{
 			// Checks for surrounding area to spawn safely in
-			for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+			for (std::vector<GameObject*>::iterator it = m_goList.begin(); it < m_goList.end(); ++it)
 			{
 				GameObject* go = (GameObject*)*it;
 				if (go->type == GameObject::GO_CHEST ||
@@ -295,7 +295,7 @@ void Assignment1::Init()
 GameObject* Assignment1::FetchGO()
 {
 	//Exercise 3a: Fetch a game object from m_goList and return it
-	for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = m_goList.begin(); it < m_goList.end(); ++it)
 	{
 		GameObject* go = (GameObject*)*it;
 		if (go->active) {
@@ -311,7 +311,7 @@ GameObject* Assignment1::FetchGO()
 		m_goList.push_back(new GameObject(GameObject::GO_GHOST));
 	}
 	m_goList.at(prevSize)->active = true;
-	return m_goList.at(prevSize);
+	return m_goList[prevSize];
 }
 
 void Assignment1::RestartGame()
@@ -441,7 +441,7 @@ void Assignment1::RestartGame()
 		if (obstacleIndex > 0)
 		{
 			// Checks for surrounding area to spawn safely in
-			for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+			for (std::vector<GameObject*>::iterator it = m_goList.begin(); it < m_goList.end(); ++it)
 			{
 				GameObject* go = (GameObject*)*it;
 				if (go->type == GameObject::GO_CHEST ||
@@ -1891,7 +1891,7 @@ void Assignment1::Update(double dt)
 		//********************************************************************************************************
 		// Collision Detection
 		//*********************************************************************************************************
-		for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+		for (std::vector<GameObject*>::iterator it = m_goList.begin(); it < m_goList.end(); ++it)
 		{
 			GameObject* go = (GameObject*)*it;
 
@@ -1934,8 +1934,7 @@ void Assignment1::Update(double dt)
 
 				else if (go->type == GameObject::GO_RINGAURA || go->type == GameObject::GO_FIRE || go->type == GameObject::GO_EXPLOSION)
 				{
-					//Exercise 18: collision check between GO_BULLET and GO_ASTEROID
-					for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
+					for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 < m_goList.end(); ++it2)
 					{
 						GameObject* go2 = (GameObject*)*it2;
 						if (go2->active)
@@ -1976,7 +1975,7 @@ void Assignment1::Update(double dt)
 						continue;
 					}
 
-					for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
+					for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 < m_goList.end(); ++it2)
 					{
 						GameObject* go2 = (GameObject*)*it2;
 						if (go2->active)
@@ -2087,6 +2086,7 @@ void Assignment1::Update(double dt)
 					}
 				}
 			}
+
 		}
 
 
@@ -2214,13 +2214,13 @@ void Assignment1::Update(double dt)
 
 		// ************************************* Homing Card Code *******************************************
 		float closestDis = 999999;
-		for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+		for (std::vector<GameObject*>::iterator it = m_goList.begin(); it < m_goList.end(); ++it)
 		{
 			GameObject* go = (GameObject*)*it;
 			if (go->active && go->type == GameObject::GO_CARD)
 			{
 				// Check for enemy targets
-				for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
+				for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 < m_goList.end(); ++it2)
 				{
 					GameObject* go2 = (GameObject*)*it2;
 					// Proceed if enemy type
@@ -2301,7 +2301,7 @@ void Assignment1::Update(double dt)
 
 
 		//************************************ ENEMY ATTACKS *****************************************************************************
-		for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+		for (std::vector<GameObject*>::iterator it = m_goList.begin(); it < m_goList.end(); ++it)
 		{
 			GameObject* enemy = (GameObject*)*it;
 			if (enemy->active)
@@ -2512,7 +2512,7 @@ void Assignment1::Update(double dt)
 					}
 
 					// Worm moving code
-					for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
+					for (std::vector<GameObject*>::iterator it2 = m_goList.begin(); it2 < m_goList.end(); ++it2)
 					{
 						GameObject* go2 = (GameObject*)*it2;
 						if (go2->active)
@@ -4674,7 +4674,7 @@ void Assignment1::Render()
 
 
 
-	for (std::vector<GameObject*>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = m_goList.begin(); it < m_goList.end(); ++it)
 	{
 		GameObject* go = (GameObject*)*it;
 		if (go->active)
