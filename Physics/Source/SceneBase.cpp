@@ -387,10 +387,10 @@ void SceneBase::Init()
 	meshList[GEO_WAVECONTROL]->textureID = LoadTGA("Image//UI//controls.tga");
 
 	meshList[GEO_SHREKCONTROL] = MeshBuilder::GenerateQuad("main menu", Color(1, 1, 1), 1.f);
-	meshList[GEO_SHREKCONTROL]->textureID = LoadTGA("Image//UI//controlS.tga");
+	meshList[GEO_SHREKCONTROL]->textureID = LoadTGA("Image//UI//shrekarrow.tga");
 
 	meshList[GEO_SHOPCONTROL] = MeshBuilder::GenerateQuad("main menu", Color(1, 1, 1), 1.f);
-	meshList[GEO_SHOPCONTROL]->textureID = LoadTGA("Image//UI//controls.tga");
+	meshList[GEO_SHOPCONTROL]->textureID = LoadTGA("Image//UI//shrekshop.tga");
 
 	// Boss Animation
 	meshList[GEO_BOSSATTACK] = MeshBuilder::GenerateSpriteAnimation("Boss Attack", 1, 12);
