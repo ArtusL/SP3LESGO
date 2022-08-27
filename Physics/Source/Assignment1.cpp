@@ -45,7 +45,7 @@ void Assignment1::Init()
 	//Physics code here
 	m_speed = 1.f;
 
-	shipSpeed = 130.f;
+	shipSpeed = 13.f;
 	prevElapsedAsteroid = prevElapsedBullet = elapsedTime = waveTimer = prevElapsedCard = keyDelay = prevHealthRegen = tripleShotTimer = 0.0;
 	Math::InitRNG();
 
@@ -598,7 +598,7 @@ void Assignment1::SpawnWorm()
 					go->nextNode = nullptr;
 					go->hitboxSizeDivider = 3;
 				}
-				go->hp = 70;
+				go->hp = 33 * sqrt(waveCount - 9);
 				go->maxHP = go->hp;
 				go->prevEnemyBullet = elapsedTime;
 				go->speedFactor = 1;
