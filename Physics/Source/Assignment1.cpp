@@ -45,7 +45,7 @@ void Assignment1::Init()
 	//Physics code here
 	m_speed = 1.f;
 
-	shipSpeed = 13.f;
+	shipSpeed = 130.f;
 	prevElapsedAsteroid = prevElapsedBullet = elapsedTime = waveTimer = prevElapsedCard = keyDelay = prevHealthRegen = tripleShotTimer = 0.0;
 	Math::InitRNG();
 
@@ -1645,13 +1645,14 @@ void Assignment1::Update(double dt)
 					}
 				}
 
-				if (randomEnemy < 100 && waveCount >= 4 && shopactive == false)
+				if (randomEnemy < 100 && waveCount >= 1 && shopactive == false)
 				{
 					go->type = GameObject::GO_SHOP;
 					go->scale.Set(10, 10, 1);
 					go->prevEnemyBullet = elapsedTime;
 					go->hitboxSizeDivider = 0.75;
 					go->enemyDamage = 0;
+					go->timer = 49;
 					shopactive = true;
 				}
 
@@ -1675,16 +1676,16 @@ void Assignment1::Update(double dt)
 					switch (random)
 					{
 					case 0:
-						go->pos.Set(m_worldWidth - 15, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+						go->pos.Set(Math::RandFloatMinMax(4, m_worldWidth - 4), Math::RandFloatMinMax(4, m_worldHeight - 4), go->pos.z);
 						break;
 					case 1:
-						go->pos.Set(0 + 15, Math::RandFloatMinMax(0, m_worldHeight), go->pos.z);
+						go->pos.Set(Math::RandFloatMinMax(4, m_worldWidth - 4), Math::RandFloatMinMax(4, m_worldHeight - 4), go->pos.z);
 						break;
 					case 2:
-						go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), m_worldHeight - 15, go->pos.z);
+						go->pos.Set(Math::RandFloatMinMax(4, m_worldWidth - 4), Math::RandFloatMinMax(4, m_worldHeight - 4), go->pos.z);
 						break;
 					case 3:
-						go->pos.Set(Math::RandFloatMinMax(0, m_worldWidth), 0 + 15, go->pos.z);
+						go->pos.Set(Math::RandFloatMinMax(4, m_worldWidth - 4), Math::RandFloatMinMax(4, m_worldHeight - 4), go->pos.z);
 						break;
 					}
 				}
@@ -1732,8 +1733,6 @@ void Assignment1::Update(double dt)
 				go->vel = 0;
 				prevElapsedAsteroid = elapsedTime;
 				enemycount++;
-
-				cout << "" << enemycount << endl;
 			}
 		}
 		//allow worm to spawn again
@@ -2136,7 +2135,7 @@ void Assignment1::Update(double dt)
 				prevElapsedBomb = elapsedTime;
 			}
 		}
-		cout << ringUse << endl;
+
 		if (ringUse == true)
 		{
 
@@ -2146,7 +2145,6 @@ void Assignment1::Update(double dt)
 			BarrierSprite->PlayAnimation("Aura", -1, 4.0f);
 
 			ringUse = false;
-			cout << ringUse << endl;
 		}
 
 		if (flamingarrowUse == false)
@@ -2287,6 +2285,18 @@ void Assignment1::Update(double dt)
 				if (go->timer < 0)
 				{
 					go->active = false;
+				}
+			}
+
+			if (go->type == GameObject::GO_SHOP && go->active == true)
+			{
+				go->timer -= 1 * dt;
+				cout << go->timer << endl;
+				if (go->timer <= 0)
+				{
+					go->active = false;
+					shopactive = false;
+
 				}
 			}
 
@@ -3926,10 +3936,11 @@ void Assignment1::RenderGO(GameObject* go)
 
 
 	case GameObject::GO_SHOP:
+		cout << go->timer << endl;
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-
+		
 		if (go->facingLeft == true)
 		{
 			RenderMesh(meshList[GEO_SHREK_LEFT], false);
@@ -4167,23 +4178,6 @@ void Assignment1::RenderGO(GameObject* go)
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_FIRE], false);
 		modelStack.PopMatrix();
-		if (go->scaleDown == false)
-		{
-			go->explosionScale += 0.2;
-			if (go->explosionScale > 4)
-			{
-				go->scaleDown = true;
-			}
-		}
-
-		if (go->scaleDown == true)
-		{
-			go->explosionScale -= 0.2;
-			if (go->explosionScale <= 0)
-			{
-				go->active = false;
-			}
-		}
 		break;
 
 
