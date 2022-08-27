@@ -659,8 +659,6 @@ void Assignment1::UpdateMenu()
 	if (Application::IsKeyReleased(VK_ESCAPE))
 		SceneBase::menuType = M_PAUSE;
 
-	std::cout << selectorIndex << std::endl;
-
 	// For shop
 	if (menuType == M_UPGRADE && selectorIndex != 8)
 	{
@@ -1333,7 +1331,7 @@ void Assignment1::Update(double dt)
 				//wave 3
 				else if (waveCount == 3)
 				{
-					for (int i = 0; i < 35; ++i)
+					for (int j = 0; j < 35; ++j)
 					{
 						go->type = GameObject::GO_GHOST;
 						go->hp = round(2 * hpFactor);
@@ -1692,8 +1690,8 @@ void Assignment1::Update(double dt)
 						break;
 					}
 				}
-				go->direction.Set(0.1, 0.1, 0);
-				go->vel = go->direction;
+/*				go->direction.Set(0.1, 0.1, 0);
+				go->vel = go->direction*/;
 				prevElapsedAsteroid = elapsedTime;
 				enemycount++;
 		
@@ -3070,6 +3068,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 				killcount++;
 				m_money += 1 + bonusMoney;
 				target->active = false;
+				target->isHit = false;
 				if (target->type == GameObject::GO_NIGHTMARE)
 				{
 					for (int i = 0; i < 4; ++i)
@@ -3183,6 +3182,7 @@ void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 			if (target->hp <= 0)
 			{
 				target->active = false;
+				target->isHit = false;
 
 				enemycount--;
 				// Money gained
@@ -3448,12 +3448,12 @@ void Assignment1::RenderGO(GameObject* go)
 	float renderColor;
 	if (go->isHit == true)
 	{
-		renderColor = 100;
+		renderColor = 100.f;
 		go->isHit = false;
 	}
 	else
 	{
-		renderColor = 1;
+		renderColor = 1.f;
 	}
 
 	switch (go->type)
@@ -3556,7 +3556,7 @@ void Assignment1::RenderGO(GameObject* go)
 	case GameObject::GO_GHOST:
 
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		meshList[GEO_GHOST_LEFT]->material.kAmbient.Set(renderColor, renderColor, renderColor);
 		meshList[GEO_GHOST]->material.kAmbient.Set(renderColor, renderColor, renderColor);
@@ -3597,7 +3597,7 @@ void Assignment1::RenderGO(GameObject* go)
 	case GameObject::GO_BDEMON:
 
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 
 		// Rotate to player
 		modelStack.PushMatrix();
@@ -3647,7 +3647,7 @@ void Assignment1::RenderGO(GameObject* go)
 	case GameObject::GO_FLAMEDEMON:
 
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 
 		// Rotate to player
 		modelStack.PushMatrix();
@@ -3695,7 +3695,7 @@ void Assignment1::RenderGO(GameObject* go)
 	case GameObject::GO_NIGHTMARE:
 
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 
 		meshList[GEO_NIGHTMARE_LEFT]->material.kAmbient.Set(renderColor, renderColor, renderColor);
@@ -3737,7 +3737,7 @@ void Assignment1::RenderGO(GameObject* go)
 	case GameObject::GO_EXPLODER:
 
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 
 		meshList[GEO_EXPLODER_LEFT]->material.kAmbient.Set(renderColor, renderColor, renderColor);
@@ -3783,7 +3783,7 @@ void Assignment1::RenderGO(GameObject* go)
 	case GameObject::GO_WORMTAIL:
 
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 
 		meshList[GEO_WORMHEAD]->material.kAmbient.Set(renderColor, renderColor, renderColor);
 		meshList[GEO_WORMBODY1]->material.kAmbient.Set(renderColor, renderColor, renderColor);
@@ -3856,7 +3856,7 @@ void Assignment1::RenderGO(GameObject* go)
 
 	case GameObject::GO_SHOP:
 		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 3);
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 
 		if (go->facingLeft == true)
@@ -3972,7 +3972,7 @@ void Assignment1::RenderGO(GameObject* go)
 	case GameObject::GO_ENEMYBULLET:
 		modelStack.PushMatrix();
 
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z + 2);
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Rotate(go->angle, 0, 0, 1);
 		if (go->type == GameObject::GO_LASER)
 		{

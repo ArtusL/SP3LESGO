@@ -145,37 +145,37 @@ void SceneBase::Init()
 	//Hero
 	meshList[GEO_HERO] = MeshBuilder::GenerateSpriteAnimation("Hero", 1, 4);
 	meshList[GEO_HERO]->textureID = LoadTexture("Image//HeroIdle.png", true);
-	meshList[GEO_HERO]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_HERO]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERO]);
 	sa->AddAnimation("IDLE", 0, 4);
 
 	meshList[GEO_HERO_LEFT] = MeshBuilder::GenerateSpriteAnimation("Hero Left", 1, 4);
 	meshList[GEO_HERO_LEFT]->textureID = LoadTexture("Image//HeroIdle.png", false);
-	meshList[GEO_HERO_LEFT]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_HERO_LEFT]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* saLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERO_LEFT]);
 	saLeft->AddAnimation("IDLE", 0, 4);
 
 	meshList[GEO_HEROATTACK] = MeshBuilder::GenerateSpriteAnimation("Hero", 1, 6);
 	meshList[GEO_HEROATTACK]->textureID = LoadTexture("Image//HeroAttack.png", true);
-	meshList[GEO_HEROATTACK]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_HEROATTACK]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* saAttack = dynamic_cast<SpriteAnimation*>(meshList[GEO_HEROATTACK]);
 	saAttack->AddAnimation("Attack", 0, 6);
 
 	meshList[GEO_HEROATTACK_LEFT] = MeshBuilder::GenerateSpriteAnimation("Hero Left", 1, 6);
 	meshList[GEO_HEROATTACK_LEFT]->textureID = LoadTexture("Image//HeroAttack.png", false);
-	meshList[GEO_HEROATTACK_LEFT]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_HEROATTACK_LEFT]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* saAttackLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_HEROATTACK_LEFT]);
 	saAttackLeft->AddAnimation("Attack", 0, 6);
 
 	meshList[GEO_HERORUN] = MeshBuilder::GenerateSpriteAnimation("Hero", 1, 12);
 	meshList[GEO_HERORUN]->textureID = LoadTexture("Image//HeroRun.png", true);
-	meshList[GEO_HERORUN]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_HERORUN]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* saRun = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERORUN]);
 	saRun->AddAnimation("Run", 0, 12);
 
 	meshList[GEO_HERORUN_LEFT] = MeshBuilder::GenerateSpriteAnimation("Hero Left", 1, 12);
 	meshList[GEO_HERORUN_LEFT]->textureID = LoadTexture("Image//HeroRun.png", false);
-	meshList[GEO_HERORUN_LEFT]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_HERORUN_LEFT]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* saRunLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERORUN_LEFT]);
 	saRunLeft->AddAnimation("Run", 0, 12);
 
@@ -207,13 +207,13 @@ void SceneBase::Init()
 	// Shopkeeper 
 	meshList[GEO_SHREK] = MeshBuilder::GenerateSpriteAnimation("Shrek", 1, 16);
 	meshList[GEO_SHREK]->textureID = LoadTexture("Image//shopkeepershrek.png", false);
-	meshList[GEO_SHREK]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_SHREK]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* ShrekSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_SHREK]);
 	ShrekSprite->AddAnimation("IDLE", 0, 16);
 
 	meshList[GEO_SHREK_LEFT] = MeshBuilder::GenerateSpriteAnimation("Shrek Left", 1, 16);
 	meshList[GEO_SHREK_LEFT]->textureID = LoadTexture("Image//shopkeepershrek.png", true);
-	meshList[GEO_SHREK_LEFT]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_SHREK_LEFT]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* ShrekSpriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_SHREK_LEFT]);
 	ShrekSpriteLeft->AddAnimation("IDLE", 0, 16);
 
@@ -223,68 +223,68 @@ void SceneBase::Init()
 	// Enemy types
 	meshList[GEO_FDEMON] = MeshBuilder::GenerateSpriteAnimation("Fdemon", 1, 6);
 	meshList[GEO_FDEMON]->textureID = LoadTexture("Image//FlameDemon.png", false);
-	meshList[GEO_FDEMON]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_FDEMON]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* Fdemonsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FDEMON]);
 	Fdemonsprite->AddAnimation("IDLE", 0, 6);
 
 	meshList[GEO_FDEMON_LEFT] = MeshBuilder::GenerateSpriteAnimation("Fdemon Left", 1, 6);
 	meshList[GEO_FDEMON_LEFT]->textureID = LoadTexture("Image//FlameDemon.png", true);
-	meshList[GEO_FDEMON_LEFT]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_FDEMON_LEFT]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* FdemonspriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_FDEMON_LEFT]);
 	FdemonspriteLeft->AddAnimation("IDLE", 0, 6);
 
 	meshList[GEO_BDEMON] = MeshBuilder::GenerateSpriteAnimation("Bdemon", 1, 6);
 	meshList[GEO_BDEMON]->textureID = LoadTexture("Image//Bdemon.png", false);
-	meshList[GEO_BDEMON]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_BDEMON]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* Bdemonsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_BDEMON]);
 	Bdemonsprite->AddAnimation("IDLE", 0, 6);
 
 	meshList[GEO_BDEMON_LEFT] = MeshBuilder::GenerateSpriteAnimation("Bdemon Left", 1, 6);
 	meshList[GEO_BDEMON_LEFT]->textureID = LoadTexture("Image//Bdemon.png", true);
-	meshList[GEO_BDEMON_LEFT]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_BDEMON_LEFT]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* BdemonspriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_BDEMON_LEFT]);
 	BdemonspriteLeft->AddAnimation("IDLE", 0, 6);
 
 	meshList[GEO_NIGHTMARE] = MeshBuilder::GenerateSpriteAnimation("Nightmare", 1, 4);
 	meshList[GEO_NIGHTMARE]->textureID = LoadTexture("Image//Nightmare.png", false);
-	meshList[GEO_NIGHTMARE]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_NIGHTMARE]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* Nightmaresprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_NIGHTMARE]);
 	Nightmaresprite->AddAnimation("IDLE", 0, 4);
 
 	meshList[GEO_NIGHTMARE_LEFT] = MeshBuilder::GenerateSpriteAnimation("Nightmare Left", 1, 4);
 	meshList[GEO_NIGHTMARE_LEFT]->textureID = LoadTexture("Image//Nightmare.png", true);
-	meshList[GEO_NIGHTMARE_LEFT]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_NIGHTMARE_LEFT]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* NightmarespriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_NIGHTMARE_LEFT]);
 	NightmarespriteLeft->AddAnimation("IDLE", 0, 4);
 
 	meshList[GEO_GHOST] = MeshBuilder::GenerateSpriteAnimation("Ghost", 1, 7);
 	meshList[GEO_GHOST]->textureID = LoadTexture("Image//ghost-idle.png", false);
-	meshList[GEO_GHOST]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_GHOST]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* Ghostsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_GHOST]);
 	Ghostsprite->AddAnimation("IDLE", 0, 7);
 
 	meshList[GEO_GHOST_LEFT] = MeshBuilder::GenerateSpriteAnimation("Ghost Left", 1, 7);
 	meshList[GEO_GHOST_LEFT]->textureID = LoadTexture("Image//ghost-idle.png", true);
-	meshList[GEO_GHOST_LEFT]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_GHOST_LEFT]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* GhostspriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_GHOST_LEFT]);
 	GhostspriteLeft->AddAnimation("IDLE", 0, 7);
 
 	// Exploder
 	meshList[GEO_EXPLODER] = MeshBuilder::GenerateSpriteAnimation("Skull", 1, 8);
 	meshList[GEO_EXPLODER]->textureID = LoadTexture("Image//FlameSkull.png", false);
-	meshList[GEO_EXPLODER]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_EXPLODER]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* Explodersprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_EXPLODER]);
 	Explodersprite->AddAnimation("IDLE", 0, 7);
 
 	meshList[GEO_EXPLODER_LEFT] = MeshBuilder::GenerateSpriteAnimation("Skull Left", 1, 8);
 	meshList[GEO_EXPLODER_LEFT]->textureID = LoadTexture("Image//FlameSkull.png", true);
-	meshList[GEO_EXPLODER_LEFT]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_EXPLODER_LEFT]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* ExploderspriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_EXPLODER_LEFT]);
 	ExploderspriteLeft->AddAnimation("IDLE", 0, 7);
 
 	meshList[GEO_ENEMYEXPLOSION] = MeshBuilder::GenerateSpriteAnimation("Explosion", 1, 11);
 	meshList[GEO_ENEMYEXPLOSION]->textureID = LoadTexture("Image//EnemyExplosion.png", true);
-	meshList[GEO_ENEMYEXPLOSION]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_ENEMYEXPLOSION]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* EnemyExplosionsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_ENEMYEXPLOSION]);
 	EnemyExplosionsprite->AddAnimation("Explode", 0, 11);
 
@@ -389,51 +389,51 @@ void SceneBase::Init()
 	// Boss Animation
 	meshList[GEO_BOSSATTACK] = MeshBuilder::GenerateSpriteAnimation("Boss Attack", 1, 12);
 	meshList[GEO_BOSSATTACK]->textureID = LoadTexture("Image//Nightborne_Attack.png", true);
-	meshList[GEO_BOSSATTACK]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_BOSSATTACK]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* NightborneSpriteAttack = dynamic_cast<SpriteAnimation*>(meshList[GEO_BOSSATTACK]);
 	NightborneSpriteAttack->AddAnimation("Attack Right", 0, 12);
 
 	meshList[GEO_BOSSATTACK_LEFT] = MeshBuilder::GenerateSpriteAnimation("Boss Attack Left", 1, 12);
 	meshList[GEO_BOSSATTACK_LEFT]->textureID = LoadTexture("Image//Nightborne_Attack.png", false);
-	meshList[GEO_BOSSATTACK_LEFT]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_BOSSATTACK_LEFT]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* NightborneSpriteAttackLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_BOSSATTACK_LEFT]);
 	NightborneSpriteAttackLeft->AddAnimation("Attack Left", 0, 12);
 
 	meshList[GEO_BOSS] = MeshBuilder::GenerateSpriteAnimation("Boss Attack Left", 1, 6);
 	meshList[GEO_BOSS]->textureID = LoadTexture("Image//NightBorneMove.png", true);
-	meshList[GEO_BOSS]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_BOSS]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* NightborneSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_BOSS]);
 	NightborneSprite->AddAnimation("Move Right", 0, 6);
 
 
 	meshList[GEO_BOSS_LEFT] = MeshBuilder::GenerateSpriteAnimation("Boss Attack Left", 1, 6);
 	meshList[GEO_BOSS_LEFT]->textureID = LoadTexture("Image//NightBorneMove.png", false);
-	meshList[GEO_BOSS_LEFT]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_BOSS_LEFT]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* NightborneSpriteLeft = dynamic_cast<SpriteAnimation*>(meshList[GEO_BOSS_LEFT]);
 	NightborneSpriteLeft->AddAnimation("Move Left", 0, 6);
 
 	// Projectile Animation
 	meshList[GEO_LASER] = MeshBuilder::GenerateSpriteAnimation("purple_projectile", 8, 8);
 	meshList[GEO_LASER]->textureID = LoadTexture("Image//purple_projectile.png", true);
-	meshList[GEO_LASER]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_LASER]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* PurpleShot = dynamic_cast<SpriteAnimation*>(meshList[GEO_LASER]);
 	PurpleShot->AddAnimation("Purple Projectile", 0, 60);
 
 	meshList[GEO_EXPLOSION] = MeshBuilder::GenerateSpriteAnimation("Explosion", 1, 11);
 	meshList[GEO_EXPLOSION]->textureID = LoadTexture("Image//Explosion.png", true);
-	meshList[GEO_EXPLOSION]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_EXPLOSION]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* Explosionsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_EXPLOSION]);
 	Explosionsprite->AddAnimation("Explode", 0, 11);
 
 	meshList[GEO_FIRE] = MeshBuilder::GenerateSpriteAnimation("Molotovflame", 1, 5);
 	meshList[GEO_FIRE]->textureID = LoadTexture("Image//MolotovFire.png", true);
-	meshList[GEO_FIRE]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_FIRE]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* Firesprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FIRE]);
 	Firesprite->AddAnimation("Fire", 0, 4);
 
 	meshList[GEO_RINGAURA] = MeshBuilder::GenerateSpriteAnimation("Aura", 2, 5);
 	meshList[GEO_RINGAURA]->textureID = LoadTexture("Image//Shield.png", true);
-	meshList[GEO_RINGAURA]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_RINGAURA]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* Barriersprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_RINGAURA]);
 	Barriersprite->AddAnimation("Aura", 0, 10);
 
@@ -447,14 +447,14 @@ void SceneBase::Init()
 	//Extras
 	meshList[GEO_CHEST] = MeshBuilder::GenerateSpriteAnimation("Chest", 8, 5);
 	meshList[GEO_CHEST]->textureID = LoadTexture("Image//Chests.png", true);
-	meshList[GEO_CHEST]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_CHEST]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* Chestsprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_CHEST]);
 	Chestsprite->AddAnimation("IDLE", 20, 24);
 	Chestsprite->AddAnimation("OPEN", 25, 30);
 
 	meshList[GEO_CHEST_PARTICLE] = MeshBuilder::GenerateSpriteAnimation("Chest Particle", 1, 6);
 	meshList[GEO_CHEST_PARTICLE]->textureID = LoadTexture("Image//Chest_Particle.png", true);
-	meshList[GEO_CHEST_PARTICLE]->material.kAmbient.Set(1, 1, 1);
+	meshList[GEO_CHEST_PARTICLE]->material.kAmbient.Set(1.f, 1.f, 1.f);
 	SpriteAnimation* Chestparticlesprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_CHEST_PARTICLE]);
 	Chestparticlesprite->AddAnimation("OPEN", 0, 6);
 
