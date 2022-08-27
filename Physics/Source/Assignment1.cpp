@@ -307,7 +307,7 @@ GameObject* Assignment1::FetchGO()
 
 	//Get Size before adding 10
 	int prevSize = m_goList.size();
-	for (int i = 0; i < 10; ++i) {
+	for (int i = 0; i < 100; ++i) {
 		m_goList.push_back(new GameObject(GameObject::GO_GHOST));
 	}
 	m_goList.at(prevSize)->active = true;
@@ -2693,9 +2693,7 @@ void Assignment1::Update(double dt)
 						}
 					}
 				}
-
 			}
-
 		}
 
 		//********************************************************************************************************************************************
