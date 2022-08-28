@@ -59,7 +59,7 @@ void Assignment1::Init()
 	//Exercise 2b: Initialize m_hp and m_score
 	m_hp = 100;
 
-	m_money = 1000000;
+	m_money = 100;
 
 	waveCount = 1;
 
@@ -4722,7 +4722,7 @@ void Assignment1::Render()
 		switch (storystate)
 		{
 		case 1:
-
+			cSoundController->StopSoundByID(9);
 			RenderMeshOnScreen(meshList[GEO_CUBE], 100, 65, 100, 70);
 			RenderMeshOnScreen(meshList[GEO_EVIL], 97.5, 65, 120, 60);
 
