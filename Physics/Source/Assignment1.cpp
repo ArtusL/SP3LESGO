@@ -41,6 +41,7 @@ void Assignment1::Init()
 	//Calculating aspect ratio
 	m_worldHeight = 600.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
+	m_worldWidth += 33.3;
 
 	//Physics code here
 	m_speed = 1.f;
@@ -60,7 +61,7 @@ void Assignment1::Init()
 
 	m_money = 100;
 
-	waveCount = 1;
+	waveCount = 20;
 
 	gravity = -4;
 	storystate = 1;
@@ -261,6 +262,7 @@ void Assignment1::Init()
 					newObstacle->timer = 0;
 					newObstacle->hitboxSizeDivider = 3;
 					newObstacle->moneyDrop = 300;
+					newObstacle->enemyDamage = 0;
 					obstacleIndex++;
 					break;
 				}
@@ -286,6 +288,7 @@ void Assignment1::Init()
 			newObstacle->hitboxSizeDivider = 3;
 			newObstacle->timer = 0;
 			newObstacle->moneyDrop = 300;
+			newObstacle->enemyDamage = 0;
 			obstacleIndex++;
 		}
 	}
@@ -392,8 +395,8 @@ void Assignment1::RestartGame()
 	arrowUse = false;
 	molotovUse = false;
 	cardUse = false;
-	isAlive = true;
 	gameStart = false;
+	isAlive = true;
 	bossspawned = false;
 	bombChoose = false;
 	upgradescreen = false;
@@ -406,17 +409,20 @@ void Assignment1::RestartGame()
 	asteroidCount = 0;
 	maxEnemyCount = 12;
 
+	HeroSprite->Reset();
+
 
 	//Exercise 2c: Construct m_ship, set active, type, scale and pos
 	m_ship = new GameObject(GameObject::GO_HERO);
 	m_ship->active = true;
-	m_ship->scale.Set(9, 9, 1);
+	m_ship->scale.Set(7, 7, 1);
 	m_ship->pos.Set(m_worldWidth / 2, m_worldHeight / 2);
 	m_ship->vel.Set(1, 0, 0);
 	m_ship->direction.Set(1, 0, 0);
 	m_ship->hp = m_hp;
 	m_ship->maxHP = m_hp;
 	m_ship->mass = 0.1f;
+	m_ship->prevEnemyBullet = 0;
 
 	// Attract powerups
 	GameObject* hole = FetchGO();
@@ -505,6 +511,7 @@ void Assignment1::RestartGame()
 					newObstacle->timer = 0;
 					newObstacle->hitboxSizeDivider = 3;
 					newObstacle->moneyDrop = 300;
+					newObstacle->enemyDamage = 0;
 					obstacleIndex++;
 					break;
 				}
@@ -530,8 +537,10 @@ void Assignment1::RestartGame()
 			newObstacle->hitboxSizeDivider = 3;
 			newObstacle->timer = 0;
 			newObstacle->moneyDrop = 300;
+			newObstacle->enemyDamage = 0;
 			obstacleIndex++;
 		}
+
 	}
 }
 
@@ -643,11 +652,6 @@ void Assignment1::UpdateMenu()
 	else
 		m_speed = 0;
 
-	if (Application::IsKeyReleased(VK_ESCAPE))
-	{
-		SceneBase::menuType = M_PAUSE;
-	}
-
 	if (SceneBase::restartGame)
 	{
 		RestartGame();
@@ -664,7 +668,13 @@ void Assignment1::UpdateMenu()
 		SceneManager::activeScene = S_ASSIGNMENT1;
 	}
 	if (Application::IsKeyReleased(VK_ESCAPE))
-		SceneBase::menuType = M_PAUSE;
+	{
+		if (gameStart == true  && menuType != M_UPGRADE && menuType != M_GAMEOVER && isAlive == true)
+		{
+			SceneBase::menuType = M_PAUSE;
+		}
+	}
+
 
 	// For shop
 	if (menuType == M_UPGRADE && selectorIndex != 8)
@@ -726,7 +736,6 @@ void Assignment1::UpdateMenu()
 		{
 		case M_MAIN:
 			UpdateMainMenu(m_speed);
-
 			break;
 		case M_PAUSE:
 			UpdatePauseMenu(m_speed);
@@ -1052,6 +1061,7 @@ void Assignment1::Update(double dt)
 	}
 	//Calculating aspect ratio
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
+	m_worldWidth += 84;
 
 	// Fire
 	FireSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_FIRE]);
@@ -1194,7 +1204,6 @@ void Assignment1::Update(double dt)
 			cSoundController->PlaySoundByID(13);
 		}
 
-
 		// ************************* CURSOR CODE ****************************************
 		{
 
@@ -1216,7 +1225,7 @@ void Assignment1::Update(double dt)
 			worldPosY -= camera.position.y;
 
 
-			worldPosY = m_worldHeight - (worldPosY)-450;
+			worldPosY = m_worldHeight - (worldPosY) - 445;
 			//worldPosX += 5;
 
 			m_ship->angle = atan2(m_ship->pos.y - worldPosY, m_ship->pos.x - worldPosX);
@@ -2758,6 +2767,7 @@ void Assignment1::Update(double dt)
 		if (m_ship->hp <= 0 && isAlive == true)
 		{
 			isAlive = false;
+			gameStart = false;
 			gameOverTimer = 3;
 			cSoundController->StopSoundByID(1);
 			cSoundController->StopSoundByID(2);
@@ -2793,8 +2803,11 @@ void Assignment1::Update(double dt)
 			gameOverTimer -= 1 * dt;
 
 			HeroSprite = dynamic_cast<SpriteAnimation*>(meshList[GEO_HERODEATH]);
-			HeroSprite->PlayAnimation("Death", 0, 2.0f);
-			HeroSprite->Update(dt);
+			HeroSprite->PlayAnimation("Death", -1, 2.0f);
+			if (gameOverTimer > 1)
+			{
+				HeroSprite->Update(dt);
+			}
 		}
 	}
 }
@@ -4272,11 +4285,11 @@ void Assignment1::Render()
 			std::ostringstream ss;
 			ss.str("");
 			ss << "Kills:" << killcount;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 1.5, 5, 50, false);
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 1.5, 5, 46.6, false);
 
 			ss.str("");
 			ss << "Wave:" << waveCount;
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.5, 5, 55, false);
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 1.5, 5, 51.2, false);
 
 		}
 		break;
@@ -4305,7 +4318,7 @@ void Assignment1::Render()
 		RenderMeshOnScreen(meshList[GEO_INFOBORDER], 150, 85, 40, 10);
 		ss.str("");
 		ss << "$:" << m_money;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 0), 2, 55, 50, false);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 0), 2, 55, 46.3, false);
 
 
 
@@ -4832,12 +4845,17 @@ void Assignment1::Render()
 
 		ss.str("");
 		ss << m_ship->hp;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 27, 7.4, false);
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.6, 27, 6.8, false);
 
 		//ss.str("");
 		//ss.precision(5);
-		//ss << "FPS: " << fps;
+		//ss << "WorldPosX: " << worldPosX;
 		//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.2, 0, 58, false);
+
+		//ss.str("");
+		//ss.precision(5);
+		//ss << "m_ship.pos.x: " << m_ship->pos.x;
+		//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 1.2, 0, 55, false);
 
 
 		// Wave Count Display

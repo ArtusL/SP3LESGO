@@ -638,19 +638,19 @@ void SceneBase::Render()
 
 void SceneBase::RenderMainMenu()
 {
-	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 50, 200, 105);
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
 
 	//RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);
 	switch (selectorIndex)
 	{
 	case 0:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 50, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 55, 45, 45);
 		break;
 	case 1:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 38, 65, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 41, 65, 45);
 		break;
 	case 2:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 97, 25, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 97, 27, 45, 45);
 		break;
 	}
 
@@ -666,17 +666,17 @@ void SceneBase::RenderMainMenu()
 
 void SceneBase::RenderControl()
 {
-	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 50, 200, 105);
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
 	RenderMeshOnScreen(meshList[GEO_MOVECONTROL], 55, 60, 60, 36.25);
 	RenderMeshOnScreen(meshList[GEO_MOUSECONTROL], 140, 60, 60, 36.25);
 	//RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);
 	switch (selectorIndex)
 	{
 	case 0:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 168, 25, 35, 35);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 168, 28, 35, 35);
 		break;
 	case 1:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 25, 25, 35, 35);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 25, 28, 35, 35);
 		break;
 	}
 	RenderTextOnScreen(meshList[GEO_TEXT], "Controls", Color(1, 1, 1), 5, 1, 50, false);
@@ -692,17 +692,17 @@ void SceneBase::RenderControl()
 
 void SceneBase::RenderShopControl()
 {
-	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 50, 200, 105);
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
 	RenderMeshOnScreen(meshList[GEO_SHREKCONTROL], 55, 60, 60, 36.25);
 	RenderMeshOnScreen(meshList[GEO_SHOPCONTROL], 140, 60, 60, 36.25);
 	//RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);
 	switch (selectorIndex)
 	{
 	case 0:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 168, 25, 35, 35);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 168, 28, 35, 35);
 		break;
 	case 1:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 25, 25, 35, 35);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 25, 28, 35, 35);
 		break;
 	}
 	RenderTextOnScreen(meshList[GEO_TEXT], "About Shop", Color(1, 1, 1), 5, 1, 50, false);
@@ -718,17 +718,17 @@ void SceneBase::RenderShopControl()
 }
 void SceneBase::RenderBossControl()
 {
-	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 50, 200, 105);
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
 	RenderMeshOnScreen(meshList[GEO_WAVECONTROL], 55, 60, 60, 36.25);
 	RenderMeshOnScreen(meshList[GEO_BOSSCONTROL], 140, 60, 60, 36.25);
 	//RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);
 	switch (selectorIndex)
 	{
 	case 0:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 168, 25, 35, 35);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 168, 28, 35, 35);
 		break;
 	case 1:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 25, 25, 35, 35);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 25, 28, 35, 35);
 		break;
 	}
 	RenderTextOnScreen(meshList[GEO_TEXT], "About Bosses", Color(1, 1, 1), 5, 1, 50, false);
@@ -744,16 +744,16 @@ void SceneBase::RenderBossControl()
 
 void SceneBase::RenderCBomb()
 {
-	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 50, 200, 105);
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
 	RenderMeshOnScreen(meshList[GEO_BOMB], 96, 60, 13, 13);
 	//RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);
 	switch (selectorIndex)
 	{
 	case 0:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 41, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 42, 45, 45);
 		break;
 	case 1:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 26, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 28, 45, 45);
 		break;
 	}
 	RenderTextOnScreen(meshList[GEO_TEXT], "BOMBS", Color(1, 1, 1), 5, 32, 45, false);
@@ -764,16 +764,16 @@ void SceneBase::RenderCBomb()
 }
 void SceneBase::RenderCArrow()
 {
-	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 50, 200, 105);
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
 	RenderMeshOnScreen(meshList[GEO_ARROW], 96, 60, 15, 15);
 	//RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);
 	switch (selectorIndex)
 	{
 	case 0:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 41, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 42, 45, 45);
 		break;
 	case 1:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 26, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 28, 45, 45);
 		break;
 	}
 	RenderTextOnScreen(meshList[GEO_TEXT], "ARROW", Color(1, 1, 1), 5, 32, 45, false);
@@ -784,16 +784,16 @@ void SceneBase::RenderCArrow()
 }
 void SceneBase::RenderCCard()
 {
-	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 50, 200, 105);
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
 	RenderMeshOnScreen(meshList[GEO_CARDS], 96, 60, 15, 15);
 	/*RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);*/
 	switch (selectorIndex)
 	{
 	case 0:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 41, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 42, 45, 45);
 		break;
 	case 1:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 26, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 28, 45, 45);
 		break;
 	}
 	RenderTextOnScreen(meshList[GEO_TEXT], "CARD", Color(1, 1, 1), 5, 33, 45, false);
@@ -804,22 +804,22 @@ void SceneBase::RenderCCard()
 }
 void SceneBase::RenderChoose()
 {
-	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 50, 200, 105);
+	RenderMeshOnScreen(meshList[GEO_UIBG], 96, 55, 200, 110);
 
 	/*RenderMeshOnScreen(meshList[GEO_MAIN_MENU], 96, 25, 45, 45);*/
 	switch (selectorIndex)
 	{
 	case 0:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 70, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 77, 45, 45);
 		break;
 	case 1:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 55, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 60, 45, 45);
 		break;
 	case 2:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 40, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 44, 45, 45);
 		break;
 	case 3:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 25, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 28, 45, 45);
 		break;
 	}
 	RenderTextOnScreen(meshList[GEO_TEXT], "Choose Weapon", Color(1, 1, 1), 5, 18, 50, false);
@@ -833,16 +833,14 @@ void SceneBase::RenderChoose()
 
 void SceneBase::RenderGameOver()
 {
-	RenderMeshOnScreen(meshList[GEO_DEADBG], 96, 49.5, 200, 103);
-
-	/*RenderMeshOnScreen(meshList[GEO_GAMEOVER], 96, 25, 45, 45);*/
+	RenderMeshOnScreen(meshList[GEO_DEADBG], 96, 49.5, 200, 120);
 	switch (selectorIndex)
 	{
 	case 0:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 41, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 43, 45, 45);
 		break;
 	case 1:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 26, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 28, 45, 45);
 		break;
 	case 2:
 		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 12, 45, 45);
@@ -862,10 +860,10 @@ void SceneBase::RenderPauseMenu()
 	switch (selectorIndex)
 	{
 	case 0:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 41, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 42, 45, 45);
 		break;
 	case 1:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 26, 45, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 96, 28, 45, 45);
 		break;
 	}
 	RenderTextOnScreen(meshList[GEO_TEXT], "PAUSE", Color(1, 1, 1), 7, 29, 35, false);
@@ -876,29 +874,29 @@ void SceneBase::RenderPauseMenu()
 
 void SceneBase::RenderUpgrade()
 {
-	RenderMeshOnScreen(meshList[GEO_SHOPBG], 96, 49.2, 200, 103);
+	RenderMeshOnScreen(meshList[GEO_SHOPBG], 96, 53, 200, 112);
 	switch (selectorIndex)
 	{
 	case 0:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 50, 70, 60, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 50, 76, 60, 45);
 		break;
 	case 1:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 50, 55, 60, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 50, 59, 60, 45);
 		break;
 	case 2:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 50, 40, 60, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 50, 44, 60, 45);
 		break;
 	case 3:
 		RenderMeshOnScreen(meshList[GEO_SELECTOR], 50, 25, 60, 45);
 		break;
 	case 4:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 141.5, 70, 60, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 141.5, 76, 60, 45);
 		break;
 	case 5:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 141.5, 55, 60, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 141.5, 59, 60, 45);
 		break;
 	case 6:
-		RenderMeshOnScreen(meshList[GEO_SELECTOR], 141.5, 40, 60, 45);
+		RenderMeshOnScreen(meshList[GEO_SELECTOR], 141.5, 44, 60, 45);
 		break;
 	case 7:
 		RenderMeshOnScreen(meshList[GEO_SELECTOR], 141.5, 25, 60, 45);
