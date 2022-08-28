@@ -101,7 +101,7 @@ void Assignment1::Init()
 	basicBulletDamage = 1;
 	healthRegen = false;
 	regenlvl = 0;
-	healthRegenAmount = 0;
+	healthRegenAmount = 1;
 	cardRate = 1;
 	cardlvl = 0;
 	ringlvl = 0;
@@ -368,7 +368,8 @@ void Assignment1::RestartGame()
 
 	basicBulletDamage = 1;
 	healthRegen = false;
-	healthRegenAmount = 0;
+	regenlvl = 0;
+	healthRegenAmount = 1;
 	cardRate = 1;
 	cardlvl = 0;
 	ringlvl = 0;
@@ -812,31 +813,34 @@ void Assignment1::Update(double dt)
 	else if (bombChoose == true)
 	{
 		keyDelay = 0.3;
-		if (m_money >= bombCost)
+		if (bomblvl < 9)
 		{
-			if (bombCost < 110)
+			if (m_money >= bombCost)
 			{
-				bomblvl++;
-				bombUse = true;
-
-			}
-			else
-			{
-				if (bomblvl <= 8)
+				if (bombCost < 110)
 				{
-					bombRate += 0.35;
 					bomblvl++;
+					bombUse = true;
 
 				}
-			}
-			if (bomblvl <= 8)
-			{
-				m_money -= bombCost;
-				bombCost += 55;
-				cSoundController->StopSoundByID(10);
-				cSoundController->PlaySoundByID(10);
-			}
+				else
+				{
+					if (bomblvl <= 9)
+					{
+						bombRate += 0.35;
+						bomblvl++;
 
+					}
+				}
+				if (bomblvl <= 9)
+				{
+					m_money -= bombCost;
+					bombCost += 55;
+					cSoundController->StopSoundByID(10);
+					cSoundController->PlaySoundByID(10);
+				}
+
+			}
 		}
 		bombChoose = false;
 
@@ -844,30 +848,33 @@ void Assignment1::Update(double dt)
 	else if (cardChoose == true)
 	{
 		keyDelay = 0.3;
-		if (m_money >= cardCost)
+		if (cardlvl < 9)
 		{
-			if (cardCost < 110)
+			if (m_money >= cardCost)
 			{
-				cardlvl++;
-				cardUse = true;
-
-			}
-			else
-			{
-				if (cardlvl <= 8)
+				if (cardCost < 110)
 				{
-					cardRate += 0.5;
 					cardlvl++;
+					cardUse = true;
 
 				}
-			}
+				else
+				{
+					if (cardlvl <= 9)
+					{
+						cardRate += 0.5;
+						cardlvl++;
 
-			if (cardlvl <= 8)
-			{
-				m_money -= cardCost;
-				cardCost += 50;
-				cSoundController->StopSoundByID(10);
-				cSoundController->PlaySoundByID(10);
+					}
+				}
+
+				if (cardlvl <= 9)
+				{
+					m_money -= cardCost;
+					cardCost += 50;
+					cSoundController->StopSoundByID(10);
+					cSoundController->PlaySoundByID(10);
+				}
 			}
 		}
 		cardChoose = false;
@@ -875,44 +882,47 @@ void Assignment1::Update(double dt)
 	else if (arrowChoose == true)
 	{
 		keyDelay = 0.3;
-		if (m_money >= arrowCost)
+		if (arrowlvl < 9 || flamingarrowlvl <1 && arrowlvl == 9 && molotovlvl == 9)
 		{
-
-			if (arrowlvl == 9 && molotovlvl == 9 && flamingarrowCost == 1000)
+			if (m_money >= arrowCost)
 			{
-				flamingarrowUse = true;
-				flamingarrowlvl++;
-				m_money -= flamingarrowCost;
-				flamingarrowCost += 1000;
-				cSoundController->PlaySoundByID(12);
-			}
 
-			else if (arrowCost < 110)
-			{
-				arrowUse = true;
-				arrowlvl++;
-			}
-
-			else if (arrowCost > 30)
-			{
-				if (arrowlvl <= 4)
+				if (arrowlvl == 9 && molotovlvl == 9 && flamingarrowCost == 1000)
 				{
-					arrowAmount++;
+					flamingarrowUse = true;
+					flamingarrowlvl++;
+					m_money -= flamingarrowCost;
+					flamingarrowCost += 1000;
+					cSoundController->PlaySoundByID(10);
+				}
+
+				else if (arrowCost < 110)
+				{
+					arrowUse = true;
 					arrowlvl++;
 				}
-				else if (arrowlvl <= 8)
-				{
-					arrowRate += 0.15;
-					arrowlvl++;
-				}
-			}
 
-			if (arrowlvl <= 8)
-			{
-				m_money -= arrowCost;
-				arrowCost += 50;
-				cSoundController->StopSoundByID(10);
-				cSoundController->PlaySoundByID(10);
+				else if (arrowCost > 30)
+				{
+					if (arrowlvl <= 4)
+					{
+						arrowAmount++;
+						arrowlvl++;
+					}
+					else if (arrowlvl <= 9)
+					{
+						arrowRate += 0.15;
+						arrowlvl++;
+					}
+				}
+
+				if (arrowlvl <= 9)
+				{
+					m_money -= arrowCost;
+					arrowCost += 50;
+					cSoundController->StopSoundByID(10);
+					cSoundController->PlaySoundByID(10);
+				}
 			}
 		}
 		arrowChoose = false;
@@ -920,25 +930,28 @@ void Assignment1::Update(double dt)
 	else if (healthUpgrade == true)
 	{
 		keyDelay = 0.3;
-		if (m_money >= healthRegenCost)
+		if (regenlvl < 3)
 		{
-			if (healthRegenCost < 400)
+			if (m_money >= healthRegenCost)
 			{
-				healthRegen = true;
-				regenlvl++;
-			}
-			else if (regenlvl <= 2)
-			{
-				healthRegenAmount++;
-				regenlvl++;
-			}
+				if (healthRegenCost < 400)
+				{
+					healthRegen = true;
+					regenlvl++;
+				}
+				else if (regenlvl <= 3)
+				{
+					healthRegenAmount++;
+					regenlvl++;
+				}
 
-			if (regenlvl <= 2)
-			{
-				m_money -= healthRegenCost;
-				healthRegenCost += 300;
-				cSoundController->StopSoundByID(10);
-				cSoundController->PlaySoundByID(10);
+				if (regenlvl <= 3)
+				{
+					m_money -= healthRegenCost;
+					healthRegenCost += 300;
+					cSoundController->StopSoundByID(10);
+					cSoundController->PlaySoundByID(10);
+				}
 			}
 		}
 		healthUpgrade = false;
@@ -946,63 +959,70 @@ void Assignment1::Update(double dt)
 	else if (ringUpgrade == true)
 	{
 		keyDelay = 0.3;
-		if (m_money >= ringCost)
+		if (ringlvl < 5)
 		{
-			if (ringCost < 300)
+			if (m_money >= ringCost)
 			{
-				ringUse = true;
-
-				ringlvl++;
-			}
-			else
-			{
-				if (ringlvl <= 4)
+				if (ringCost < 300)
 				{
-					ringAOE += 2.0;
+					ringUse = true;
+
 					ringlvl++;
 				}
+				else
+				{
+					if (ringlvl <= 5)
+					{
+						ringAOE += 2.0;
+						ringlvl++;
+					}
+				}
+				if (ringlvl <= 5)
+				{
+					m_money -= ringCost;
+					ringCost += 150;
+					cSoundController->StopSoundByID(10);
+					cSoundController->PlaySoundByID(10);
+				}
+
 			}
-			if (ringlvl <= 4)
-			{
-				m_money -= ringCost;
-				ringCost += 150;
-				cSoundController->StopSoundByID(10);
-				cSoundController->PlaySoundByID(10);
-			}
-			ringUpgrade = false;
 		}
+		ringUpgrade = false;
 	}
 	else if (molotovUpgrade == true)
 	{
 		keyDelay = 0.3;
-		if (m_money >= molotovCost)
+		if (molotovlvl < 9)
 		{
-			if (molotovCost < 60)
+			if (m_money >= molotovCost)
 			{
-				molotovUse = true;
-				molotovlvl++;
-			}
-			else
-			{
-				if (molotovlvl <= 3)
+				if (molotovCost < 60)
 				{
-					molotovAmount++;
+					molotovUse = true;
 					molotovlvl++;
 				}
-				else if (molotovlvl <= 8)
+				else
 				{
-					molotovRate += 0.15;
-					molotovlvl++;
+					if (molotovlvl <= 3)
+					{
+						molotovAmount++;
+						molotovlvl++;
+					}
+					else if (molotovlvl <= 9)
+					{
+						molotovRate += 0.15;
+						molotovlvl++;
+					}
 				}
-			}
-			if (molotovlvl <= 8)
-			{
-				m_money -= molotovCost;
-				molotovCost += 35;
-				cSoundController->StopSoundByID(10);
-				cSoundController->PlaySoundByID(10);
-			}
+				if (molotovlvl <= 9)
+				{
+					m_money -= molotovCost;
+					molotovCost += 35;
+					cSoundController->StopSoundByID(10);
+					cSoundController->PlaySoundByID(10);
+				}
 
+			}
 		}
 		molotovUpgrade = false;
 	}
@@ -1010,16 +1030,19 @@ void Assignment1::Update(double dt)
 	if (firerateUpgrade == true)
 	{
 		keyDelay = 0.3;
-		if (m_money >= fireRateCost)
+		if (fireratelvl < 9)
 		{
-			if (fireratelvl <= 8)
+			if (m_money >= fireRateCost)
 			{
-				fireRate += 0.5;
-				m_money -= fireRateCost;
-				fireRateCost += 400;
-				fireratelvl++;
-				cSoundController->StopSoundByID(10);
-				cSoundController->PlaySoundByID(10);
+				if (fireratelvl <= 9)
+				{
+					fireRate += 0.5;
+					m_money -= fireRateCost;
+					fireRateCost += 400;
+					fireratelvl++;
+					cSoundController->StopSoundByID(10);
+					cSoundController->PlaySoundByID(10);
+				}
 			}
 		}
 		firerateUpgrade = false;
@@ -1027,16 +1050,19 @@ void Assignment1::Update(double dt)
 	if (damageUpgrade == true)
 	{
 		keyDelay = 0.3;
-		if (m_money >= damageUpCost)
+		if (damagelvl < 9)
 		{
-			if (damagelvl <= 8)
+			if (m_money >= damageUpCost)
 			{
-				m_money -= damageUpCost;
-				basicBulletDamage++;
-				damageUpCost += 200 * (damagelvl + 1);
-				damagelvl++;
-				cSoundController->StopSoundByID(10);
-				cSoundController->PlaySoundByID(10);
+				if (damagelvl <= 9)
+				{
+					m_money -= damageUpCost;
+					basicBulletDamage++;
+					damageUpCost += 200 * (damagelvl + 1);
+					damagelvl++;
+					cSoundController->StopSoundByID(10);
+					cSoundController->PlaySoundByID(10);
+				}
 			}
 		}
 		damageUpgrade = false;
@@ -1654,7 +1680,7 @@ void Assignment1::Update(double dt)
 					}
 				}
 
-				if (randomEnemy < 100 && waveCount >= 4 && shopactive == false)
+				if (randomEnemy < 100 && waveCount >= 1 && shopactive == false)
 				{
 					go->type = GameObject::GO_SHOP;
 					go->scale.Set(10, 10, 1);
@@ -4386,7 +4412,7 @@ void Assignment1::Render()
 		else
 		{
 
-			if (regenlvl >= 9)
+			if (regenlvl >= 3)
 			{
 				ss.str("");
 				ss << "LVL" << regenlvl << " Regen amount";
