@@ -310,11 +310,11 @@ GameObject* Assignment1::FetchGO()
 
 	//Get Size before adding 10
 	int prevSize = m_goList.size();
-	for (int i = 0; i < 100; ++i) {
+	for (int i = 0; i < 600; ++i) {
 		m_goList.push_back(new GameObject(GameObject::GO_GHOST));
 	}
 	m_goList.at(prevSize)->active = true;
-	return m_goList[prevSize];
+	return m_goList.at(prevSize);
 }
 
 void Assignment1::RestartGame()
@@ -2308,7 +2308,6 @@ void Assignment1::Update(double dt)
 		}
 		//*****************************************************************************************************************
 
-
 		//************************************ ENEMY ATTACKS *****************************************************************************
 		for (std::vector<GameObject*>::iterator it = m_goList.begin(); it < m_goList.end(); ++it)
 		{
@@ -2381,7 +2380,7 @@ void Assignment1::Update(double dt)
 						if (diff > 1)
 						{
 							float bulletCount = 8;
-							float angle = 360 / bulletCount;;
+							float angle = 360 / bulletCount;
 							for (int i = 0; i < 8; ++i)
 							{
 								GameObject* go2 = FetchGO();
@@ -2391,6 +2390,7 @@ void Assignment1::Update(double dt)
 								go2->angle = angle * i + Math::RandFloatMinMax(0, 50);
 								go2->enemyDamage = 13;
 								go2->hitboxSizeDivider = 2;
+								go2->timer = 999;
 
 
 								go2->direction = RotateVector(go2->pos, go2->angle * dt * shipSpeed);
@@ -2461,7 +2461,7 @@ void Assignment1::Update(double dt)
 							go2->angle = laserAngle;
 							go2->enemyDamage = 13;
 							go2->hitboxSizeDivider = 6;
-							go2->timer = 10;
+							go2->timer = 999;
 
 							laserAngle += 4;
 
@@ -2474,7 +2474,7 @@ void Assignment1::Update(double dt)
 
 							go2->vel = go2->direction * BULLET_SPEED * 0.8;
 
-							if (laserAngle >= 500)
+							if (laserAngle >= 400)
 							{
 								laserAngle = 0;
 								bossState = 0;
@@ -2483,7 +2483,6 @@ void Assignment1::Update(double dt)
 						}
 						break;
 					}
-					break;
 				}
 
 
@@ -2668,9 +2667,7 @@ void Assignment1::Update(double dt)
 				}
 
 				//// unspawn offscreen
-				else if (enemy->type == GameObject::GO_ENEMYBULLET ||
-					enemy->type == GameObject::GO_LASER ||
-					enemy->type == GameObject::GO_WORMTAIL)
+				else if (enemy->type == GameObject::GO_ENEMYBULLET || enemy->type == GameObject::GO_LASER || enemy->type == GameObject::GO_WORMTAIL)
 				{
 
 					// Enemy projectile despawns after a certain lifetime
