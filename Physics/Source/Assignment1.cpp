@@ -51,7 +51,7 @@ void Assignment1::Init()
 	Math::InitRNG();
 
 	//Exercise 2a: Construct 100 GameObject with type GO_ASTEROID and add into m_goList
-	for (int i = 0; i != 100; i++)
+	for (int i = 0; i < 100; i++)
 	{
 		m_goList.push_back(new GameObject(GameObject::GO_GHOST));
 	}
@@ -61,7 +61,7 @@ void Assignment1::Init()
 
 	m_money = 100;
 
-	waveCount = 20;
+	waveCount = 1;
 
 	gravity = -4;
 	storystate = 1;
@@ -2463,7 +2463,7 @@ void Assignment1::Update(double dt)
 							go2->hitboxSizeDivider = 6;
 							go2->timer = 10;
 
-							laserAngle += 6;
+							laserAngle += 4;
 
 							go2->direction = RotateVector(go2->pos, go2->angle * dt * shipSpeed);
 							go2->direction = go2->direction.Normalized();
@@ -2474,7 +2474,7 @@ void Assignment1::Update(double dt)
 
 							go2->vel = go2->direction * BULLET_SPEED * 0.8;
 
-							if (laserAngle >= 350)
+							if (laserAngle >= 500)
 							{
 								laserAngle = 0;
 								bossState = 0;
@@ -2917,10 +2917,18 @@ void Assignment1::Collision(GameObject* go)
 		}
 
 	}
-	//Exercise 13: asteroids should wrap around the screen like the ship
-	//Wrap(go->pos.x, m_worldWidth);
-	//Wrap(go->pos.y, m_worldHeight);
 
+	if (go->type == GameObject::GO_ENEMYBULLET ||
+		go->type == GameObject::GO_LASER)
+	{
+		if (go->pos.x > m_worldWidth
+			|| go->pos.x <0
+			|| go->pos.y > m_worldHeight
+			|| go->pos.y < 0)
+		{
+			go->active = false;
+		}
+	}
 }
 void Assignment1::HitEnemy(GameObject* bullet, GameObject* target)
 {
@@ -4037,9 +4045,9 @@ void Assignment1::RenderGO(GameObject* go)
 
 				RenderTextOnScreen(meshList[GEO_TEXT], "NightBorne", Color(0, 0, 0), 2, 33, 53, false);
 
-				RenderMeshOnScreen(meshList[GEO_HEALTHBORDER], 97, 85, 65, 6);
-				RenderMeshOnScreen(meshList[GEO_HEALTHBACK], 97, 85, 65, 6);
-				RenderMeshOnScreen(meshList[GEO_BOSSHEALTH], 97, 85, 65 * ((go->hp / go->maxHP)), 6);
+				RenderMeshOnScreen(meshList[GEO_HEALTHBORDER], 97, 92, 65, 6);
+				RenderMeshOnScreen(meshList[GEO_HEALTHBACK], 97, 92, 65, 6);
+				RenderMeshOnScreen(meshList[GEO_BOSSHEALTH], 97, 92, 65 * ((go->hp / go->maxHP)), 6);
 				std::ostringstream ss;
 
 				ss << "" << go->hp;
