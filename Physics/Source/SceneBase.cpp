@@ -123,6 +123,9 @@ void SceneBase::Init()
 	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("background", Color(1, 1, 1), 1.f);
 	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//background.tga");
 
+	meshList[GEO_BACKGROUND2] = MeshBuilder::GenerateQuad("background", Color(1, 1, 1), 1.f);
+	meshList[GEO_BACKGROUND2]->textureID = LoadTGA("Image//background2.tga");
+
 	meshList[GEO_MAFIASHREK] = MeshBuilder::GenerateQuad("background", Color(1, 1, 1), 1.f);
 	meshList[GEO_MAFIASHREK]->textureID = LoadTGA("Image//mafiashrek.tga");
 

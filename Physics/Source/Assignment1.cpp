@@ -4729,7 +4729,17 @@ void Assignment1::Render()
 		}
 	}
 
-
+	for (float rows = -2; rows < 11; rows++)
+	{
+		for (float cols = -2; cols < 11; cols++)
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(144 * rows, 75 * cols, -5);
+			modelStack.Scale(288, 150, 1);
+			RenderMesh(meshList[GEO_BACKGROUND2], false);
+			modelStack.PopMatrix();
+		}
+	}
 
 
 
