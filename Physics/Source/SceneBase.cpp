@@ -11,6 +11,7 @@
 #include <sstream>
 bool SceneBase::restartGame = false;
 bool SceneBase::resetGame = false;
+bool SceneBase::resetMain = false;
 bool SceneBase::bombChoose = false;
 bool SceneBase::arrowChoose = false;
 bool SceneBase::cardChoose = false;
@@ -942,6 +943,7 @@ void SceneBase::UpdateBossControl(float& m_speed)
 
 void SceneBase::UpdateChoose(float& m_speed)
 {
+	
 	switch (selectorIndex)
 	{
 	case 0:
@@ -1080,16 +1082,16 @@ void SceneBase::UpdateCCard(float& m_speed)
 }
 void SceneBase::UpdateGameOver(float& m_speed)
 {
-	restartGame = true;
 	switch (selectorIndex)
 	{
 	case 0:
-		menuType = M_NONE;
-		m_speed = 1;
+		//menuType = M_CHOOSE;
+		resetGame = true;
+	/*	m_speed = 1;*/
 		break;
 	case 1:
 		selectorIndex = 0;
-		resetGame = true;
+		menuType = M_MAIN;
 		break;
 	case 2:
 		Application::gameExit = true;
@@ -1107,7 +1109,7 @@ void SceneBase::UpdatePauseMenu(float& m_speed)
 		break;
 	case 1:
 		selectorIndex = 0;
-		resetGame = true;
+		resetMain = true;
 		menuType = M_MAIN;
 		break;
 	}

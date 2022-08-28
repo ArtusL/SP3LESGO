@@ -163,6 +163,7 @@ public:
 	static MENU_TYPE menuType;
 	static bool restartGame;
 	static bool resetGame;
+	static bool resetMain;
 	static bool bombChoose;
 	static bool arrowChoose;
 	static bool cardChoose;

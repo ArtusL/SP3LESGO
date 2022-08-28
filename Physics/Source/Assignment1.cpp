@@ -59,9 +59,9 @@ void Assignment1::Init()
 	//Exercise 2b: Initialize m_hp and m_score
 	m_hp = 100;
 
-	m_money = 100;
+	m_money = 10000;
 
-	waveCount = 1;
+	waveCount = 15;
 
 	gravity = -4;
 	storystate = 1;
@@ -664,6 +664,14 @@ void Assignment1::UpdateMenu()
 	{
 		RestartGame();
 		SceneBase::resetGame = false;
+		SceneBase::menuType = M_CHOOSE;
+		SceneManager::activeScene = S_ASSIGNMENT1;
+	}
+
+	if (SceneBase::resetMain)
+	{
+		RestartGame();
+		SceneBase::resetMain = false;
 		SceneBase::menuType = M_MAIN;
 		SceneManager::activeScene = S_ASSIGNMENT1;
 	}
@@ -2789,6 +2797,13 @@ void Assignment1::Update(double dt)
 		{
 			RestartGame();
 			SceneBase::resetGame = false;
+			SceneBase::menuType = M_CHOOSE;
+			SceneManager::activeScene = S_ASSIGNMENT1;
+		}
+		if (SceneBase::resetMain)
+		{
+			RestartGame();
+			SceneBase::resetMain = false;
 			SceneBase::menuType = M_MAIN;
 			SceneManager::activeScene = S_ASSIGNMENT1;
 		}
