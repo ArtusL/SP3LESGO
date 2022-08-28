@@ -59,7 +59,7 @@ void Assignment1::Init()
 	//Exercise 2b: Initialize m_hp and m_score
 	m_hp = 100;
 
-	m_money = 100;
+	m_money = 1000000;
 
 	waveCount = 1;
 
@@ -887,7 +887,7 @@ void Assignment1::Update(double dt)
 				cSoundController->PlaySoundByID(12);
 			}
 
-			else if (arrowCost < 100)
+			else if (arrowCost < 110)
 			{
 				arrowUse = true;
 				arrowlvl++;
@@ -4575,7 +4575,7 @@ void Assignment1::Render()
 
 		}
 
-		if (arrowCost < 30)
+		if (arrowCost < 110)
 		{
 
 			ss.str("");
