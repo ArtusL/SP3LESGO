@@ -59,9 +59,9 @@ void Assignment1::Init()
 	//Exercise 2b: Initialize m_hp and m_score
 	m_hp = 100;
 
-	m_money = 10000;
+	m_money = 100;
 
-	waveCount = 15;
+	waveCount = 1;
 
 	gravity = -4;
 	storystate = 1;
