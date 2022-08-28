@@ -1654,7 +1654,7 @@ void Assignment1::Update(double dt)
 					}
 				}
 
-				if (randomEnemy < 100 && waveCount >= 1 && shopactive == false)
+				if (randomEnemy < 100 && waveCount >= 4 && shopactive == false)
 				{
 					go->type = GameObject::GO_SHOP;
 					go->scale.Set(10, 10, 1);
